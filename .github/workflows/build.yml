@@ -92,5 +92,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
-            const workflowId = workflows.find(workflow => workflow.name === 'CI/CD Pipeline (Other Jobs)').id;
+            console.log(workflows);
+            const workflow = workflows.find(workflow => workflow.name === 'CI/CD Pipeline (Other Jobs)');
+            if (!workflow) {
+              throw new Error('Workflow not found');
+            }
+            const workflowId = workflow.id;
             await github.actions.createWorkflowDispatch({ workflow_id: workflowId, ref: 'main', inputs: context.payload.inputs });
