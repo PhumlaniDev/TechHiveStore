@@ -93,7 +93,7 @@ jobs:
           script: |
             const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
             console.log(workflows);
-            const workflow = workflows.find(workflow => workflow.name === 'CI/CD Pipeline (Other Jobs)');
+            const workflow = workflows.workflows.find(workflow => workflow.name === 'CI/CD Pipeline (Other Jobs)');
             if (!workflow) {
               throw new Error('Workflow not found');
             }
