@@ -1,0 +1,96 @@
+name: CI/CD Pipeline (Orchestration)
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
+    inputs:
+      run_lint:
+        description: 'Run Linting'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_build:
+        description: 'Run Build'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_unit_tests:
+        description: 'Run Unit Tests'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_code_analysis:
+        description: 'Run Code Analysis'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_integration_tests:
+        description: 'Run Integration Tests'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_publish:
+        description: 'Publish Maven Artifact'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_vulnerability_scan:
+        description: 'Run Vulnerability Scan'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_release:
+        description: 'Run Release'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_job_summary:
+        description: 'Run Job Summary'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+jobs:
+  orchestrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Other Workflow
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
+            const workflowId = workflows.find(workflow => workflow.name === 'CI/CD Pipeline (Other Jobs)').id;
+            await github.actions.createWorkflowDispatch({ workflow_id: workflowId, ref: 'main', inputs: context.payload.inputs });

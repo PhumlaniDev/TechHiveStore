@@ -1,0 +1,224 @@
+name: CI/CD Pipeline (Other Jobs)
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-dependencies.outputs.cache-hit }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        id: setup-java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Cache Maven dependencies
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+  lint:
+    if: ${{ github.event.inputs.run_lint == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Run Lint
+        run: mvn checkstyle:check
+
+  build:
+    if: ${{ github.event.inputs.run_build == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ lint ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Build Docker Image
+        run: |
+          docker build -t your-dockerhub-username/your-app-name:${{ github.sha }} .
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push your-dockerhub-username/your-app-name:${{ github.sha }}
+
+  unit_tests:
+    if: ${{ github.event.inputs.run_unit_tests == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Run Unit Tests
+        run: mvn test
+
+  code_analysis:
+    if: ${{ github.event.inputs.run_code_analysis == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ unit_tests ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Code Analysis with SonarQube
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn sonar:sonar \
+          -Dsonar.projectKey=your-project-key \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=$SONAR_TOKEN
+
+          COVERAGE=$(mvn org.jacoco:jacoco-maven-plugin:report | grep -oP '(?<=<counter type="LINE" missed="\d+" covered="\d+" >)[^<]+')
+          if [ $(echo "$COVERAGE < 85" | bc) -eq 1 ]; then
+            echo "Code coverage is below 85% ($COVERAGE%)"
+            exit 1
+          fi
+
+  integration_test:
+    if: ${{ github.event.inputs.run_integration_tests == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ code_analysis ]
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: your-db
+          POSTGRES_USER: your-username
+          POSTGRES_PASSWORD: your-password
+        options: >-
+          --health-cmd "pg_isready -U $POSTGRES_USER" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432; do
+          echo "Waiting for PostgreSQL..."
+          sleep 2
+          done
+
+      - name: Run Integration Tests
+        run: mvn verify -Dspring.profiles.active=test
+
+  publish:
+    if: ${{ github.event.inputs.run_publish == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ integration_test ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Publish Maven Artifact to GitHub Packages
+        run: |
+          mvn deploy -Dregistry=https://maven.pkg.github.com/OWNER/REPO \
+          -Dtoken=${{ secrets.GITHUB_TOKEN }}
+
+  vulnerability_scan:
+    if: ${{ github.event.inputs.run_vulnerability_scan == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ publish ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy Scan
+        uses: aquasecurity/trivy-action@v0.1.0
+        with:
+          image-ref: your-dockerhub-username/your-app-name:${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    if: ${{ github.event.inputs.run_release == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ vulnerability_scan ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Ship Image to Docker Hub
+        run: |
+          docker tag your-dockerhub-username/your-app-name:${{ github.sha }} your-dockerhub-username/your-app-name:latest
+          docker push your-dockerhub-username/your-app-name:latest
+
+  job_summary:
+    runs-on: ubuntu-latest
+    needs: [ release ]
+    steps:
+      - name: Create Job Summary
+        run: |
+          echo "## CI/CD Pipeline Summary" >> $GITHUB_STEP_SUM
