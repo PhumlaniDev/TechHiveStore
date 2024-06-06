@@ -98,4 +98,4 @@ jobs:
               throw new Error('Workflow not found');
             }
             const workflowId = workflow.id;
-            await github.actions.createWorkflowDispatch({ workflow_id: workflowId, ref: 'main', inputs: context.payload.inputs });
+            await github.actions.createWorkflowDispatch({ owner: context.repo.owner, repo: context.repo.repo, workflow_id: workflowId, ref: 'main', inputs: context.payload.inputs });
