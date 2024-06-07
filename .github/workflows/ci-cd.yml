@@ -136,9 +136,9 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_DB: your-db
-          POSTGRES_USER: your-username
-          POSTGRES_PASSWORD: your-password
+          POSTGRES_DB: techhive
+          POSTGRES_USER: phumlanidev
+          POSTGRES_PASSWORD: password
         options: >-
           --health-cmd "pg_isready -U $POSTGRES_USER" 
           --health-interval 10s 
