@@ -7,6 +7,80 @@ on:
   pull_request:
     branches:
       - develop
+  workflow_dispatch: # This line adds the manual trigger
+    inputs:
+      run_lint:
+        description: 'Run Linting'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_build:
+        description: 'Run Build'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_unit_tests:
+        description: 'Run Unit Tests'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_code_analysis:
+        description: 'Run Code Analysis'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_integration_tests:
+        description: 'Run Integration Tests'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_publish:
+        description: 'Publish Maven Artifact'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_vulnerability_scan:
+        description: 'Run Vulnerability Scan'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_release:
+        description: 'Run Release'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
+      run_job_summary:
+        description: 'Run Job Summary'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - "true"
+          - "false"
 
 jobs:
 
