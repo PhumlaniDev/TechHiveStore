@@ -7,80 +7,6 @@ on:
   pull_request:
     branches:
       - develop
-  workflow_dispatch:
-    inputs:
-      run_lint:
-        description: 'Run Linting'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_build:
-        description: 'Run Build'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_unit_tests:
-        description: 'Run Unit Tests'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_code_analysis:
-        description: 'Run Code Analysis'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_integration_tests:
-        description: 'Run Integration Tests'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_publish:
-        description: 'Publish Maven Artifact'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_vulnerability_scan:
-        description: 'Run Vulnerability Scan'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_release:
-        description: 'Run Release'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
-      run_job_summary:
-        description: 'Run Job Summary'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - "true"
-          - "false"
 
 jobs:
 
@@ -109,7 +35,6 @@ jobs:
             ${{ runner.os }}-
 
   lint:
-    if: ${{ github.event.inputs.run_lint == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -132,7 +57,6 @@ jobs:
         run: mvn checkstyle:check
 
   build:
-    if: ${{ github.event.inputs.run_build == 'true' }}
     runs-on: ubuntu-latest
     needs: [ lint ]
     steps:
@@ -155,7 +79,6 @@ jobs:
           docker push your-dockerhub-username/your-app-name:${{ github.sha }}
 
   unit_tests:
-    if: ${{ github.event.inputs.run_unit_tests == 'true' }}
     runs-on: ubuntu-latest
     needs: [ build ]
     steps:
@@ -172,7 +95,6 @@ jobs:
         run: mvn test
 
   code_analysis:
-    if: ${{ github.event.inputs.run_code_analysis == 'true' }}
     runs-on: ubuntu-latest
     needs: [ unit_tests ]
     steps:
@@ -203,7 +125,6 @@ jobs:
           fi
 
   integration_test:
-    if: ${{ github.event.inputs.run_integration_tests == 'true' }}
     runs-on: ubuntu-latest
     needs: [ code_analysis ]
     services:
@@ -242,7 +163,6 @@ jobs:
         run: mvn verify -Dspring.profiles.active=test
 
   publish:
-    if: ${{ github.event.inputs.run_publish == 'true' }}
     runs-on: ubuntu-latest
     needs: [ integration_test ]
     steps:
@@ -261,7 +181,6 @@ jobs:
           -Dtoken=${{ secrets.GITHUB_TOKEN }}
 
   vulnerability_scan:
-    if: ${{ github.event.inputs.run_vulnerability_scan == 'true' }}
     runs-on: ubuntu-latest
     needs: [ publish ]
     steps:
@@ -276,7 +195,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    if: ${{ github.event.inputs.run_release == 'true' }}
     runs-on: ubuntu-latest
     needs: [ vulnerability_scan ]
     steps:
