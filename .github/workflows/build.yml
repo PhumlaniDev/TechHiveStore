@@ -92,10 +92,25 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
             const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
-            console.log(workflows);
             const workflow = workflows.workflows.find(workflow => workflow.name === 'CI/CD Pipeline (Other Jobs)');
             if (!workflow) {
               throw new Error('Workflow not found');
             }
             const workflowId = workflow.id;
-            await github.actions.createWorkflowDispatch({ owner: context.repo.owner, repo: context.repo.repo, workflow_id: workflowId, ref: 'main', inputs: context.payload.inputs });
+            await github.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflowId,
+              ref: 'main',
+              inputs: {
+                run_lint: context.payload.inputs.run_lint,
+                run_build: context.payload.inputs.run_build,
+                run_unit_tests: context.payload.inputs.run_unit_tests,
+                run_code_analysis: context.payload.inputs.run_code_analysis,
+                run_integration_tests: context.payload.inputs.run_integration_tests,
+                run_publish: context.payload.inputs.run_publish,
+                run_vulnerability_scan: context.payload.inputs.run_vulnerability_scan,
+                run_release: context.payload.inputs.run_release,
+                run_job_summary: context.payload.inputs.run_job_summary
+              }
+            });
