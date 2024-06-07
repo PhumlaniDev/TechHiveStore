@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - develop
-  workflow_dispatch: # This line adds the manual trigger
+  workflow_dispatch:
     inputs:
       run_lint:
         description: 'Run Linting'
@@ -188,11 +188,12 @@ jobs:
       - name: Code Analysis with SonarQube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL}}
         run: |
           mvn sonar:sonar \
           -Dsonar.projectKey=Tech-Hive-Store \
           -Dsonar.projectName='Tech-Hive-Store' \
-          -Dsonar.host.url=http://172.18.0.3:9000 \
+          -Dsonar.host.url=$SONAR_HOST_URL \
           -Dsonar.login=$SONAR_TOKEN
 
           COVERAGE=$(mvn org.jacoco:jacoco-maven-plugin:report | grep -oP '(?<=<counter type="LINE" missed="\d+" covered="\d+" >)[^<]+')
