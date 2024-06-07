@@ -97,6 +97,10 @@ jobs:
               throw new Error('Workflow not found');
             }
             const workflowId = workflow.id;
+            if (!context.payload.inputs) {
+              throw new Error('No inputs found in context.payload');
+            }
+            console.log('Inputs:', JSON.stringify(context.payload.inputs, null, 2));
             await github.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
