@@ -92,6 +92,18 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
       - name: Restore Maven cache
         uses: actions/cache@v3
         with:
@@ -107,6 +119,18 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
 
       - name: Restore Maven cache
         uses: actions/cache@v3
@@ -153,6 +177,18 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
       - name: Restore Maven cache
         uses: actions/cache@v3
         with:
@@ -176,6 +212,18 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
       - name: Restore Maven cache
         uses: actions/cache@v3
         with:
@@ -193,6 +241,18 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
 
       - name: Run Trivy Scan
         uses: aquasecurity/trivy-action@v0.1.0
