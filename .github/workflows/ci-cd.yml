@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline (Other Jobs)
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
       - develop
 
 jobs:
+
   setup:
     runs-on: ubuntu-latest
     outputs:
@@ -33,9 +34,33 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
+  #  lint:
+  #    runs-on: ubuntu-latest
+  #    needs: [ setup ]
+  #    steps:
+  #      - name: Check out code
+  #        uses: actions/checkout@v3
+  #
+  #      - name: Set up Java
+  #        uses: actions/setup-java@v3
+  #        with:
+  #          distribution: 'zulu'
+  #          java-version: '17'
+  #
+  #      - name: Install Maven
+  #        uses: actions/setup-java@v3
+  #        with:
+  #          distribution: 'zulu'
+  #          java-version: '17'
+  #          cache: 'maven'
+  #
+  #      - name: Run Lint
+  #        run: mvn checkstyle:check
+
   build:
     runs-on: ubuntu-latest
     needs: [ setup ]
+
     services:
       postgres:
         image: postgres:latest
@@ -69,18 +94,214 @@ jobs:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
 
-      - name: Build Docker image
-        id: build-image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }} .
+      - name: Build with Maven
+        run: mvn clean install
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
 
-      - name: Push Docker image to Docker Hub
+      - name: Build and Tag Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest .
+
+      - name: Push Docker Image
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
+
+  unit_tests:
+    runs-on: ubuntu-latest
+    needs: [ setup, build ]
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: tech_hive_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Run Unit Tests
+        run: mvn test
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
+
+  code_analysis:
+    runs-on: ubuntu-latest
+    needs: [ unit_tests ]
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: tech_hive_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Restore Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Code Analysis with SonarQube
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io
+
+  #          COVERAGE=$(mvn org.jacoco:jacoco-maven-plugin:report | grep -oP '(?<=<counter type="LINE" missed="\d+" covered="\d+" >)[^<]+')
+  #          if [ $(echo "$COVERAGE < 85" | bc) -eq 1 ]; then
+  #            echo "Code coverage is below 85% ($COVERAGE%)"
+  #            exit 1
+  #          fi
+
+  #  integration_test:
+  #    runs-on: ubuntu-latest
+  #    needs: [ code_analysis ]
+  #    services:
+  #      postgres:
+  #        image: postgres:latest
+  #        ports:
+  #          - 5432:5432
+  #        env:
+  #          POSTGRES_DB: techhive
+  #          POSTGRES_USER: phumlanidev
+  #          POSTGRES_PASSWORD: password
+  #        options: >-
+  #          --health-cmd "pg_isready -U $POSTGRES_USER"
+  #          --health-interval 10s
+  #          --health-timeout 5s
+  #          --health-retries 5
+  #
+  #    steps:
+  #      - name: Check out code
+  #        uses: actions/checkout@v3
+  #
+  #      - name: Set up Java
+  #        uses: actions/setup-java@v3
+  #        with:
+  #          distribution: 'zulu'
+  #          java-version: '17'
+  #
+  #      - name: Restore Maven cache
+  #        uses: actions/cache@v3
+  #        with:
+  #          path: ~/.m2/repository
+  #          key: ${{ needs.setup.outputs.cache-key }}
+  #
+  #      - name: Restore Maven cache
+  #        uses: actions/cache@v3
+  #        with:
+  #          path: ~/.m2/repository
+  #          key: ${{ needs.setup.outputs.cache-key }}
+  #
+  #      - name: Wait for Postgres
+  #        run: |
+  #          until pg_isready -h localhost -p 5432; do
+  #          echo "Waiting for PostgreSQL..."
+  #          sleep 2
+  #          done
+  #
+  #      - name: Run Integration Tests
+  #        run: mvn verify -Dspring.profiles.active=test
+
+  #  publish:
+  #    runs-on: ubuntu-latest
+  #    needs: [ integration_test ]
+  #    steps:
+  #      - name: Check out code
+  #        uses: actions/checkout@v3
+  #
+  #      - name: Set up Java
+  #        uses: actions/setup-java@v3
+  #        with:
+  #          distribution: 'zulu'
+  #          java-version: '17'
+  #
+  #      - name: Restore Maven cache
+  #        uses: actions/cache@v3
+  #        with:
+  #          path: ~/.m2/repository
+  #          key: ${{ needs.setup.outputs.cache-key }}
+  #
+  #      - name: Restore Maven cache
+  #        uses: actions/cache@v3
+  #        with:
+  #          path: ~/.m2/repository
+  #          key: ${{ needs.setup.outputs.cache-key }}
+  #
+  #      - name: Publish Maven Artifact to GitHub Packages
+  #        run: |
+  #          mvn deploy -Dregistry=https://maven.pkg.github.com/OWNER/REPO \
+  #          -Dtoken=${{ secrets.GITHUB_TOKEN }}
 
   vulnerability_scan:
     runs-on: ubuntu-latest
-    needs: [ build ]
+    #    needs: [ publish ]
+    #    needs: [ integration_test ]
+    needs: [ code_analysis ]
     steps:
       - name: Check out code
         uses: actions/checkout@v3
