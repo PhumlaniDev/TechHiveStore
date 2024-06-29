@@ -103,9 +103,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }} .
-          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }}
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest .
 
   unit_tests:
     runs-on: ubuntu-latest
@@ -341,6 +339,7 @@ jobs:
         run: |
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
+
   job_summary:
     runs-on: ubuntu-latest
     needs: [ release ]
