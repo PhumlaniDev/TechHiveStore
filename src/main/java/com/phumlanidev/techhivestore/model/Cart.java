@@ -13,6 +13,6 @@ public class Cart {
   private Long cartId;
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private User userId;
+  private Users userId;
   private double totalPrice;
 }

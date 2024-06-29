@@ -23,5 +23,5 @@ public class Address {
   private String country;
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private User userId;
+  private Users userId;
 }

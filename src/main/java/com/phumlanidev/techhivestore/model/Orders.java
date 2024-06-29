@@ -19,7 +19,7 @@ public class Orders {
   private UUID orderNumber;
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private User userId; //foreign key
+  private Users userId; //foreign key
   @Column(name = "order_created_date")
   private LocalDateTime orderCreatedDate;
   @Column(name = "status")
