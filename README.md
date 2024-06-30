@@ -1,1 +1,7 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=bugs)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
