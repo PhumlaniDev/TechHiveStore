@@ -344,29 +344,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  job-summary:
-    runs-on: ubuntu-latest
-    needs: [ code-analysis, vulnerability-scan ]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Generate code analysis report
-        run: curl -u ${{ secrets.SONAR_TOKEN }} https://sonarcloud.io/api/project_analyses/search?project=${{ secrets.SONAR_PROJECT_KEY }} -o sonar-report.json
-
-      - name: Generate vulnerability report
-        run: cat trivy-report.json | jq '.'
-
-      - name: Create summary table
-        run: |
-          echo "# Analysis and Vulnerability Report" > report.md
-          echo "## SonarCloud Analysis" >> report.md
-          cat sonar-report.json | jq . >> report.md
-          echo "## Vulnerabilities" >> report.md
-          cat trivy-report.json | jq -r '.[] | "Package: \(.Target)\nSeverity: \(.Severity)\nDescription: \(.VulnerabilityID)\n"' >> report.md
-
-      - name: Upload summary
-        uses: actions/upload-artifact@v3
-        with:
-          name: summary-report
-          path: report.md
+#  job-summary:
+#    runs-on: ubuntu-latest
+#    needs: [ code-analysis, vulnerability-scan ]
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Generate code analysis report
+#        run: curl -u ${{ secrets.SONAR_TOKEN }} https://sonarcloud.io/api/project_analyses/search?project=${{ secrets.SONAR_PROJECT_KEY }} -o sonar-report.json
+#
+#      - name: Generate vulnerability report
+#        run: cat trivy-report.json | jq '.'
+#
+#      - name: Create summary table
+#        run: |
+#          echo "# Analysis and Vulnerability Report" > report.md
+#          echo "## SonarCloud Analysis" >> report.md
+#          cat sonar-report.json | jq . >> report.md
+#          echo "## Vulnerabilities" >> report.md
+#          cat trivy-report.json | jq -r '.[] | "Package: \(.Target)\nSeverity: \(.Severity)\nDescription: \(.VulnerabilityID)\n"' >> report.md
+#
+#      - name: Upload summary
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: summary-report
+#          path: report.md
