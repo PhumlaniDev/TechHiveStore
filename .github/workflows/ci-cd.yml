@@ -103,9 +103,10 @@ jobs:
 
       - name: Build and Tag Docker Image
         run: |
+          run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }} .
-          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }} ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
+          docker images
 #         docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.sha }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest .
 
 #      - name: Push Docker Image
@@ -318,6 +319,9 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Ensure Docker Image is Available
+        run: docker images
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.20.0
