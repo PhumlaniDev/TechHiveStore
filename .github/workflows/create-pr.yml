@@ -1,0 +1,26 @@
+name: Create Pull Request
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Pipeline"]
+    types:
+      - completed
+
+jobs:
+  create_pr:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main  # target branch
+          head: develop  # source branch
+          title: 'Automated PR: Update from develop'
+          body: |
+            This pull request has been automatically created by the CI/CD pipeline.
+            It contains all the latest changes from the `develop` branch.
