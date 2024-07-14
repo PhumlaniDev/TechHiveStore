@@ -38,7 +38,7 @@ keycloak:
   realm: devops-realm
   resource: ecommerce
   credentials:
-    secret: hN9zhht1zUL01PsmCnJ2pc5AIQNkCc2u
+    secret: *******
 
 #  sql:
 #    init:
