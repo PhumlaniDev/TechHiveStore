@@ -341,7 +341,6 @@ jobs:
 
   job-summary:
     runs-on: ubuntu-latest
-    needs: [ code_analysis, vulnerability_scan ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
