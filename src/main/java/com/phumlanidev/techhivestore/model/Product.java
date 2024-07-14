@@ -14,7 +14,8 @@ public class Product {
   private String description;
   private String price;
   private Integer quantity;
-  @ManyToOne
-  private Category category;
   private String imageURL;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id", nullable = false)
+  private Category category;
 }
