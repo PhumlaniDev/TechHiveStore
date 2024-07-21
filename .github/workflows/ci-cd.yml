@@ -95,6 +95,7 @@ jobs:
           key: ${{ needs.setup.outputs.cache-key }}
 
       - name: Set up Jasypt Encryptor Password
+        run: -Djasypt.encryptor.password=${{ secrets.JASYPT_ENCRYPTOR_SECRET }}
         env:
           JASYPT_ENCRYPTOR_SECRET: ${{ secrets.JASYPT_ENCRYPTOR_SECRET }}
 
