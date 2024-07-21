@@ -94,12 +94,18 @@ jobs:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
 
+      - name: Set up Jasypt Encryptor Password
+        run: -Djasypt.encryptor.password=$JASYPT_ENCRYPTOR_SECRET
+        env:
+          JASYPT_ENCRYPTOR_SECRET: ${{ secrets.JASYPT_ENCRYPTOR_SECRET }}
+
       - name: Build with Maven
         run: mvn clean install
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
+          JASYPT_ENCRYPTOR_SECRET: ${{ secrets.JASYPT_ENCRYPTOR_SECRET }}
 
       - name: Build and Tag Docker Image
         run: |

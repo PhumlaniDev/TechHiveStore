@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/tech_hive_db
-    username: ENC(q8r4XsDuhBzK94hghWjc3SmXw6FCUZ9/xBT0IGpV3h2/vWtTzIFp8n7DxcTPHasy)
-    password: ENC(BjjwVoYkWm5iTMHGgdFZpe6dX1EPYWXCT1wkXh8tkW/uV+15Qmv8TACLty46h1yy)
+    username: ENC(rdJDby6Ae+yTpsU3c3i/T8Av4yxB8ot53mhnn8CW5oj1jrnd0y7TnYsadAafJ50d)
+    password: ENC(a7DKztkGp8LfaQMEIHi9Ehiy7StMOGyjHgsEcRsRZcbkY7b/+yWfjYDgK7k34DZN)
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -30,15 +30,18 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/devops-realm
+          issuer-uri: http://localhost:8080/admin
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 keycloak:
-  auth-server-url: http://0.0.0.0:8080/auth
+  auth-server-url: http://localhost:8080
   realm: devops-realm
   resource: ecommerce
   credentials:
-    secret: ENC(KR/eLb6Q7NPUN+WgPkjV7sEGyq87IOquqDo5ITvBpKLyeEFMULS8SH3h7OKhZ42sIyrWOW9kIaKBJTVvjm4oVV01FRXxKK4jBwHUsM1rqNE=)
+    secret: ENC(t8ajTobCbJBYf7UVEmmgunlGXdIHbykuHORPvMaXU7xf0jHiz3V5W6+Q7zrAAjbT0iObsO5JvNU75EDzVBJlONqiYBur+8BrMrZ4VkF1Qjo=)
+  admin:
+    username: admin
+    password: admin
 
 #  sql:
 #    init:
