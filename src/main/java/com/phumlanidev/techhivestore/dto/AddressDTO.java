@@ -1,7 +1,10 @@
 package com.phumlanidev.techhivestore.dto;
 
-import lombok.*;
+import lombok.Data;
 
+/**
+ * <p> comment </p>.
+ */
 @Data
 public class AddressDTO {
 

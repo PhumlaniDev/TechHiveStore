@@ -9,6 +9,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+/**
+ * <p> comment </p>.
+ */
 @Entity
 @Data
 public class OrderItem {

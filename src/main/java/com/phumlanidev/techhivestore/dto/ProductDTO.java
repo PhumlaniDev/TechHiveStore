@@ -2,8 +2,11 @@ package com.phumlanidev.techhivestore.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Data;
 
+/**
+ * <p> comment </p>.
+ */
 @Data
 public class ProductDTO {
 

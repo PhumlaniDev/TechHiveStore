@@ -10,26 +10,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <p> comment </p>.
+ */
 @RestController
 @RequestMapping("/api/v1/category")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+  private final CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+  public CategoryController(CategoryService categoryService) {
+    this.categoryService = categoryService;
+  }
 
-    @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO categoryDTO) {
-        Category category = mapCategoryDTOToEntity(categoryDTO);
-        return ResponseEntity.ok(categoryService.saveCategory(category));
-    }
+  @PostMapping
+  public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO categoryDTO) {
+    Category category = mapCategoryDTOToEntity(categoryDTO);
+    return ResponseEntity.ok(categoryService.saveCategory(category));
+  }
 
-    private Category mapCategoryDTOToEntity(CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setCategoryName(categoryDTO.getCategoryName());
-        category.setDescription(categoryDTO.getDescription());
-        return category;
-    }
+  private Category mapCategoryDTOToEntity(CategoryDTO categoryDTO) {
+    Category category = new Category();
+    category.setCategoryName(categoryDTO.getCategoryName());
+    category.setDescription(categoryDTO.getDescription());
+    return category;
+  }
 }

@@ -7,10 +7,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.List;
 import lombok.Data;
 
-import java.util.List;
-
+/**
+ * <p> comment </p>.
+ */
 @Entity
 @Data
 public class Category {

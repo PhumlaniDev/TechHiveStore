@@ -3,6 +3,9 @@ package com.phumlanidev.techhivestore.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * <p> comment </p>.
+ */
 @Data
 public class CategoryDTO {
 

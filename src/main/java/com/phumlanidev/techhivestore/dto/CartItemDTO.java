@@ -2,6 +2,9 @@ package com.phumlanidev.techhivestore.dto;
 
 import lombok.Data;
 
+/**
+ * <p> comment </p>.
+ */
 @Data
 public class CartItemDTO {
 

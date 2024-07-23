@@ -76,7 +76,7 @@
     <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-admin-client</artifactId>
-      <version>15.0.2</version>
+      <version>25.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.github.ulisesbocchio</groupId>
@@ -84,16 +84,6 @@
       <version>3.0.5</version>
     </dependency>
   </dependencies>
-
-  <reporting>
-<!--    <plugins>-->
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-checkstyle-plugin</artifactId>-->
-<!--        <version>3.4.0</version>-->
-<!--      </plugin>-->
-<!--    </plugins>-->
-  </reporting>
 
   <build>
     <plugins>
