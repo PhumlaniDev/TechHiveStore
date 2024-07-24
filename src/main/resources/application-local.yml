@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/tech_hive_db
-    username: ENC(rdJDby6Ae+yTpsU3c3i/T8Av4yxB8ot53mhnn8CW5oj1jrnd0y7TnYsadAafJ50d)
-    password: ENC(a7DKztkGp8LfaQMEIHi9Ehiy7StMOGyjHgsEcRsRZcbkY7b/+yWfjYDgK7k34DZN)
+    username: ENC(P4ZB+ckb/Z2vGchAi5689p06EIqmOfwFnchapxGm7AovwiRGqOOI3MIOnrXouZv2)
+    password: ENC(YuWGyEXvyjEz83rNyBmL5aPOjYIJBP/qd6KwzaVQj11GH4txmo5nDI9M/GWZZG7C)
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -38,7 +38,7 @@ keycloak:
   realm: devops-realm
   resource: ecommerce
   credentials:
-    secret: ENC(t8ajTobCbJBYf7UVEmmgunlGXdIHbykuHORPvMaXU7xf0jHiz3V5W6+Q7zrAAjbT0iObsO5JvNU75EDzVBJlONqiYBur+8BrMrZ4VkF1Qjo=)
+    secret: ENC(aGYEHkAXGEpbsnqHGxvI03PduzOAjPlSlLiKpQTkjLOJx9NQ+tXDtZ5ObAK+r89v/SOTsrzpPQdo++53bLooXCvvT6LQ9q1uaIAvl8rlXsM=)
   admin:
     username: admin
     password: admin

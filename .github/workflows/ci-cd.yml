@@ -94,9 +94,8 @@ jobs:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
 
-      - name: Set up Jasypt Encryptor Password
-        env:
-          JASYPT_ENCRYPTOR_SECRET: ${{ secrets.JASYPT_ENCRYPTOR_SECRET }}
+      - name: Set Jasypt Encryptor Password
+        run: echo "JASYPT_ENCRYPTOR_SECRET=${{ secrets.JASYPT_ENCRYPTOR_SECRET }}" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn clean install
