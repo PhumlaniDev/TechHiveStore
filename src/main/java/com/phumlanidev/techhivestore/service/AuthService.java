@@ -44,6 +44,12 @@ public class AuthService {
   @Value("${keycloak.credentials.secret}")
   private String keycloakClientSecret;
 
+  public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, Keycloak keycloak) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.keycloak = keycloak;
+  }
+
 
   /**
    * <p> comment </p>.

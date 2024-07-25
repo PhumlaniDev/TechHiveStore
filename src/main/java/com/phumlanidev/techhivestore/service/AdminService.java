@@ -16,6 +16,10 @@ public class AdminService {
 
   private final UserRepository userRepository;
 
+  public AdminService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
   /**
    * <p> comment </p>.
    */
