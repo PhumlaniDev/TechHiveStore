@@ -20,8 +20,8 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Optional<Product> findProductBy(ProductDTO productDTO) {
-        Product product = new Product();
-        Optional<ProductDTO> existingProduct = productRepository.findByName()
-    }
+//    public Optional<Product> findProductBy(ProductDTO productDTO) {
+//        Product product = new Product();
+//        Optional<ProductDTO> existingProduct = productRepository.findByName();
+//    }
 }

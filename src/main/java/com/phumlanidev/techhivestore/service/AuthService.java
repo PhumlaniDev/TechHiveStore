@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
   private final UserRepository userRepository;
