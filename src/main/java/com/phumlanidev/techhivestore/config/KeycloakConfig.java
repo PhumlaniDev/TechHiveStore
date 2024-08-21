@@ -23,6 +23,10 @@ public class KeycloakConfig {
     private String keycloakClientId;
     @Value("${keycloak.credentials.secret}")
     private String keycloakClientSecret;
+    @Value("${keycloak.admin.username}")
+    private String keycloakClientAdminUsername;
+    @Value("${keycloak.admin.password}")
+    private String keycloakClientAdminPassword;
 
     @Bean
     public Keycloak keycloak(){
@@ -36,6 +40,8 @@ public class KeycloakConfig {
                 .realm(keycloakRealm)
                 .clientId(keycloakClientId)
                 .clientSecret(keycloakClientSecret)
+                .username(keycloakClientAdminUsername)
+                .password(keycloakClientAdminPassword)
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .build();
     }

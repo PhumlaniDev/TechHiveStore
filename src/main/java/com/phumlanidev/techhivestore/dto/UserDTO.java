@@ -18,7 +18,8 @@ public class UserDTO {
   private String firstName;
   private String lastName;
   private String phoneNumber;
-  //    private Long addressId;
+  private AddressDTO address;
+
 
   /**
    * <p> comment </p>.
@@ -26,6 +27,13 @@ public class UserDTO {
   public UserDTO(Users user) {
     this.userId = user.getUserId();
     this.username = user.getUsername();
-    this.password = user.getPassword();
+    this.email = user.getEmail();
+    this.firstName = user.getFirstName();
+    this.lastName = user.getLastName();
+    this.phoneNumber = user.getPhoneNumber();
+
+    if (user.getAddressId() != null) {
+      this.address = new AddressDTO(user.getAddressId());
+    }
   }
 }

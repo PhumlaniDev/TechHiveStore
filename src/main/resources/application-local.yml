@@ -30,15 +30,15 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/admin
+          issuer-uri: http://localhost:7000/admin
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 keycloak:
-  auth-server-url: http://localhost:8080
+  auth-server-url: http://localhost:7000
   realm: mac-apps
   resource: ecommerce
   credentials:
-    secret: ENC(+v/bHPfEU9p6fTIB+AzJ4R8RABjSetmMJ7W9ZVBSn56/V7UQlbOAuzmQ8Yz1S2SIr++RFu3Jn+6DfY2iQBZTk7nHMllfHxSN9Pq5MYO8BpY=)
+    secret: 99MzaZzsXyGSGxtYrxAgBcFmHdRd9BGa
   admin:
     username: admin
     password: admin
@@ -61,4 +61,4 @@ logging:
         web: debug
 
 server:
-  port: 7000
+  port: 9000

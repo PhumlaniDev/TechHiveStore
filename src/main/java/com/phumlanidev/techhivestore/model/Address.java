@@ -1,5 +1,6 @@
 package com.phumlanidev.techhivestore.model;
 
+import com.phumlanidev.techhivestore.dto.AddressDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,4 @@ public class Address {
   private String zipCode;
   @Column(name = "country")
   private String country;
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private Users userId;
 }

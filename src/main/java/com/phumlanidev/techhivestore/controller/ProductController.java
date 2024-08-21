@@ -1,8 +1,6 @@
 package com.phumlanidev.techhivestore.controller;
 
 import com.phumlanidev.techhivestore.dto.ProductDTO;
-import com.phumlanidev.techhivestore.model.Category;
-import com.phumlanidev.techhivestore.model.Product;
 import com.phumlanidev.techhivestore.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,25 +21,24 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@Valid @RequestBody ProductDTO productDTO) {
-        Product product = mapProductDTOToEntity(productDTO);
-        return new  ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
+    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO) {
+        return new  ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
     }
 
-    private Product mapProductDTOToEntity(ProductDTO productDTO) {
-        Product product = new Product();
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription());
-        product.setPrice(productDTO.getPrice());
-        product.setQuantity(productDTO.getQuantity());
-        product.setImageURL(productDTO.getImageURL());
-
-        // Map CategoryDTO to Category entity
-        Category category = new Category();
-        category.setCategoryName(productDTO.getCategory().getCategoryName());
-        category.setDescription(productDTO.getCategory().getDescription());
-        product.setCategory(category);
-
-        return product;
-    }
+//    private Product mapProductDTOToEntity(ProductDTO productDTO) {
+//        Product product = new Product();
+//        product.setName(productDTO.getName());
+//        product.setDescription(productDTO.getDescription());
+//        product.setPrice(productDTO.getPrice());
+//        product.setQuantity(productDTO.getQuantity());
+//        product.setImageURL(productDTO.getImageURL());
+//
+//        // Map CategoryDTO to Category entity
+//        Category category = new Category();
+//        category.setCategoryName(productDTO.getCategory().getCategoryName());
+//        category.setDescription(productDTO.getCategory().getDescription());
+//        product.setCategory(category);
+//
+//        return product;
+//    }
 }

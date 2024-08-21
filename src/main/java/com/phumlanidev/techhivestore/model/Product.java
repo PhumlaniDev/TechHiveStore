@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * <p> comment </p>.
  */
@@ -27,4 +29,12 @@ public class Product {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
+  @ManyToOne
+  @JoinColumn(name = "created_by")
+  private Users createdBy;
+  @ManyToOne
+  @JoinColumn(name = "updated_by")
+  private Users updatedBy;
+  private LocalDateTime createdDate;
+  private LocalDateTime updatedDate;
 }

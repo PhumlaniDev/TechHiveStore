@@ -1,8 +1,12 @@
 package com.phumlanidev.techhivestore.dto;
 
+import com.phumlanidev.techhivestore.model.Category;
+import com.phumlanidev.techhivestore.model.Users;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * <p> comment </p>.
@@ -20,5 +24,9 @@ public class ProductDTO {
   private Integer quantity;
   private String imageURL;
   @NotNull(message = "Category must not be null")
-  private CategoryDTO category;
+  private Category category;
+  private Users createdByUser;
+  private Users updatedByUser;
+  private LocalDateTime createdDate;
+  private LocalDateTime updatedDate;
 }

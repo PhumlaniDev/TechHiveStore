@@ -95,7 +95,7 @@ jobs:
           key: ${{ needs.setup.outputs.cache-key }}
 
       - name: Set Jasypt Encryptor Password
-        run: echo "JASYPT_ENCRYPTOR_SECRET=${{ secrets.JASYPT_ENCRYPTOR_SECRET }}" >> $GITHUB_ENV
+        run: echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn clean install
@@ -103,7 +103,7 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
-          JASYPT_ENCRYPTOR_SECRET: ${{ secrets.JASYPT_ENCRYPTOR_SECRET }}
+          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
 
       - name: Build and Tag Docker Image
         run: |

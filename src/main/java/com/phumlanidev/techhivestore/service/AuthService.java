@@ -1,14 +1,17 @@
 package com.phumlanidev.techhivestore.service;
 
 
+import com.phumlanidev.techhivestore.dto.AddressDTO;
 import com.phumlanidev.techhivestore.dto.LoginDto;
 import com.phumlanidev.techhivestore.dto.UserDTO;
+import com.phumlanidev.techhivestore.model.Address;
 import com.phumlanidev.techhivestore.model.Users;
-import com.phumlanidev.techhivestore.repository.UserRepository;
+import com.phumlanidev.techhivestore.repository.AddressRepository;
+import com.phumlanidev.techhivestore.repository.UsersRepository;
 import java.util.Collections;
 
+import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
@@ -30,7 +33,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-  private final UserRepository userRepository;
+  private final UsersRepository usersRepository;
+  private final AddressRepository addressRepository;
   private final PasswordEncoder passwordEncoder;
   private final Keycloak keycloak;
 
@@ -43,8 +47,12 @@ public class AuthService {
   @Value("${keycloak.credentials.secret}")
   private String keycloakClientSecret;
 
-  public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, Keycloak keycloak) {
-    this.userRepository = userRepository;
+  private static final String ENABLED_ATTRIBUTE = "enabled";
+  private static final String TRUE_VALUE = "true";
+
+  public AuthService(UsersRepository usersRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder, Keycloak keycloak) {
+    this.usersRepository = usersRepository;
+    this.addressRepository = addressRepository;
     this.passwordEncoder = passwordEncoder;
     this.keycloak = keycloak;
   }
@@ -54,17 +62,37 @@ public class AuthService {
    * <p> comment </p>.
    */
   public UserDTO registerUser(UserDTO userDTO) {
+    AddressDTO addressDTO = userDTO.getAddress(); // Retrieve the AddressDTO from UserDTO
+
+    if (addressDTO == null) {
+      throw new IllegalArgumentException("AddressDTO cannot be null");
+    }
+
+    Address address = new Address();
+
+    address.setCity(addressDTO.getCity());
+    address.setCountry(addressDTO.getCountry());
+    address.setProvince(addressDTO.getProvince());
+    address.setZipCode(addressDTO.getZipCode());
+    addressRepository.save(address);
+
     Users user = new Users();
-    user.setUsername(userDTO.getUsername());
-    user.setEmail(userDTO.getEmail());
+    user.setUsername(userDTO.getUsername().toLowerCase());
+    user.setEmail(userDTO.getEmail().toLowerCase());
     user.setFirstName(userDTO.getFirstName());
     user.setLastName(userDTO.getLastName());
     user.setPhoneNumber(userDTO.getPhoneNumber());
     user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
     user.setRoles(Collections.singletonList("ROLE_USER"));
-    userRepository.save(user);
+    user.setAddressId(address);
+
+    usersRepository.save(user);
+
     log.info("User {} saved to database", user.getUsername());
     registerUserInKeycloak(userDTO);
+    addressRepository.save(address);
+
+
     return new UserDTO(user);
   }
 
@@ -73,42 +101,54 @@ public class AuthService {
    */
   private void registerUserInKeycloak(UserDTO userDTO) {
     try {
-
       RealmResource realmResource = keycloak.realm(keycloakRealm);
       UsersResource usersResource = realmResource.users();
 
-      UserRepresentation userRepresentation = new UserRepresentation();
-      userRepresentation.setUsername(userDTO.getUsername());
-      userRepresentation.setEmail(userDTO.getEmail());
-      userRepresentation.setFirstName(userDTO.getFirstName());
-      userRepresentation.setLastName(userDTO.getLastName());
-      userRepresentation.singleAttribute("enabled", "true");
-      userRepresentation.setEnabled(true);
+      UserRepresentation userRepresentation = createUserRepresentation(userDTO);
 
-      Response response = usersResource.create(userRepresentation);
-      log.debug("Response from Keycloak: {}", response.getStatusInfo());
+      try (Response response = usersResource.create(userRepresentation)) {
+        log.debug("Response from Keycloak: {}", response.getStatusInfo());
 
-      if (response.getStatus() == 201) {
-        String userId = usersResource.create(userRepresentation).toString();
-        log.info("User {} created in Keycloak with ID {}", userDTO.getUsername(), userId);
-
-        CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setTemporary(false);
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(userDTO.getPassword());
-
-        usersResource.get(userId).resetPassword(credential);
-        log.info("Password set for user {} in Keycloak", userDTO.getUsername());
-      } else {
-        // Log the error response
-        log.error("Failed to create user {} in Keycloak: {}", userDTO.getUsername(),
-            response.getStatusInfo().toString());
+        if (response.getStatus() == 201) {
+          String userId = extractUserId(response);
+          log.info("User {} created in Keycloak with ID {}", userDTO.getUsername(), userId);
+          setPasswordForUser(usersResource, userId, userDTO.getPassword());
+        } else {
+          log.error("Failed to create user {} in Keycloak: {}", userDTO.getUsername(), response.getStatusInfo().toString());
+          throw new RuntimeException("Failed to create user in Keycloak: " + response.getStatus());
+        }
+      } catch (NotAuthorizedException e) {
+        log.error("Authorization failed during user creation: {}", e.getMessage());
+        // Handle the 401 Unauthorized error here
       }
     } catch (Exception e) {
-      // Log the exception
-      log.error("Exception occurred while creating user {} in Keycloak: {}",
-          userDTO.getUsername(), e.getMessage(), e);
+      log.error("Exception occurred while creating user {} in Keycloak: {}", userDTO.getUsername(), e.getMessage(), e);
     }
+  }
+
+  private UserRepresentation createUserRepresentation(UserDTO userDTO) {
+    UserRepresentation userRepresentation = new UserRepresentation();
+    userRepresentation.setUsername(userDTO.getUsername());
+    userRepresentation.setEmail(userDTO.getEmail());
+    userRepresentation.setFirstName(userDTO.getFirstName());
+    userRepresentation.setLastName(userDTO.getLastName());
+    userRepresentation.singleAttribute(ENABLED_ATTRIBUTE, TRUE_VALUE);
+    userRepresentation.setEnabled(true);
+    return userRepresentation;
+  }
+
+  private String extractUserId(Response response) {
+    // Assuming that the response contains the user ID in its location header or similar
+    return response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+  }
+
+  private void setPasswordForUser(UsersResource usersResource, String userId, String password) {
+    CredentialRepresentation credential = new CredentialRepresentation();
+    credential.setTemporary(false);
+    credential.setType(CredentialRepresentation.PASSWORD);
+    credential.setValue(password);
+    usersResource.get(userId).resetPassword(credential);
+    log.info("Password set for user ID {} in Keycloak", userId);
   }
 
   public String login(LoginDto loginDto) {

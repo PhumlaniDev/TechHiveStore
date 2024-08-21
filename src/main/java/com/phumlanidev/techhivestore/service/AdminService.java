@@ -3,8 +3,7 @@ package com.phumlanidev.techhivestore.service;
 import com.phumlanidev.techhivestore.dto.UserDTO;
 import com.phumlanidev.techhivestore.exception.UserNotFoundException;
 import com.phumlanidev.techhivestore.model.Users;
-import com.phumlanidev.techhivestore.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.phumlanidev.techhivestore.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,17 +12,17 @@ import java.util.stream.Collectors;
 @Service
 public class AdminService {
 
-  private final UserRepository userRepository;
+  private final UsersRepository usersRepository;
 
-  public AdminService(UserRepository userRepository) {
-    this.userRepository = userRepository;
+  public AdminService(UsersRepository usersRepository) {
+    this.usersRepository = usersRepository;
   }
 
   /**
    * <p> comment </p>.
    */
   public List<UserDTO> getAllUsers() {
-    return userRepository.findAll().stream()
+    return usersRepository.findAll().stream()
         .map(UserDTO::new).collect(Collectors.toList());
   }
 
@@ -31,7 +30,7 @@ public class AdminService {
    * <p> comment </p>.
    */
   public UserDTO getUserById(Long id) throws UserNotFoundException {
-    Users user = userRepository.findById(id).orElseThrow(() ->
+    Users user = usersRepository.findById(id).orElseThrow(() ->
         new UserNotFoundException("User not found"));
     return new UserDTO(user);
   }
@@ -49,6 +48,6 @@ public class AdminService {
 //  }
 
   public void deleteUser(Long id) {
-    userRepository.deleteById(id);
+    usersRepository.deleteById(id);
   }
 }
