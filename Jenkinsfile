@@ -76,22 +76,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Job Summary') {
-            steps {
-                script {
-                    sh '''
-                    curl -u $SONAR_TOKEN https://sonarcloud.io/api/project_analyses/search?project=PhumlaniDev_TechHiveStore -o sonar-report.json
-                    echo "# Analysis and Vulnerability Report" > report.md
-                    echo "## SonarCloud Analysis" >> report.md
-                    cat sonar-report.json | jq . >> report.md
-                    echo "## Vulnerabilities" >> report.md
-                    cat trivy-report.json | jq -r '.[] | "Package: \(.Target)\nSeverity: \(.Severity)\nDescription: \(.VulnerabilityID)\n"' >> report.md
-                    '''
-                    archiveArtifacts artifacts: 'report.md', allowEmptyArchive: true
-                }
-            }
-        }
     }
 
     post {
