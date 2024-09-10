@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        // Define custom Docker agent with Java Azul Zulu 17, Maven, PostgreSQL, and Docker CLI
+        docker {
+            image 'aphumlanidev/docker-jenkins-agent:latest' // Replace with the actual custom Docker agent image
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Enable Docker-in-Docker
+        }
+    }
 
     environment {
         POSTGRES_DB = 'tech_hive_db'
@@ -11,83 +17,35 @@ pipeline {
         DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
         DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
         SONAR_TOKEN = credentials('SONAR_TOKEN')
+        IMAGE_NAME = 'tech-hive-store'
     }
 
     stages {
-        // stage('Setup') {
-        //     steps {
-        //         script {
-        //             checkout scm
-        //             // Use your prebuilt Docker image with Java 17 and Maven
-        //             docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-        //                 sh 'mvn dependency:go-offline'
-        //             }
-        //         }
-        //     }
-        // }
 
         stage('Build') {
             steps {
                 script {
-                    docker.image('postgres:latest').inside('-p 5432:5432') {
-                        // Use the prebuilt image for Maven build
-                        // docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-                        //     sh 'mvn clean install'
-                        // }
-
-                        sh 'mvn clean install'
-
-                        sh '''
-                        docker build -t $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER} .
-                        docker tag $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER} $DOCKERHUB_USERNAME/tech-hive-store:latest
-                        echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-                        docker push $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                        docker push $DOCKERHUB_USERNAME/tech-hive-store:latest
-                        '''
-                    }
+                    sh 'mvn clean install'
                 }
             }
         }
 
-        stage('Unit Tests') {
+        stage('Unit Test') {
             steps {
                 script {
                     sh 'mvn test'
-                    // docker.image('postgres:latest').inside('-p 5432:5432') {
-                    //     docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-                    //         sh 'mvn test'
-                    //     }
-                    // }
                 }
             }
         }
 
-        stage('Code Analysis') {
+        stage('Dockerize and Push') {
             steps {
                 script {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
-                    // docker.image('postgres:latest').inside('-p 5432:5432') {
-                    //     docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-                    //         sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
-                    //     }
-                    // }
-                }
-            }
-        }
-
-        stage('Vulnerability Scan') {
-            steps {
-                script {
-                    sh '''
-                    docker pull $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                    trivy image --format json --output trivy-report.json $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                    '''
-                    // docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                    //     sh '''
-                    //     docker pull $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                    //     trivy image --format json --output trivy-report.json $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                    //     '''
-                    // }
+                    sh """
+                    docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
+                    docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
+                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                    """
                 }
             }
         }
