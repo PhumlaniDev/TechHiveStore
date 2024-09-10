@@ -18,9 +18,10 @@ pipeline {
             steps {
                 script {
                     checkout scm
-                    sh 'apt-get update'
-                    sh 'apt-get install -y openjdk-17-jdk maven docker.io'
-                    sh 'mvn dependency:go-offline'
+                    // Use your prebuilt Docker image with Java 17 and Maven
+                    docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+                        sh 'mvn dependency:go-offline'
+                    }
                 }
             }
         }
@@ -29,7 +30,11 @@ pipeline {
             steps {
                 script {
                     docker.image('postgres:latest').inside('-p 5432:5432') {
-                        sh 'mvn clean install'
+                        // Use the prebuilt image for Maven build
+                        docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+                            sh 'mvn clean install'
+                        }
+
                         sh '''
                         docker build -t $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER} .
                         docker tag $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER} $DOCKERHUB_USERNAME/tech-hive-store:latest
@@ -46,7 +51,9 @@ pipeline {
             steps {
                 script {
                     docker.image('postgres:latest').inside('-p 5432:5432') {
-                        sh 'mvn test'
+                        docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+                            sh 'mvn test'
+                        }
                     }
                 }
             }
@@ -56,7 +63,9 @@ pipeline {
             steps {
                 script {
                     docker.image('postgres:latest').inside('-p 5432:5432') {
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
+                        docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+                            sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
+                        }
                     }
                 }
             }
