@@ -1,11 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'aphumlanidev/docker-jenkins-agent:latest'
-            label 'docker-agent'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         POSTGRES_DB = 'tech_hive_db'
