@@ -18,8 +18,8 @@ pipeline {
             steps {
                 script {
                     checkout scm
-                    sh 'sudo apt-get update'
-                    sh 'sudo apt-get install -y openjdk-17-jdk maven docker.io'
+                    sh 'apt-get update'
+                    sh 'apt-get install -y openjdk-17-jdk maven docker.io'
                     sh 'mvn dependency:go-offline'
                 }
             }
