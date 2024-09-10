@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        label 'docker-agent'
+        docker {
+            image 'aphumlanidev/docker-jenkins-agent:latest'
+            label 'docker-agent'
+        }
     }
 
     environment {
