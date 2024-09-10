@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        docker 'docker-agent'
+        label 'docker-agent'
     }
 
     environment {
