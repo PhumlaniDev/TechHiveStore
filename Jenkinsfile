@@ -14,17 +14,17 @@ pipeline {
     }
 
     stages {
-        stage('Setup') {
-            steps {
-                script {
-                    checkout scm
-                    // Use your prebuilt Docker image with Java 17 and Maven
-                    docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-                        sh 'mvn dependency:go-offline'
-                    }
-                }
-            }
-        }
+        // stage('Setup') {
+        //     steps {
+        //         script {
+        //             checkout scm
+        //             // Use your prebuilt Docker image with Java 17 and Maven
+        //             docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+        //                 sh 'mvn dependency:go-offline'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Build') {
             steps {
