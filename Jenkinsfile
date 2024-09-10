@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'docker-agent'
-    }
+    agent any
 
     environment {
         POSTGRES_DB = 'tech_hive_db'
