@@ -1,9 +1,8 @@
 pipeline {
     agent {
-        // Define custom Docker agent with Java Azul Zulu 17, Maven, PostgreSQL, and Docker CLI
         docker {
-            image 'aphumlanidev/docker-jenkins-agent:latest' // Replace with the actual custom Docker agent image
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Enable Docker-in-Docker
+            image 'docker-agent:latest' // Your custom Jenkins agent image
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for docker commands
         }
     }
 
@@ -20,33 +19,25 @@ pipeline {
         IMAGE_NAME = 'tech-hive-store'
     }
 
-    stages {
-
+     stages {
+        stage('Checkout') {
+            steps {
+                // Checkout your repository from GitHub
+                git 'https://github.com/PhumlaniDev/TechHiveStore.git'
+            }
+        }
+        
         stage('Build') {
             steps {
-                script {
-                    sh 'mvn clean install'
-                }
+                // Clean and build the project using Maven
+                sh 'mvn clean install'
             }
         }
 
-        stage('Unit Test') {
+         stage('Unite Test') {
             steps {
-                script {
-                    sh 'mvn test'
-                }
-            }
-        }
-
-        stage('Dockerize and Push') {
-            steps {
-                script {
-                    sh """
-                    docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
-                    docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
-                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                    """
-                }
+                // Clean and build the project using Maven
+                sh 'mvn test'
             }
         }
     }
