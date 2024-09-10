@@ -31,9 +31,11 @@ pipeline {
                 script {
                     docker.image('postgres:latest').inside('-p 5432:5432') {
                         // Use the prebuilt image for Maven build
-                        docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-                            sh 'mvn clean install'
-                        }
+                        // docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+                        //     sh 'mvn clean install'
+                        // }
+
+                        sh 'mvn clean install'
 
                         sh '''
                         docker build -t $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER} .
@@ -50,11 +52,12 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 script {
-                    docker.image('postgres:latest').inside('-p 5432:5432') {
-                        docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-                            sh 'mvn test'
-                        }
-                    }
+                    sh 'mvn test'
+                    // docker.image('postgres:latest').inside('-p 5432:5432') {
+                    //     docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+                    //         sh 'mvn test'
+                    //     }
+                    // }
                 }
             }
         }
@@ -62,11 +65,12 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 script {
-                    docker.image('postgres:latest').inside('-p 5432:5432') {
-                        docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
-                            sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
-                        }
-                    }
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
+                    // docker.image('postgres:latest').inside('-p 5432:5432') {
+                    //     docker.image('aphumlanidev/docker-jenkins-agent:latest').inside {
+                    //         sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
+                    //     }
+                    // }
                 }
             }
         }
@@ -74,12 +78,16 @@ pipeline {
         stage('Vulnerability Scan') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                        sh '''
-                        docker pull $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                        trivy image --format json --output trivy-report.json $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                        '''
-                    }
+                    sh '''
+                    docker pull $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
+                    trivy image --format json --output trivy-report.json $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
+                    '''
+                    // docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+                    //     sh '''
+                    //     docker pull $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
+                    //     trivy image --format json --output trivy-report.json $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
+                    //     '''
+                    // }
                 }
             }
         }
