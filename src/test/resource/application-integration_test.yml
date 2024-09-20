@@ -3,29 +3,19 @@ spring:
     name: Tech Hive e-Store
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/tech_hive_db
-    username: ENC(Jz7L2RNRolIhTtUAMLtbNb1JNtRpyhplEf0BQaQ3eVCLifrgv+s9/whJIB8906kH)
-    password: ENC(TKwqREIGSCPUFO5bElSB3/BKfgIrbGDp2BfWtSecHfU09pJcswP2M+UH4ftZd98A)
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-      idle-timeout: 30000
-      max-lifetime: 1800000
-      connection-timeout: 20000
-      pool-name: HikariCP
+    driver-class-name:
+    url: jdbc:tc:postgresql:15.3:///testdb
+    username: test
+    password: test
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        default_schema: public
-        format_sql: true
-        show_sql: true
-        use_sql_comments: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+  liquibase:
+    enabled: false
 
   security:
     oauth2:
@@ -35,7 +25,7 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 keycloak:
-  auth-server-url: http://localhost:8080
+  auth-server-url: http://localhost:8080/
   realm: mac-apps
   resource: ecommerce
   credentials:
@@ -60,6 +50,3 @@ logging:
     org:
       springframework:
         web: debug
-
-server:
-  port: 9000
