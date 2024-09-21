@@ -114,6 +114,19 @@
     </dependency>
   </dependencies>
 
+  <distributionManagement>
+    <repository>
+      <id>nexus-releases</id>
+      <name>macgyver-nexus</name>
+      <url>https://nexus.phumlaniarendse.co.za/repository/macgyver-nexus/</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus-snapshots</id>
+      <name>macgyver-nexus</name>
+      <url>https://nexus.phumlaniarendse.co.za/repository/macgyver-nexus/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <build>
     <plugins>
       <plugin>
@@ -133,8 +146,33 @@
         <artifactId>jasypt-maven-plugin</artifactId>
         <version>3.0.3</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.1.3</version>
+      </plugin>
     </plugins>
   </build>
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Maven Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+
+    <repository>
+      <id>nexus</id>
+      <name>Internal Nexus Repository</name>
+      <url>https://nexus.phumlaniarendse.co.za/repository/macgyver-nexus/</url>
+    </repository>
+  </repositories>
 
   <profiles>
     <profile>

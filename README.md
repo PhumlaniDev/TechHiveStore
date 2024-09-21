@@ -1,3 +1,4 @@
+[![CI/CD Pipeline (Other Jobs)](https://github.com/PhumlaniDev/TechHiveStore/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/PhumlaniDev/TechHiveStore/actions/workflows/ci-cd.yml)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=bugs)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=PhumlaniDev_TechHiveStore&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=PhumlaniDev_TechHiveStore)

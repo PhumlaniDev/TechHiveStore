@@ -1,4 +1,4 @@
-name: CI/CD Pipeline (Other Jobs)
+name: build
 
 on:
   push:
@@ -33,6 +33,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-
+
 
   #  lint:
   #    runs-on: ubuntu-latest
@@ -117,6 +118,7 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
+
 
 
   unit_tests:
@@ -276,35 +278,38 @@ jobs:
   #      - name: Run Integration Tests
   #        run: mvn verify -Dspring.profiles.active=test
 
-  #  publish:
-  #    runs-on: ubuntu-latest
-  #    needs: [ integration_test ]
-  #    steps:
-  #      - name: Check out code
-  #        uses: actions/checkout@v3
-  #
-  #      - name: Set up Java
-  #        uses: actions/setup-java@v3
-  #        with:
-  #          distribution: 'zulu'
-  #          java-version: '17'
-  #
-  #      - name: Restore Maven cache
-  #        uses: actions/cache@v3
-  #        with:
-  #          path: ~/.m2/repository
-  #          key: ${{ needs.setup.outputs.cache-key }}
-  #
-  #      - name: Restore Maven cache
-  #        uses: actions/cache@v3
-  #        with:
-  #          path: ~/.m2/repository
-  #          key: ${{ needs.setup.outputs.cache-key }}
-  #
-  #      - name: Publish Maven Artifact to GitHub Packages
-  #        run: |
-  #          mvn deploy -Dregistry=https://maven.pkg.github.com/OWNER/REPO \
-  #          -Dtoken=${{ secrets.GITHUB_TOKEN }}
+  publish:
+      runs-on: ubuntu-latest
+#      needs: [ integration_test ]
+      steps:
+        - name: Check out code
+          uses: actions/checkout@v3
+
+        - name: Set up Java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'zulu'
+            java-version: '17'
+
+        - name: Restore Maven cache
+          uses: actions/cache@v3
+          with:
+            path: ~/.m2/repository
+            key: ${{ needs.setup.outputs.cache-key }}
+
+        - name: Publish to Nexus (Snapshot)
+          if: github.ref != 'refs/heads/devlop'
+          run: mvn deploy -DskipTests --settings .github/settings.xml
+          env:
+            SONATYPE_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+            SONATYPE_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+            JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+
+#        - name: Publish Maven Artifact to GitHub Packages
+#          run: |
+#            mvn deploy -Dregistry=https://maven.pkg.github.com/OWNER/REPO \
+#            -Dtoken=${{ secrets.GITHUB_TOKEN }}
+
 
   vulnerability_scan:
     runs-on: ubuntu-latest
