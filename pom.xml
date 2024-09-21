@@ -154,26 +154,6 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven Central Repository</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-
-    <repository>
-      <id>nexus</id>
-      <name>Internal Nexus Repository</name>
-      <url>https://nexus.phumlaniarendse.co.za/repository/macgyver-nexus/</url>
-    </repository>
-  </repositories>
-
   <profiles>
     <profile>
       <id>coverage</id>
