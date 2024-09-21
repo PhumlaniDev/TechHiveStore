@@ -21,6 +21,7 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class AuthService {
+
+  @Autowired
+  public AuthService(UsersRepository usersRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder, Keycloak keycloak) {
+    this.usersRepository = usersRepository;
+    this.addressRepository = addressRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.keycloak = keycloak;
+  }
 
   private final UsersRepository usersRepository;
   private final AddressRepository addressRepository;
@@ -49,13 +58,6 @@ public class AuthService {
 
   private static final String ENABLED_ATTRIBUTE = "enabled";
   private static final String TRUE_VALUE = "true";
-
-  public AuthService(UsersRepository usersRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder, Keycloak keycloak) {
-    this.usersRepository = usersRepository;
-    this.addressRepository = addressRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.keycloak = keycloak;
-  }
 
 
   /**

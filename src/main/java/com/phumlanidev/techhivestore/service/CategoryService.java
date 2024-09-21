@@ -3,6 +3,7 @@ package com.phumlanidev.techhivestore.service;
 
 import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.repository.CategoryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,6 +18,8 @@ public class CategoryService {
     this.categoryRepository = categoryRepository;
   }
 
+
+  @Transactional
   public Category saveCategory(Category category) {
     return categoryRepository.save(category);
   }

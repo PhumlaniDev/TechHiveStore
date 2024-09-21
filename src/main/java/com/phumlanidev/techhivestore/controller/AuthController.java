@@ -4,7 +4,7 @@ import com.phumlanidev.techhivestore.config.JwtResponse;
 import com.phumlanidev.techhivestore.dto.LoginDto;
 import com.phumlanidev.techhivestore.dto.UserDTO;
 import com.phumlanidev.techhivestore.service.AuthService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/auth/")
-@RequiredArgsConstructor
 public class AuthController {
 
   private final AuthService authService;
+
+  @Autowired
+  public AuthController(AuthService authService) {
+    this.authService = authService;
+  }
 
   /**
    * <p> comment </p>.

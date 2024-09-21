@@ -1,7 +1,6 @@
 package com.phumlanidev.techhivestore.dto;
 
 import com.phumlanidev.techhivestore.model.Address;
-import com.phumlanidev.techhivestore.model.Users;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

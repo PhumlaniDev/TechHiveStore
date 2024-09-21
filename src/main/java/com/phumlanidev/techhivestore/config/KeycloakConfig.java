@@ -25,7 +25,7 @@ public class KeycloakConfig {
     private String keycloakClientSecret;
     @Value("${keycloak.admin.username}")
     private String keycloakClientAdminUsername;
-    @Value("${keycloak.admin.password}")
+    @Value("${keycloak.admin.password")
     private String keycloakClientAdminPassword;
 
     @Bean
