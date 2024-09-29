@@ -1,5 +1,6 @@
 package com.phumlanidev.techhivestore.dto;
 
+import com.phumlanidev.techhivestore.mapper.AddressMapper;
 import com.phumlanidev.techhivestore.model.Users;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +34,8 @@ public class UserDTO {
     this.phoneNumber = user.getPhoneNumber();
 
     if (user.getAddressId() != null) {
-      this.address = new AddressDTO(user.getAddressId());
+      AddressMapper addressMapper = new AddressMapper();
+      this.address = addressMapper.toDTO(user.getAddressId());
     }
   }
 }

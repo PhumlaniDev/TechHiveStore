@@ -101,7 +101,7 @@ public class AuthService {
   /**
    * <p> comment </p>.
    */
-  private void registerUserInKeycloak(UserDTO userDTO) {
+  void registerUserInKeycloak(UserDTO userDTO) {
     try {
       RealmResource realmResource = keycloak.realm(keycloakRealm);
       UsersResource usersResource = realmResource.users();

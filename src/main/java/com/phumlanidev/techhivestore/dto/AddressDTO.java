@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class AddressDTO {
 
   private Long addressId;
-  private String streetAddress;
+  private String streetName;
   private String city;
   private String province;
   private String zipCode;
@@ -23,7 +23,7 @@ public class AddressDTO {
   public AddressDTO(Address address) {
     if (address != null) {
       this.addressId = address.getAddressId();
-      this.streetAddress = address.getStreetAddress();
+      this.streetName = address.getStreetName();
       this.city = address.getCity();
       this.province = address.getProvince();
       this.zipCode = address.getZipCode();

@@ -29,4 +29,32 @@ public class ProductDTO {
   private Users updatedByUser;
   private LocalDateTime createdDate;
   private LocalDateTime updatedDate;
+
+  public ProductDTO() {
+  }
+
+  public ProductDTO(LocalDateTime updatedDate,
+                    LocalDateTime createdDate,
+                    Users updatedByUser,
+                    Users createdByUser,
+                    Category category,
+                    String imageURL,
+                    Integer quantity,
+                    String price,
+                    String description,
+                    String name) {
+    this.updatedDate = updatedDate;
+    this.createdDate = createdDate;
+    this.updatedByUser = updatedByUser;
+    this.createdByUser = createdByUser;
+    this.category = category;
+    this.imageURL = imageURL;
+    this.quantity = quantity;
+    this.price = price;
+    this.description = description;
+    this.name = name;
+  }
+
+
+
 }
