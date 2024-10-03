@@ -122,13 +122,13 @@
     <distributionManagement>
       <repository>
         <id>nexus-releases</id>
-        <url>http://${env.NEXUS_IP_ADDRESS}:${env.NEXUS_PORT}/repository/Phumlani-repo/</url>
+        <url>http://172.18.0.2:8081/repository/Phumlani-repo/</url>
       </repository>
-    <snapshotRepository>
-      <id>nexus-snapshots</id>
-      <name>Phumlani-repo</name>
-      <url>http://${env.NEXUS_IP_ADDRESS}:${env.NEXUS_PORT}/repository/Phumlani-repo/</url>
-    </snapshotRepository>
+      <snapshotRepository>
+        <id>nexus-snapshots</id>
+        <name>Phumlani-repo</name>
+        <url>http://172.18.0.2:8081/repository/Phumlani-repo/</url>
+      </snapshotRepository>
   </distributionManagement>
 
   <build>
