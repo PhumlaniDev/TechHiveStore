@@ -167,11 +167,11 @@ jobs:
           key: ${{ needs.setup.outputs.cache-key }}
 
       - name: Run Unit Tests
-        run: mvn test
+        run: mvn test -Dspring.profiles.active=test
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
+          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: test
 
   code_analysis:
     runs-on: ubuntu-latest
