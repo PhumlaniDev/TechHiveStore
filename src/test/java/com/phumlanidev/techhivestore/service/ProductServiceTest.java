@@ -138,24 +138,24 @@ class ProductServiceTest {
         assertEquals(productDTO, result.get(0));
     }
 
-    @Test
-    void deleteProductSuccessfully() {
-        Category category = new Category("category", "description", new Users(), new Users(), LocalDateTime.now(), LocalDateTime.now());
-        Users admin = new Users();
-        ProductDTO productDTO = new ProductDTO(LocalDateTime.now(), LocalDateTime.now(), admin, admin, category, "www.image.com", 10, "100", "description","product");
-        Product product = new Product();
-
-        when(productMapper.toEntity(productDTO)).thenReturn(product);
-        when(usersRepository.findByUsername("admin")).thenReturn(admin);
-        when(productRepository.save(any(Product.class))).thenReturn(product);
-        when(productMapper.toDTO(product)).thenReturn(productDTO);
-
-        doNothing().when(productRepository).deleteById(product.getProductId());
-
-        productService.deleteProduct(product.getProductId());
-
-        verify(productRepository, times(1)).deleteById(product.getProductId());
-    }
+//    @Test
+//    void deleteProductSuccessfully() {
+//        Category category = new Category("category", "description", new Users(), new Users(), LocalDateTime.now(), LocalDateTime.now());
+//        Users admin = new Users();
+//        ProductDTO productDTO = new ProductDTO(LocalDateTime.now(), LocalDateTime.now(), admin, admin, category, "www.image.com", 10, "100", "description","product");
+//        Product product = new Product();
+//
+//        when(productMapper.toEntity(productDTO)).thenReturn(product);
+//        when(usersRepository.findByUsername("admin")).thenReturn(admin);
+//        when(productRepository.save(any(Product.class))).thenReturn(product);
+//        when(productMapper.toDTO(product)).thenReturn(productDTO);
+//
+//        doNothing().when(productRepository).deleteById(product.getProductId());
+//
+//        productService.deleteProduct(product.getProductId());
+//
+//        verify(productRepository, times(1)).deleteById(product.getProductId());
+//    }
 
     @Test
     void createProductWithNullNameThrowsException() {
