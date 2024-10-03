@@ -120,6 +120,10 @@
   </dependencies>
 
     <distributionManagement>
+      <repository>
+        <id>nexus-releases</id>
+        <url>http://${env.NEXUS_IP_ADDRESS}:${env.NEXUS_PORT}/repository/Phumlani-repo/</url>
+      </repository>
     <snapshotRepository>
       <id>nexus-snapshots</id>
       <name>Phumlani-repo</name>

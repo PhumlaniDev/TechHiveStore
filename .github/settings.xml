@@ -6,6 +6,19 @@
       <id>nexus-snapshots</id>
       <username>${env.NEXUS_USERNAME}</username>
       <password>${env.NEXUS_PASSWORD}</password>
+      <configuration>
+        <httpConfiguration>
+          <all>
+            <connectionTimeout>60000</connectionTimeout> <!-- 60 seconds -->
+            <readTimeout>60000</readTimeout>             <!-- 60 seconds -->
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+    <server>
+      <id>nexus-releases</id>
+      <username>${env.NEXUS_USERNAME}</username>
+      <password>${env.NEXUS_PASSWORD}</password>
     </server>
   </servers>
 </settings>
