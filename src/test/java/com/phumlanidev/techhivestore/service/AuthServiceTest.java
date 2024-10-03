@@ -17,13 +17,13 @@ import org.keycloak.representations.AccessTokenResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-//@SpringBootTest
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 class AuthServiceTest {
 
     @Mock
