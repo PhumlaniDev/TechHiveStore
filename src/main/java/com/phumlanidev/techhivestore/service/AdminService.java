@@ -47,6 +47,11 @@ public class AdminService {
 //    return new UserDTO(user);
 //  }
 
+  /**
+   * <p> This method deletes a user by their ID from the repository. </p>
+   *
+   * @param id the ID of the user to delete.
+   */
   public void deleteUser(Long id) {
     usersRepository.deleteById(id);
   }

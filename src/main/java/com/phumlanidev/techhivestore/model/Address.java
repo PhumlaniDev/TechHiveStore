@@ -19,7 +19,7 @@ public class Address {
   @Column(name = "id")
   private Long addressId;
   @Column(name = "street_address")
-  private String streetAddress;
+  private String streetName;
   @Column(name = "city")
   private String city;
   @Column(name = "province")
