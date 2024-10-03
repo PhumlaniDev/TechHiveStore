@@ -112,18 +112,18 @@
       <version>5.10.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>dotenv-java</artifactId>
+      <version>3.0.2</version>
+    </dependency>
   </dependencies>
 
-  <distributionManagement>
-    <repository>
-      <id>nexus-releases</id>
-      <name>macgyver-nexus</name>
-      <url>https://nexus.phumlaniarendse.co.za/repository/macgyver-nexus/</url>
-    </repository>
+    <distributionManagement>
     <snapshotRepository>
       <id>nexus-snapshots</id>
-      <name>macgyver-nexus</name>
-      <url>https://nexus.phumlaniarendse.co.za/repository/macgyver-nexus/</url>
+      <name>Phumlani-repo</name>
+      <url>http://${env.NEXUS_IP_ADDRESS}:${env.NEXUS_PORT}/repository/Phumlani-repo/</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -155,6 +155,7 @@
   </build>
 
   <profiles>
+<!--  jacoco  -->
     <profile>
       <id>coverage</id>
       <build>
