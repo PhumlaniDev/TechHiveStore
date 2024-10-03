@@ -340,6 +340,7 @@ jobs:
           SONATYPE_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+          NEXUS_PORT: ${{ secrets.NEXUS_PORT }}
 
   job-summary:
     runs-on: ubuntu-latest
