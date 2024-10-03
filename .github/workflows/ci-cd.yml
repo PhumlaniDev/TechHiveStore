@@ -225,7 +225,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: postgres
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage, test -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io
 
   #  integration_test:
   #    runs-on: ubuntu-latest
@@ -341,6 +341,7 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
           NEXUS_PORT: ${{ secrets.NEXUS_PORT }}
+          NEXUS_IP_ADDRESS: ${{ secrets.NEXUS_IP_ADDRESS }}
 
   job-summary:
     runs-on: ubuntu-latest
