@@ -119,20 +119,17 @@
     </dependency>
   </dependencies>
 
-    <distributionManagement>
-      <repository>
-        <id>nexus-releases</id>
-        <url>http://172.18.0.2:8081/repository/Phumlani-repo/</url>
-      </repository>
-      <snapshotRepository>
-        <id>nexus-snapshots</id>
-        <name>Phumlani-repo</name>
-        <url>http://172.18.0.2:8081/repository/Phumlani-repo/</url>
-      </snapshotRepository>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>nexus-snapshot</id>
+      <name>Maven Snapshot</name>
+      <url>${env.NEXUS_SNAPSHOT_URL}</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <build>
     <plugins>
+<!--spring maven-->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -145,21 +142,36 @@
           </excludes>
         </configuration>
       </plugin>
+<!--jasypt-->
       <plugin>
         <groupId>com.github.ulisesbocchio</groupId>
         <artifactId>jasypt-maven-plugin</artifactId>
         <version>3.0.3</version>
       </plugin>
+<!--maven deploy-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>3.1.3</version>
+        <executions>
+          <execution>
+            <id>deploy-file</id>
+            <goals>
+              <goal>deploy-file</goal>
+            </goals>
+            <configuration>
+              <file>target/TechHiveStore-0.0.1-SNAPSHOT.jar</file>
+              <repositoryId>nexus-snapshot</repositoryId> <!-- Adjust for your repo -->
+              <url>${env.NEXUS_LIBS_URL}/</url>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
 
   <profiles>
-<!--  jacoco  -->
+<!--jacoco-->
     <profile>
       <id>coverage</id>
       <build>

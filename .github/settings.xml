@@ -1,24 +1,84 @@
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <servers>
     <server>
-      <id>nexus-snapshots</id>
-      <username>${env.NEXUS_USERNAME}</username>
-      <password>${env.NEXUS_PASSWORD}</password>
-      <configuration>
-        <httpConfiguration>
-          <all>
-            <connectionTimeout>60000</connectionTimeout> <!-- 60 seconds -->
-            <readTimeout>60000</readTimeout>             <!-- 60 seconds -->
-          </all>
-        </httpConfiguration>
-      </configuration>
+      <id>nexus-snapshot</id>
+      <username>admin</username>
+      <password>oGkLKlSLP</password>
     </server>
     <server>
-      <id>nexus-releases</id>
-      <username>${env.NEXUS_USERNAME}</username>
-      <password>${env.NEXUS_PASSWORD}</password>
+      <id>nexus-dependencies</id>
+      <username>admin</username>
+      <password>oGkLKlSLP</password>
     </server>
   </servers>
+
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${env.NEXUS_MAVEN_PUBLIC_URL}</url>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+      <id>snapshot</id>
+      <repositories>
+        <repository>
+          <id>nexus-snapshot</id>
+          <name>Maven Snapshot</name>
+          <url>${env.NEXUS_SNAPSHOT_URL}</url>
+        </repository>
+      </repositories>
+    </profile>
+    <profile>
+      <id>libs</id>
+      <repositories>
+        <repository>
+          <id>nexus-libraries</id>
+          <name>Maven Third Party Libraries</name>
+          <url>${env.NEXUS_LIBS_URL}</url>
+        </repository>
+      </repositories>
+    </profile>
+    <profile>
+      <id>mavencentral</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>https://repo.maven.apache.org/maven2/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>https://repo.maven.apache.org/maven2/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>snapshot</activeProfile>
+    <activeProfile>libs</activeProfile>
+    <activeProfile>mavencentral</activeProfile>
+  </activeProfiles>
 </settings>
