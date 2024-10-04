@@ -120,6 +120,11 @@
   </dependencies>
 
   <distributionManagement>
+    <repository>
+      <id>nexus-libraries</id>
+      <name>Maven Libraries</name>
+      <url>http://172.18.0.4:8081/repository/third-party-libs/</url>
+    </repository>
     <snapshotRepository>
       <id>nexus-snapshot</id>
       <name>Maven Snapshot</name>

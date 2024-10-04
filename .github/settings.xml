@@ -4,11 +4,11 @@
   <servers>
     <server>
       <id>nexus-snapshot</id>
-      <username>ENC(akAvZKFCg6g8DtRaU6hbikk1lQHo4YDdXiTzqF0MAyJHzQDoNky0zCEWwGfsBGtc)</username>
-      <password>ENC(CPaY/XAEWJb6evKSN011o/8ntmZ/kSeh21QH6i5LH3nQwxdS8fHA0+2U3qi0R/5j)</password>
+      <username>admin</username>
+      <password>oGkLKlSLP</password>
     </server>
     <server>
-      <id>nexus-dependencies</id>
+      <id>nexus-libraries</id>
       <username>admin</username>
       <password>oGkLKlSLP</password>
     </server>
@@ -34,7 +34,7 @@
       </repositories>
     </profile>
     <profile>
-      <id>libs</id>
+      <id>libraries</id>
       <repositories>
         <repository>
           <id>nexus-libraries</id>
@@ -78,7 +78,7 @@
 
   <activeProfiles>
     <activeProfile>snapshot</activeProfile>
-    <activeProfile>libs</activeProfile>
+    <activeProfile>libraries</activeProfile>
     <activeProfile>mavencentral</activeProfile>
   </activeProfiles>
 </settings>
