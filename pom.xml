@@ -123,7 +123,7 @@
     <snapshotRepository>
       <id>nexus-snapshot</id>
       <name>Maven Snapshot</name>
-      <url>${env.NEXUS_SNAPSHOT_URL}</url>
+      <url>http://172.18.0.4:8081/repository/maven-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -162,7 +162,7 @@
             <configuration>
               <file>target/TechHiveStore-0.0.1-SNAPSHOT.jar</file>
               <repositoryId>nexus-snapshot</repositoryId> <!-- Adjust for your repo -->
-              <url>${env.NEXUS_LIBS_URL}/</url>
+              <url>http://172.18.0.4:8081/repository/maven-snapshots/</url>
             </configuration>
           </execution>
         </executions>

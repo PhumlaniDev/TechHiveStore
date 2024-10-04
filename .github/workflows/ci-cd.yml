@@ -344,9 +344,9 @@ jobs:
           SONATYPE_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-          NEXUS_LIBS_URL: ${{ secrets.NEXUS_LIBS_URL }}
-          NEXUS_SNAPSHOT_URL: ${{ secrets.NEXUS_SNAPSHOT_URL }}
-          NEXUS_MAVEN_PUBLIC_URL: ${{ secrets.NEXUS_MAVEN_PUBLIC_URL }}
+          NEXUS_LIBS_URL: http://172.18.0.4:8081/repository/third-party-libs/
+          NEXUS_SNAPSHOT_URL: http://172.18.0.4:8081/repository/maven-snapshots/
+          NEXUS_MAVEN_PUBLIC_URL: http://172.18.0.4:8081/repository/maven-public/
 
   job-summary:
     runs-on: ubuntu-latest

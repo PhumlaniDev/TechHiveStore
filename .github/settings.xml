@@ -4,8 +4,8 @@
   <servers>
     <server>
       <id>nexus-snapshot</id>
-      <username>admin</username>
-      <password>oGkLKlSLP</password>
+      <username>ENC(akAvZKFCg6g8DtRaU6hbikk1lQHo4YDdXiTzqF0MAyJHzQDoNky0zCEWwGfsBGtc)</username>
+      <password>ENC(CPaY/XAEWJb6evKSN011o/8ntmZ/kSeh21QH6i5LH3nQwxdS8fHA0+2U3qi0R/5j)</password>
     </server>
     <server>
       <id>nexus-dependencies</id>
@@ -18,7 +18,7 @@
     <mirror>
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-      <url>${env.NEXUS_MAVEN_PUBLIC_URL}</url>
+      <url>http://172.18.0.4:8081/repository/maven-public/</url>
     </mirror>
   </mirrors>
 
@@ -29,7 +29,7 @@
         <repository>
           <id>nexus-snapshot</id>
           <name>Maven Snapshot</name>
-          <url>${env.NEXUS_SNAPSHOT_URL}</url>
+          <url>http://172.18.0.4:8081/repository/maven-snapshots/</url>
         </repository>
       </repositories>
     </profile>
@@ -39,7 +39,7 @@
         <repository>
           <id>nexus-libraries</id>
           <name>Maven Third Party Libraries</name>
-          <url>${env.NEXUS_LIBS_URL}</url>
+          <url>http://172.18.0.4:8081/repository/third-party-libs/</url>
         </repository>
       </repositories>
     </profile>
