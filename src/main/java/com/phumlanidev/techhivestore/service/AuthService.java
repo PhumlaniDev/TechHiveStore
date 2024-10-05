@@ -154,9 +154,7 @@ public class AuthService {
   }
 
   public String login(LoginDto loginDto) {
-    try {
-
-      Keycloak keycloak = KeycloakBuilder.builder()
+    try (Keycloak keycloak = KeycloakBuilder.builder()
           .serverUrl(keycloakServerUrl)
           .realm(keycloakRealm)
           .clientId(keycloakClientId)
@@ -164,7 +162,7 @@ public class AuthService {
           .username(loginDto.getUsername())
           .password(loginDto.getPassword())
           .grantType(OAuth2Constants.PASSWORD)
-          .build();
+          .build()){
 
       AccessTokenResponse accessTokenResponse = keycloak.tokenManager().getAccessToken();
       return accessTokenResponse.getIdToken();
