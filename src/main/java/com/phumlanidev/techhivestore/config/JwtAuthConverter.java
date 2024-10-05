@@ -29,9 +29,9 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
   private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
       new JwtGrantedAuthoritiesConverter();
 
-  @Value("${jwt.auth.converter.principle-attribute:preferred_username}")
+  @Value("${jwt.auth.converter.principle-attribute}")
   private String principleAttribute;
-  @Value("${jwt.auth.converter.resource-id:ecommerce}")
+  @Value("${jwt.auth.converter.resource-id}")
   private String resourceId;
 
   @Override

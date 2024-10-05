@@ -30,11 +30,6 @@ public class KeycloakConfig {
 
     @Bean
     public Keycloak keycloak(){
-
-        logger.info("Keycloak Server URL: {}", keycloakServerUrl);
-        logger.info("Keycloak Realm: {}", keycloakRealm);
-        logger.info("Keycloak Client ID: {}", keycloakClientId);
-
         return KeycloakBuilder.builder()
                 .serverUrl(keycloakServerUrl)
                 .realm(keycloakRealm)

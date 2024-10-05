@@ -16,7 +16,7 @@
 
   <mirrors>
     <mirror>
-      <id>nexus</id>
+      <id>nexus-libraries</id>
       <mirrorOf>*</mirrorOf>
       <url>http://172.18.0.4:8081/repository/maven-public/</url>
     </mirror>
@@ -38,47 +38,15 @@
       <repositories>
         <repository>
           <id>nexus-libraries</id>
-          <name>Maven Third Party Libraries</name>
-          <url>http://172.18.0.4:8081/repository/third-party-libs/</url>
+          <name>Maven Snapshot</name>
+          <url>http://172.18.0.4:8081/repository/maven-public/</url>
         </repository>
       </repositories>
-    </profile>
-    <profile>
-      <id>mavencentral</id>
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>https://repo.maven.apache.org/maven2/</url>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-          </snapshots>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>central</id>
-          <url>https://repo.maven.apache.org/maven2/</url>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
     </profile>
   </profiles>
 
   <activeProfiles>
     <activeProfile>snapshot</activeProfile>
     <activeProfile>libraries</activeProfile>
-    <activeProfile>mavencentral</activeProfile>
   </activeProfiles>
 </settings>

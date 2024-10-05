@@ -22,7 +22,7 @@ keycloak:
   realm: mac-apps
   resource: ecommerce
   credentials:
-    secret: ENC(8qdhL2pKBF3zLVptfntQ/yy+0+XWq8Tf8nmlWdHvuRB37VAZd3EiSeDWYZuTTq51xbpGSwhGG6Kjr1F2DfGejSmcvEOiMpmuyR32yvPwgh0=)
+    secret: Bw421P4VwyPsBj8vthwOQiIJ4WyCznSr
   admin:
     username: admin
     password: admin
@@ -31,11 +31,11 @@ keycloak:
   #    init:
   #      mode: always
 
-  jwt:
-    auth:
-      converter:
-        resource-id: ecommerce
-        principle-attribute: preferred_username
+jwt:
+  auth:
+    converter:
+      resource-id: ecommerce
+      principle-attribute: preferred_username
 
 logging:
   level:

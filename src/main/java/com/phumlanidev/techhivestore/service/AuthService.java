@@ -103,6 +103,10 @@ public class AuthService {
    */
   void registerUserInKeycloak(UserDTO userDTO) {
     try {
+      // Get the token for debugging
+      String token = keycloak.tokenManager().getAccessTokenString();
+      log.debug("Using Keycloak token: {}", token);
+
       RealmResource realmResource = keycloak.realm(keycloakRealm);
       UsersResource usersResource = realmResource.users();
 
