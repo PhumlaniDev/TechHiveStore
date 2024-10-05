@@ -121,6 +121,16 @@
 
   <repositories>
     <repository>
+      <id>nexus-public</id>
+      <url>http://172.18.0.4:8081/repository/maven-public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>nexus-releases</id>
       <url>http://172.18.0.4:8081/repository/maven-releases/</url>
       <releases>

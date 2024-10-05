@@ -16,7 +16,7 @@
 
   <mirrors>
     <mirror>
-      <id>nexus-libraries</id>
+      <id>nexus-public</id>
       <mirrorOf>*</mirrorOf>
       <url>http://172.18.0.4:8081/repository/maven-public/</url>
     </mirror>
@@ -34,10 +34,10 @@
       </repositories>
     </profile>
     <profile>
-      <id>libraries</id>
+      <id>public</id>
       <repositories>
         <repository>
-          <id>nexus-libraries</id>
+          <id>nexus-public</id>
           <name>Maven Snapshot</name>
           <url>http://172.18.0.4:8081/repository/maven-public/</url>
         </repository>
@@ -47,6 +47,6 @@
 
   <activeProfiles>
     <activeProfile>snapshot</activeProfile>
-    <activeProfile>libraries</activeProfile>
+    <activeProfile>public</activeProfile>
   </activeProfiles>
 </settings>
