@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/tech_hive_db
-    username: ENC(Jz7L2RNRolIhTtUAMLtbNb1JNtRpyhplEf0BQaQ3eVCLifrgv+s9/whJIB8906kH)
-    password: ENC(TKwqREIGSCPUFO5bElSB3/BKfgIrbGDp2BfWtSecHfU09pJcswP2M+UH4ftZd98A)
+    username: phumlanidev
+    password: password
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
