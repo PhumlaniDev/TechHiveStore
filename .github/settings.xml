@@ -17,7 +17,7 @@
   <mirrors>
     <mirror>
       <id>nexus-public</id>
-      <mirrorOf>*</mirrorOf>
+      <mirrorOf>*, !central</mirrorOf>
       <url>http://172.18.0.4:8081/repository/maven-public/</url>
     </mirror>
   </mirrors>
@@ -40,6 +40,17 @@
           <id>nexus-public</id>
           <name>Maven Snapshot</name>
           <url>http://172.18.0.4:8081/repository/maven-public/</url>
+        </repository>
+        <repository>
+          <id>central</id> <!-- Add Maven Central -->
+          <name>Maven Central</name>
+          <url>https://repo.maven.apache.org/maven2</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
         </repository>
       </repositories>
     </profile>

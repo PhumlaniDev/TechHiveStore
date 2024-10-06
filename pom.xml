@@ -131,6 +131,16 @@
       </snapshots>
     </repository>
     <repository>
+      <id>central</id> <!-- Add Maven Central -->
+      <url>https://repo.maven.apache.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>nexus-releases</id>
       <url>http://172.18.0.4:8081/repository/maven-releases/</url>
       <releases>
