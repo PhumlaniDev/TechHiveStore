@@ -19,7 +19,7 @@ FROM azul/zulu-openjdk-alpine:17
 WORKDIR /app
 
 # Copy the built JAR file from the first stage
-COPY --from=build /app/target/TechHiveStore-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/techtivestore-0.0.1-SNAPSHOT.jar app.jar
 
 # Make port 8080 available to the world outside this container
 EXPOSE 7000
