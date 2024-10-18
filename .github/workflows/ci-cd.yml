@@ -161,11 +161,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Debug Cache Key
+        run: echo "${{ steps.cache-dependencies.outputs.cache-key }}"
+
       - name: Restore Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ needs.setup.outputs.cache-key }}
+          key: ${{ needs.setup.outputs.cache-key || 'default-key' }}
           fail-on-cache-miss: false
 
       - name: Run Unit Tests
@@ -286,11 +289,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Debug Cache Key
+        run: echo "${{ steps.cache-dependencies.outputs.cache-key }}"
+
       - name: Restore Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ needs.setup.outputs.cache-key }}
+          key: ${{ needs.setup.outputs.cache-key || 'default-key' }}
           fail-on-cache-miss: false
 
       - name: Log in to Docker Hub
@@ -324,11 +330,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Debug Cache Key
+        run: echo "${{ steps.cache-dependencies.outputs.cache-key }}"
+
       - name: Restore Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ needs.setup.outputs.cache-key }}
+          key: ${{ needs.setup.outputs.cache-key || 'default-key' }}
           fail-on-cache-miss: false
 
       - name: Deploy Maven Artifacts to GitHub Packages
