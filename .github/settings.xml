@@ -1,63 +1,46 @@
 <settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
   <servers>
     <server>
-      <id>nexus-snapshot</id>
-      <username>admin</username>
-      <password>oGkLKlSLP</password>
-    </server>
-    <server>
-      <id>nexus-libraries</id>
-      <username>admin</username>
-      <password>oGkLKlSLP</password>
+      <id>github</id>
+      <username>${env.GH_USERNAME}</username>
+      <password>${env.GH_PAT}</password>
     </server>
   </servers>
 
   <mirrors>
     <mirror>
-      <id>nexus-public</id>
-      <mirrorOf>*, !central</mirrorOf>
-      <url>http://172.18.0.3:8081/repository/maven-public/</url>
+      <id>central</id>
+      <mirrorOf>external:*</mirrorOf>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </mirror>
+
+    <mirror>
+      <id>github</id>
+      <mirrorOf>external:*</mirrorOf>
+      <url>https://maven.pkg.github.com/PhumlaniDev/TechHiveStore</url>
     </mirror>
   </mirrors>
 
   <profiles>
     <profile>
-      <id>snapshot</id>
       <repositories>
         <repository>
-          <id>nexus-snapshot</id>
-          <name>Maven Snapshot</name>
-          <url>http://172.18.0.3:8081/repository/maven-snapshots/</url>
-        </repository>
-      </repositories>
-    </profile>
-    <profile>
-      <id>public</id>
-      <repositories>
-        <repository>
-          <id>nexus-public</id>
-          <name>Maven Snapshot</name>
-          <url>http://172.18.0.3:8081/repository/maven-public/</url>
-        </repository>
-        <repository>
-          <id>central</id> <!-- Add Maven Central -->
-          <name>Maven Central</name>
+          <id>central</id>
           <url>https://repo.maven.apache.org/maven2</url>
           <releases>
             <enabled>true</enabled>
           </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
+        </repository>
+
+        <!-- GitHub Packages repository (used for your own artifacts) -->
+        <repository>
+          <id>github</id>
+          <url>https://maven.pkg.github.com/PhumlaniDev/TechHiveStore</url>
         </repository>
       </repositories>
     </profile>
   </profiles>
-
-  <activeProfiles>
-    <activeProfile>snapshot</activeProfile>
-    <activeProfile>public</activeProfile>
-  </activeProfiles>
 </settings>

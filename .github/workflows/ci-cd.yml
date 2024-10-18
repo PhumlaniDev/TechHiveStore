@@ -107,10 +107,14 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -Dspring.profiles.active=local --settings .github/settings.xml
         env:
+          GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          GH_USERNAME: ${{ secrets.GITHUB_USERNAME }}
 
       - name: Build and Tag Docker Image
         run: |
@@ -333,20 +337,15 @@ jobs:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
 
-      - name: Publish to Nexus (Snapshot)
+      - name: Deploy Maven Artifacts to GitHub Packages
         if: github.ref != 'refs/heads/devlop'
-        run: |
-          echo "NEXUS_IP_ADDRESS=${{ secrets.NEXUS_IP_ADDRESS }}"
-          echo "NEXUS_PORT=${{ secrets.NEXUS_PORT }}"
-          mvn clean deploy -DskipTests --settings .github/settings.xml
+        run: mvn deploy -DskipTests --settings .github/settings.xml
 
         env:
           SONATYPE_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-          NEXUS_LIBS_URL: http://172.18.0.4:8081/repository/third-party-libs/
-          NEXUS_SNAPSHOT_URL: http://172.18.0.4:8081/repository/maven-snapshots/
-          NEXUS_MAVEN_PUBLIC_URL: http://172.18.0.4:8081/repository/maven-public/
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          GH_USERNAME: ${{ secrets.GITHUB_USERNAME }}
 
   job-summary:
     runs-on: ubuntu-latest

@@ -5,8 +5,8 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.3</version>
-    <relativePath>..</relativePath> <!-- lookup parent from repository -->
+    <version>3.3.0</version>
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.phumlanidev</groupId>
   <artifactId>TechHiveStore</artifactId>
@@ -119,30 +119,31 @@
     </dependency>
   </dependencies>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/PhumlaniDev/TechHiveStore</url>
+    </repository>
+  </distributionManagement>
+
   <repositories>
     <repository>
-      <id>nexus-public</id>
-      <url>http://172.18.0.3:8081/repository/maven-public/</url>
+      <id>github</id>
+      <name>GitHub OWNER Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/PhumlaniDev/TechHiveStore</url>
       <releases>
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
       </snapshots>
     </repository>
+
     <repository>
-      <id>central</id> <!-- Add Maven Central -->
+      <id>central</id>
+      <name>Maven Central Repository</name>
       <url>https://repo.maven.apache.org/maven2</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>nexus-releases</id>
-      <url>http://172.18.0.3:8081/repository/maven-releases/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -152,18 +153,17 @@
     </repository>
   </repositories>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>nexus-snapshot</id>
-      <name>Maven Snapshot</name>
-      <url>http://172.18.0.3:8081/repository/maven-snapshots/</url>
-    </snapshotRepository>
-    <repository>
-      <id>nexus-releases</id>
-      <name>Maven Releases Repository</name>
-      <url>http://172.18.0.3:8081/repository/maven-releases/</url>
-    </repository>
-  </distributionManagement>
+
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.4.0</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <build>
     <plugins>
