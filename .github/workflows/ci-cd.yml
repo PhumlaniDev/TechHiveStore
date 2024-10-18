@@ -342,10 +342,8 @@ jobs:
         run: mvn deploy -DskipTests --settings .github/settings.xml
 
         env:
-          SONATYPE_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
-          GH_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
 
   job-summary:
     runs-on: ubuntu-latest
