@@ -9,7 +9,7 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.phumlanidev</groupId>
-  <artifactId>TechHiveStore</artifactId>
+  <artifactId>techtivestore</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>TechHiveStore</name>
   <description>TechHiveStore</description>
@@ -124,7 +124,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/PhumlaniDev/TechHiveStore</url>
+      <url>https://maven.pkg.github.com/phumlanidev/techhivestore</url>
     </repository>
   </distributionManagement>
 
@@ -132,7 +132,7 @@
     <repository>
       <id>github</id>
       <name>GitHub OWNER Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/PhumlaniDev/TechHiveStore</url>
+      <url>https://maven.pkg.github.com/phumlanidev/techhivestore</url>
       <releases>
         <enabled>true</enabled>
       </releases>
