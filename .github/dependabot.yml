@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/" # Location of your pom.xml file
+    schedule:
+      interval: "daily" # Check daily for updates
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directory: "/" # Location of your pom.xml file
+    schedule:
+      interval: "daily" # Check daily for updates
+    open-pull-requests-limit: 5
