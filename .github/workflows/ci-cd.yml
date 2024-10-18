@@ -95,6 +95,7 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
+          fail-on-cache-miss: false
 
       - name: Set Jasypt Encryptor Password
         run: echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
@@ -162,6 +163,7 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
+          fail-on-cache-miss: false
 
       - name: Run Unit Tests
         run: mvn test -Dspring.profiles.active=test
@@ -201,12 +203,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-
-      - name: Restore Maven cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ needs.setup.outputs.cache-key }}
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
@@ -292,6 +288,7 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
+          fail-on-cache-miss: false
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
@@ -329,6 +326,7 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key }}
+          fail-on-cache-miss: false
 
       - name: Deploy Maven Artifacts to GitHub Packages
         if: github.ref != 'refs/heads/devlop'
