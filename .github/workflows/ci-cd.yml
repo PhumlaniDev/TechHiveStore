@@ -370,7 +370,7 @@ jobs:
           cat trivy-report.json | jq -r '.[] | "Package: \(.Target)\nSeverity: \(.Severity)\nDescription: \(.VulnerabilityID)\n"' >> report.md
 
       - name: Upload summary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: summary-report
           path: report.md
