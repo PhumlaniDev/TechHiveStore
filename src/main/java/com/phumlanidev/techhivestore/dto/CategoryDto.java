@@ -1,24 +1,20 @@
 package com.phumlanidev.techhivestore.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.*;
 
 /**
  * <p> comment </p>.
  */
-@Data
-public class CategoryDTO {
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class CategoryDto {
 
   @NotBlank(message = "Category name must not be blank")
   private String categoryName;
   private String description;
 
-    public CategoryDTO(String categoryName, String description) {
-        this.categoryName = categoryName;
-        this.description = description;
-    }
-
-    public CategoryDTO() {
-
-    }
 }

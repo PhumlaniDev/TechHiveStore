@@ -6,11 +6,11 @@ import lombok.Data;
  * <p> comment </p>.
  */
 @Data
-public class CartItemDTO {
+public class OrderItemDto {
 
-  private Long cartItemsId;
-  private Long cartId; // foreign key reference
+  private Long orderItemId;
+  private Long orderId; // foreign key reference
   private Long productId; // foreign key reference
   private Integer quantity;
-  private Integer price;
+  private double price;
 }

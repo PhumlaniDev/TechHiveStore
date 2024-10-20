@@ -10,7 +10,7 @@ import lombok.Data;
  * <p> comment </p>.
  */
 @Data
-public class OrderDTO {
+public class OrderDto {
 
   private Long orderId;
   private UUID orderNumber;
