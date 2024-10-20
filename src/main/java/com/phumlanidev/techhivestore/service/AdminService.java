@@ -1,11 +1,11 @@
 package com.phumlanidev.techhivestore.service;
 
 import com.phumlanidev.techhivestore.repository.UsersRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdminService {
 
   private UsersRepository usersRepository;

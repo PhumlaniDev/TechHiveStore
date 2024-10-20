@@ -6,7 +6,7 @@ import com.phumlanidev.techhivestore.mapper.UserMapper;
 import com.phumlanidev.techhivestore.repository.AddressRepository;
 import com.phumlanidev.techhivestore.repository.UsersRepository;
 import jakarta.ws.rs.core.Response;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UsersResource;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthService {
 
   private UsersRepository usersRepository;

@@ -8,7 +8,7 @@ import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.repository.CategoryRepository;
 import com.phumlanidev.techhivestore.repository.UsersRepository;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,7 +17,7 @@ import java.util.Optional;
  * <p> comment </p>.
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryService {
 
     private CategoryRepository categoryRepository;
