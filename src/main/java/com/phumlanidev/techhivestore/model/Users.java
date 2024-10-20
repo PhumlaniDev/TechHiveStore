@@ -7,6 +7,7 @@ import lombok.*;
 /**
  * <p> comment </p>.
  */
+@Entity
 @Getter
 @Setter
 @ToString
