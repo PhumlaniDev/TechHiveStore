@@ -142,9 +142,9 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_DB: tech_hive_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testDB
+          POSTGRES_USER: ${{ POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ POSTGRES_PASSWORD }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -174,9 +174,9 @@ jobs:
       - name: Run Unit Tests
         run: mvn test -Dspring.profiles.active=test
         env:
-          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
-          SPRING_DATASOURCE_USERNAME: test
-          SPRING_DATASOURCE_PASSWORD: test
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
+          SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
+          SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
 
   code_analysis:
