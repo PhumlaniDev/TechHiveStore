@@ -1,7 +1,7 @@
 package com.phumlanidev.techhivestore.service;
 
 
-import com.phumlanidev.techhivestore.dto.CategoryDTO;
+import com.phumlanidev.techhivestore.dto.CategoryDto;
 import com.phumlanidev.techhivestore.mapper.CategoryMapper;
 import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.model.Users;
@@ -39,7 +39,7 @@ public class CategoryService {
 
   // create a method that will create a category, the method should be annotated with @Transactional, should be created by an admin, should not save a category with null values, should also check if the method already exists
   @Transactional
-  public CategoryDTO createCategory(Category category) {
+  public CategoryDto createCategory(Category category) {
     if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
       throw new IllegalArgumentException("Category name cannot be null or empty");
     }
@@ -54,7 +54,7 @@ public class CategoryService {
 
   // create a method that will update a category and should be updated by an admin
     @Transactional
-    public CategoryDTO updateCategory(Category category) {
+    public CategoryDto updateCategory(Category category) {
         Users updatedBy = usersRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         category.setUpdatedBy(updatedBy);
         category.setUpdatedDate(LocalDateTime.now());
@@ -63,13 +63,13 @@ public class CategoryService {
 
     // create a method that will return a list of all categories
     @Transactional
-    public List<CategoryDTO> findAllCategories() {
+    public List<CategoryDto> findAllCategories() {
         return categoryRepository.findAll().stream().map(categoryMapper::toDTO).collect(Collectors.toList());
     }
 
     // create a method that will return a category by id
     @Transactional
-    public CategoryDTO findCategoryById(Long categoryId) {
+    public CategoryDto findCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .map(categoryMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Category not found"));

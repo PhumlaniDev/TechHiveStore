@@ -19,23 +19,6 @@ public class UserDTO {
   private String firstName;
   private String lastName;
   private String phoneNumber;
-  private AddressDTO address;
+  private AddressDto address;
 
-
-  /**
-   * <p> comment </p>.
-   */
-  public UserDTO(Users user) {
-    this.userId = user.getUserId();
-    this.username = user.getUsername();
-    this.email = user.getEmail();
-    this.firstName = user.getFirstName();
-    this.lastName = user.getLastName();
-    this.phoneNumber = user.getPhoneNumber();
-
-    if (user.getAddressId() != null) {
-      AddressMapper addressMapper = new AddressMapper();
-      this.address = addressMapper.toDTO(user.getAddressId());
-    }
-  }
 }

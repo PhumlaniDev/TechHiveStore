@@ -1,22 +1,22 @@
 package com.phumlanidev.techhivestore.mapper;
 
-import com.phumlanidev.techhivestore.dto.CategoryDTO;
+import com.phumlanidev.techhivestore.dto.CategoryDto;
 import com.phumlanidev.techhivestore.model.Category;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryMapper extends AbstractMapper<Category, CategoryDTO> {
+public class CategoryMapper {
 
-  @Override
-  public Category toEntity(CategoryDTO dto) {
+
+  public Category toEntity(CategoryDto categoryDto) {
     Category category = new Category();
-    category.setCategoryName(dto.getCategoryName());
+    category.setCategoryName(categoryDto.getCategoryName());
     return category;
   }
 
-  @Override
-  public CategoryDTO toDTO(Category entity) {
-    CategoryDTO categoryDTO = new CategoryDTO();
+
+  public CategoryDto toDTO(Category entity) {
+    CategoryDto categoryDTO = new CategoryDto();
     categoryDTO.setCategoryName(entity.getCategoryName());
     return categoryDTO;
   }
