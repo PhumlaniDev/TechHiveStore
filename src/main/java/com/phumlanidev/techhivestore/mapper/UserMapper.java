@@ -1,30 +1,33 @@
 package com.phumlanidev.techhivestore.mapper;
 
-import com.phumlanidev.techhivestore.dto.UserDTO;
+import com.phumlanidev.techhivestore.dto.UserDto;
 import com.phumlanidev.techhivestore.model.Users;
 
-public class UserMapper extends AbstractMapper<Users, UserDTO> {
+public class UserMapper{
 
 
-    @Override
-    public Users toEntity(UserDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        Users users = new Users();
-        users.setUserId(dto.getUserId());
+
+    public Users toEntity(UserDto dto, Users users) {
         users.setUsername(dto.getUsername());
-        users.setPassword(dto.getPassword());
         users.setEmail(dto.getEmail());
         users.setFirstName(dto.getFirstName());
         users.setLastName(dto.getLastName());
         users.setPhoneNumber(dto.getPhoneNumber());
+        users.setRole(dto.getRole());
         return users;
 
     }
 
-    @Override
-    public UserDTO toDTO(Users entity) {
-        return null;
+
+    public UserDto toDTO(Users users, UserDto dto) {
+        dto.setUsername(users.getUsername());
+        dto.setEmail(users.getEmail());
+        dto.setFirstName(users.getFirstName());
+        dto.setLastName(users.getLastName());
+        dto.setPhoneNumber(users.getPhoneNumber());
+        dto.setRole(users.getRole());
+        dto.setAddress(dto.getAddress());
+
+        return dto;
     }
 }

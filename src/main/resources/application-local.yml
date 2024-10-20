@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/tech_hive_db
-    username: macgyver
-    password: Chr1st1@n9432
+    username: ENC(/nW6jbEwEA2bza/dA1QI9hwPhDqXRyU1KnrPAtQ/oMqDfmE/mP1T/uK44W7S3kCc)
+    password: ENC(19JPpH3BoBvy/NO3FAvwX12J1zsAJAaglWVjR7YwhezEfik601BwD7Mb3swoD5Vu)
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -17,7 +17,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+
     properties:
       hibernate:
         default_schema: public
@@ -31,22 +32,22 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://172.18.0.2:8080/admin
+          issuer-uri: http://localhost:8080/admin
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 keycloak:
-  auth-server-url: http://172.18.0.2:8080/
+  auth-server-url: http://localhost:8080/
   realm: mac-apps
   resource: ecommerce
   credentials:
-    secret: Bw421P4VwyPsBj8vthwOQiIJ4WyCznSr
+    secret: ENC(ie/PRKwk0xLJDSpm4dafC4SnvlOVLTlxhpBGVfHzfNJiwtRfCCgyybawshmg2365Nsg6/Z9SiNCKFb9zNL1+JsFkgeqdvqR7/iYiHi3pXIs=)
   admin:
     username: admin
     password: admin
 
-#  sql:
-#    init:
-#      mode: always
+  sql:
+    init:
+      mode: always
 
 jwt:
   auth:
@@ -56,10 +57,12 @@ jwt:
 
 logging:
   level:
-    root: info
     org:
-      springframework:
-        web: debug
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
 
 server:
   port: 9000

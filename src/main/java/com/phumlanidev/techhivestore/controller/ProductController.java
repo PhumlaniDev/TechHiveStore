@@ -1,6 +1,6 @@
 package com.phumlanidev.techhivestore.controller;
 
-import com.phumlanidev.techhivestore.dto.ProductDTO;
+import com.phumlanidev.techhivestore.dto.ProductDto;
 import com.phumlanidev.techhivestore.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductDto productDTO) {
         return new  ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
     }
 

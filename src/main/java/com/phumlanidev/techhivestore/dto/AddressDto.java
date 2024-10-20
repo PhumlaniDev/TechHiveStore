@@ -1,7 +1,10 @@
 package com.phumlanidev.techhivestore.dto;
 
-import com.phumlanidev.techhivestore.model.Address;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * <p> comment </p>.

@@ -1,9 +1,13 @@
 package com.phumlanidev.techhivestore.controller;
 
 
-import com.phumlanidev.techhivestore.dto.CategoryDTO;
+import com.phumlanidev.techhivestore.constant.Constant;
+import com.phumlanidev.techhivestore.dto.CategoryDto;
+import com.phumlanidev.techhivestore.auth.ResponseDto;
 import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.service.CategoryService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,21 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/category")
+@AllArgsConstructor
 public class CategoryController {
 
   private final CategoryService categoryService;
 
-  public CategoryController(CategoryService categoryService) {
-    this.categoryService = categoryService;
+
+  @PostMapping("/create")
+  public ResponseEntity<ResponseDto> createCategory(@RequestBody CategoryDto categoryDTO) {
+    categoryService.createCategory(categoryDTO);
+    return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(new ResponseDto(Constant.MESSAGE_201, Constant.STATUS_CODE_CREATED));
   }
 
-  @PostMapping
-  public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO categoryDTO) {
-    Category category = mapCategoryDTOToEntity(categoryDTO);
-    return ResponseEntity.ok(categoryService.saveCategory(category));
-  }
-
-  private Category mapCategoryDTOToEntity(CategoryDTO categoryDTO) {
+  private Category mapCategoryDTOToEntity(CategoryDto categoryDTO) {
     Category category = new Category();
     category.setCategoryName(categoryDTO.getCategoryName());
     category.setDescription(categoryDTO.getDescription());
