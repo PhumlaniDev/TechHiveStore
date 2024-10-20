@@ -219,9 +219,9 @@ jobs:
 
       - name: Code Analysis with SonarQube
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testDB
-          SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
-          SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: test
           GH_PAT: ${{ secrets.GH_PAT }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage, test -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io
