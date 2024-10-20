@@ -175,8 +175,8 @@ jobs:
         run: mvn test
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testDB
-          SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
-          SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
 
   code_analysis:
