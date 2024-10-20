@@ -1,6 +1,6 @@
 -- Create database (if required, uncomment and configure appropriately)
  CREATE DATABASE IF NOT EXISTS tech_hive_db
- WITH OWNER = phumlanidev
+ WITH OWNER = macgyver
  ENCODING = 'UTF8'
  CONNECTION LIMIT = -1;
 
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS OrderItem (
     );
 
  -- Grant all privileges to the user 'phumlanidev'
- GRANT ALL PRIVILEGES ON tech_hive_db.* TO 'phumlanidev'@'localhost';
+ GRANT ALL PRIVILEGES ON tech_hive_db.* TO 'macgyver'@'localhost';
 
  -- Make sure privileges are reloaded
  FLUSH PRIVILEGES;
