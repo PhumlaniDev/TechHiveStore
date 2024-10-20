@@ -1,12 +1,10 @@
-package com.phumlanidev.techhivestore.service;
+package com.phumlanidev.techhivestore.auth;
 
 
-
-import com.phumlanidev.techhivestore.dto.UserDTO;
+import com.phumlanidev.techhivestore.dto.UserDto;
+import com.phumlanidev.techhivestore.mapper.UserMapper;
 import com.phumlanidev.techhivestore.repository.AddressRepository;
 import com.phumlanidev.techhivestore.repository.UsersRepository;
-
-
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +12,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,27 +25,29 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AuthService {
 
-
-
   private final UsersRepository usersRepository;
   private final AddressRepository addressRepository;
   private final PasswordEncoder passwordEncoder;
   private final Keycloak keycloak;
+  private final UserMapper userMapper;
 
-//  @Value("${keycloak.auth-server-url}")
-//  private String keycloakServerUrl;
-//  @Value("${keycloak.realm}")
-//  private String keycloakRealm;
-//  @Value("${keycloak.resource}")
-//  private String keycloakClientId;
-//  @Value("${keycloak.credentials.secret}")
-//  private String keycloakClientSecret;
+  @Value("${keycloak.auth-server-url}")
+  private String keycloakServerUrl;
+  @Value("${keycloak.realm}")
+  private String keycloakRealm;
+  @Value("${keycloak.resource}")
+  private String keycloakClientId;
+  @Value("${keycloak.credentials.secret}")
+  private String keycloakClientSecret;
 
   private static final String ENABLED_ATTRIBUTE = "enabled";
   private static final String TRUE_VALUE = "true";
 
 
-    //  public UserDTO registerUser(UserDTO userDTO) {
+  /**
+   * <p> comment </p>.
+   */
+//  public UserDto registerUser(UserDto userDTO) {
 //    AddressDto addressDTO = userDTO.getAddress(); // Retrieve the AddressDTO from UserDTO
 //
 //    if (addressDTO == null) {
@@ -61,15 +62,10 @@ public class AuthService {
 //    address.setZipCode(addressDTO.getZipCode());
 //    addressRepository.save(address);
 //
-//    Users user = new Users();
-//    user.setUsername(userDTO.getUsername().toLowerCase());
-//    user.setEmail(userDTO.getEmail().toLowerCase());
-//    user.setFirstName(userDTO.getFirstName());
-//    user.setLastName(userDTO.getLastName());
-//    user.setPhoneNumber(userDTO.getPhoneNumber());
+//    Users user = userMapper.toEntity(userDTO, new Users());
 //    user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-//    user.setRoles(Collections.singletonList("ROLE_USER"));
-//    user.setAddressId(address);
+////    user.setRoles(Collections.singletonList("ROLE_USER"));
+////    user.setAddress(address);
 //
 //    usersRepository.save(user);
 //
@@ -78,13 +74,13 @@ public class AuthService {
 //    addressRepository.save(address);
 //
 //
-//    return new UserDTO(user);
+//    return new UserDto(user);
 //  }
-
-  /**
-   * <p> comment </p>.
-   */
-//  void registerUserInKeycloak(UserDTO userDTO) {
+//
+//  /**
+//   * <p> comment </p>.
+//   */
+//  void registerUserInKeycloak(UserDto userDTO) {
 //    try {
 //      // Get the token for debugging
 //      String token = keycloak.tokenManager().getAccessTokenString();
@@ -115,7 +111,7 @@ public class AuthService {
 //    }
 //  }
 
-  private UserRepresentation createUserRepresentation(UserDTO userDTO) {
+  private UserRepresentation createUserRepresentation(UserDto userDTO) {
     UserRepresentation userRepresentation = new UserRepresentation();
     userRepresentation.setUsername(userDTO.getUsername());
     userRepresentation.setEmail(userDTO.getEmail());

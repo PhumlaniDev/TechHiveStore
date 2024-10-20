@@ -1,24 +1,23 @@
 package com.phumlanidev.techhivestore.dto;
 
-import com.phumlanidev.techhivestore.mapper.AddressMapper;
-import com.phumlanidev.techhivestore.model.Users;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.phumlanidev.techhivestore.enums.Roles;
+import lombok.*;
 
 /**
  * <p> comment </p>.
  */
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-public class UserDTO {
+@AllArgsConstructor
+public class UserDto {
 
-  private Long userId;
   private String username;
-  private String password;
   private String email;
   private String firstName;
   private String lastName;
   private String phoneNumber;
+  private Roles role;
   private AddressDto address;
-
 }

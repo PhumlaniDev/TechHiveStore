@@ -5,7 +5,7 @@ import com.phumlanidev.techhivestore.model.Product;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductMapper  {
+public class ProductMapper {
 
     public Product toEntity(ProductDto dto, Product product) {
         product.setName(dto.getName());

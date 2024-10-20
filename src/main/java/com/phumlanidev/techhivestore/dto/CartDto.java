@@ -6,9 +6,9 @@ import lombok.Data;
  * <p> comment </p>.
  */
 @Data
-public final class CartDto {
+public class CartDto {
 
-  private Long cartId;
-  private Long userId; // foreign key reference
-  private double totalPrice;
+    private Long cartId;
+    private Long userId; // foreign key reference
+    private double totalPrice;
 }

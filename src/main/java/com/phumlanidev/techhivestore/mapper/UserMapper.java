@@ -5,7 +5,7 @@ import com.phumlanidev.techhivestore.model.Users;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapper{
+public class UserMapper {
 
 
 

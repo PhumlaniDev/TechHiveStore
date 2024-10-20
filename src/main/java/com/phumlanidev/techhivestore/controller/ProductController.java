@@ -1,12 +1,6 @@
 package com.phumlanidev.techhivestore.controller;
 
-import com.phumlanidev.techhivestore.dto.ProductDTO;
 import com.phumlanidev.techhivestore.service.ProductService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +14,10 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
-    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO) {
-        return new  ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductDto productDTO) {
+//        return new  ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
+//    }
 
 //    private Product mapProductDTOToEntity(ProductDTO productDTO) {
 //        Product product = new Product();
