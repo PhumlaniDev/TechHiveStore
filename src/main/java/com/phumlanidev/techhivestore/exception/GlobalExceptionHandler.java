@@ -73,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserAlreadyExistException.class)
+    @ExceptionHandler(CategoryAlreadyExistException.class)
     public ResponseEntity<ErrorResponseDto> handleCategoryAlreadyExistException(CategoryAlreadyExistException ex, WebRequest request) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(
                 request.getDescription(false),
