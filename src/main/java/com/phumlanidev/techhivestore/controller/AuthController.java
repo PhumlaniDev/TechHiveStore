@@ -2,8 +2,10 @@ package com.phumlanidev.techhivestore.controller;
 
 import com.phumlanidev.techhivestore.config.JwtResponse;
 import com.phumlanidev.techhivestore.dto.LoginDto;
-import com.phumlanidev.techhivestore.auth.AuthService;
+import com.phumlanidev.techhivestore.dto.UserDTO;
+import com.phumlanidev.techhivestore.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,11 +29,11 @@ public class AuthController {
   /**
    * <p> comment </p>.
    */
-//  @PostMapping("/register")
-//  public ResponseEntity<UserDto> register(@RequestBody UserDto userDTO) {
-//    UserDto registeredUser = authService.registerUser(userDTO);
-//    return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
-//  }
+  @PostMapping("/register")
+  public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
+    UserDTO registeredUser = authService.registerUser(userDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+  }
 
   /**
    * <p> comment </p>.

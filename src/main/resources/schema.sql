@@ -1,90 +1,80 @@
 -- Create database (if required, uncomment and configure appropriately)
- CREATE DATABASE IF NOT EXISTS tech_hive_db
- WITH OWNER = phumlanidev
- ENCODING = 'UTF8'
- CONNECTION LIMIT = -1;
-
- -- Use the newly created or existing database
- USE tech_hive_db;
+-- CREATE DATABASE IF NOT EXISTS tech_hive_db
+-- WITH OWNER = phumlanidev
+-- ENCODING = 'UTF8'
+-- CONNECTION LIMIT = -1;
 
 CREATE TABLE IF NOT EXISTS Address (
-    address_id AUTO_INCREMENT PRIMARY KEY,
-    street_name VARCHAR(255) NOT NULL,
+                                       addressId SERIAL PRIMARY KEY,
+                                       streetAddress VARCHAR(255) NOT NULL,
     city VARCHAR(100) NOT NULL,
     province VARCHAR(100),
-    zip_code VARCHAR(20) NOT NULL,
+    zipCode VARCHAR(20) NOT NULL,
     country VARCHAR(100) NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS Users (
-    user_id AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
+                                     userId SERIAL PRIMARY KEY,
+                                     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    phone_number VARCHAR(20),
-    role VARCHAR(20),
-    address_id INT,
-    FOREIGN KEY (address_id) REFERENCES Address (address_id)
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    phoneNumber VARCHAR(20),
+    addressId INT,
+    FOREIGN KEY (addressId) REFERENCES Address (addressId)
     );
 
 CREATE TABLE IF NOT EXISTS Category (
-    category_id AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(100) NOT NULL UNIQUE,
+                                        categoryId SERIAL PRIMARY KEY,
+                                        categoryName VARCHAR(100) NOT NULL UNIQUE,
     description TEXT
     );
 
 CREATE TABLE IF NOT EXISTS Product (
-    product_id AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+                                       productId SERIAL PRIMARY KEY,
+                                       name VARCHAR(100) NOT NULL,
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     quantity INT NOT NULL,
-    category_id INT,
+    categoryId INT,
     imageURL VARCHAR(255),
-    FOREIGN KEY (category_id) REFERENCES Category (category_id)
+    FOREIGN KEY (categoryId) REFERENCES Category (categoryId)
     );
 
 CREATE TABLE IF NOT EXISTS Cart (
-    cart_id AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    total_price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users (user_id)
+                                    cartId SERIAL PRIMARY KEY,
+                                    userId INT,
+                                    totalPrice DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES Users (userId)
     );
 
 CREATE TABLE IF NOT EXISTS CartItem (
-    cart_item_id AUTO_INCREMENT PRIMARY KEY,
-    cart_id INT,
-    product_id INT,
-    quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (cart_id) REFERENCES Cart (cart_id),
-    FOREIGN KEY (product_id) REFERENCES Product (product_id)
+                                        cartItemId SERIAL PRIMARY KEY,
+                                        cartId INT,
+                                        productId INT,
+                                        quantity INT NOT NULL,
+                                        price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (cartId) REFERENCES Cart (cartId),
+    FOREIGN KEY (productId) REFERENCES Product (productId)
     );
 
 CREATE TABLE IF NOT EXISTS Orders (
-    order_id AUTO_INCREMENT PRIMARY KEY,
-    order_number VARCHAR(50) NOT NULL UNIQUE,
-    user_id INT,
-    order_created_date TIMESTAMP NOT NULL,
-    order_status VARCHAR(50) NOT NULL,
-    total_price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users (user_id)
+                                      orderId SERIAL PRIMARY KEY,
+                                      orderNumber VARCHAR(50) NOT NULL UNIQUE,
+    userId INT,
+    orderCreatedDate TIMESTAMP NOT NULL,
+    orderStatus VARCHAR(50) NOT NULL,
+    totalPrice DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES Users (userId)
     );
 
 CREATE TABLE IF NOT EXISTS OrderItem (
-    order_item_id AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    product_id INT,
-    quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders (order_id),
-    FOREIGN KEY (product_id) REFERENCES Product (product_id)
+                                         orderItemId SERIAL PRIMARY KEY,
+                                         orderId INT,
+                                         productId INT,
+                                         quantity INT NOT NULL,
+                                         price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (orderId) REFERENCES Orders (orderId),
+    FOREIGN KEY (productId) REFERENCES Product (productId)
     );
-
- -- Grant all privileges to the user 'phumlanidev'
- GRANT ALL PRIVILEGES ON tech_hive_db.* TO 'phumlanidev'@'localhost';
-
- -- Make sure privileges are reloaded
- FLUSH PRIVILEGES;
