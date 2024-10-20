@@ -23,7 +23,6 @@ public class Users extends BaseEntity{
   private String firstName;
   private String lastName;
   private String phoneNumber;
-  @ElementCollection(fetch = FetchType.EAGER)
   @Enumerated(EnumType.STRING)
   private Roles role;
   private Address address;
