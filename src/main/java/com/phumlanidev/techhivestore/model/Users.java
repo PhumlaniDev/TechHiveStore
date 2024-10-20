@@ -25,6 +25,8 @@ public class Users extends BaseEntity{
   private String phoneNumber;
   @Enumerated(EnumType.STRING)
   private Roles role;
+  @ManyToOne
+  @JoinColumn(name = "address_id", referencedColumnName = "addressId")
   private Address address;
 
 }

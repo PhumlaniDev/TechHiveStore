@@ -1,7 +1,6 @@
 package com.phumlanidev.techhivestore.mapper;
 
 import com.phumlanidev.techhivestore.dto.ProductDto;
-import com.phumlanidev.techhivestore.dto.UserDto;
 import com.phumlanidev.techhivestore.model.Product;
 import org.springframework.stereotype.Component;
 

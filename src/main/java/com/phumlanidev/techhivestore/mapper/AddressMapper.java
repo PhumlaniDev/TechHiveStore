@@ -2,7 +2,9 @@ package com.phumlanidev.techhivestore.mapper;
 
 import com.phumlanidev.techhivestore.dto.AddressDto;
 import com.phumlanidev.techhivestore.model.Address;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AddressMapper{
 
   public Address toEntity(AddressDto dto, Address address) {

@@ -2,7 +2,9 @@ package com.phumlanidev.techhivestore.mapper;
 
 import com.phumlanidev.techhivestore.dto.UserDto;
 import com.phumlanidev.techhivestore.model.Users;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper{
 
 
