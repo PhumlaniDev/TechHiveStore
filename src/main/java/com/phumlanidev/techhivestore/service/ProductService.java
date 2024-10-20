@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
-    private final UsersRepository usersRepository;
-    private final ProductMapper productMapper;
+    private ProductRepository productRepository;
+    private UsersRepository usersRepository;
+    private ProductMapper productMapper;
 
     // create a createProduct method that will also save the product to the database and return the productDTO, also the method should be annotated with @Transactional and also should be created by an admin and should have specific categories and don't save a product with null values
 //    @Transactional

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AdminService {
 
-  private final UsersRepository usersRepository;
+  private UsersRepository usersRepository;
 
     /**
      * <p> This method deletes a user by their ID from the repository. </p>

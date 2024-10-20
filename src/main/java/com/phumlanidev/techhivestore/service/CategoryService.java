@@ -20,9 +20,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
-    private final UsersRepository usersRepository;
+    private CategoryRepository categoryRepository;
+    private CategoryMapper categoryMapper;
+    private UsersRepository usersRepository;
 
   // create a method that will create a category, the method should be annotated with @Transactional, should be created by an admin, should not save a category with null values, should also check if the method already exists
   @Transactional

@@ -25,11 +25,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AuthService {
 
-  private final UsersRepository usersRepository;
-  private final AddressRepository addressRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final Keycloak keycloak;
-  private final UserMapper userMapper;
+  private UsersRepository usersRepository;
+  private AddressRepository addressRepository;
+  private PasswordEncoder passwordEncoder;
+  private Keycloak keycloak;
+  private UserMapper userMapper;
 
   @Value("${keycloak.auth-server-url}")
   private String keycloakServerUrl;
