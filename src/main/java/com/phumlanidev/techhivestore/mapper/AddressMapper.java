@@ -1,13 +1,11 @@
 package com.phumlanidev.techhivestore.mapper;
 
-import com.phumlanidev.techhivestore.dto.AddressDTO;
+import com.phumlanidev.techhivestore.dto.AddressDto;
 import com.phumlanidev.techhivestore.model.Address;
 
-public class AddressMapper extends AbstractMapper<Address, AddressDTO> {
+public class AddressMapper{
 
-  @Override
-  public Address toEntity(AddressDTO dto) {
-    Address address = new Address();
+  public Address toEntity(AddressDto dto, Address address) {
     address.setStreetName(dto.getStreetName());
     address.setCity(dto.getCity());
     address.setProvince(dto.getProvince());
@@ -16,9 +14,8 @@ public class AddressMapper extends AbstractMapper<Address, AddressDTO> {
     return address;
   }
 
-  @Override
-  public AddressDTO toDTO(Address entity) {
-    AddressDTO addressDTO = new AddressDTO();
+
+  public AddressDto toDTO(Address entity, AddressDto addressDTO ) {
     addressDTO.setStreetName(entity.getStreetName());
     addressDTO.setCity(entity.getCity());
     addressDTO.setProvince(entity.getProvince());
