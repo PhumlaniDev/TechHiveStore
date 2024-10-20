@@ -172,9 +172,9 @@ jobs:
           fail-on-cache-miss: false
 
       - name: Run Unit Tests
-        run: mvn test -Dspring.profiles.active=test
+        run: mvn test
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testDB
           SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
           SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
