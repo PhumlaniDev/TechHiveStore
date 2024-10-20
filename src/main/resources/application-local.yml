@@ -7,6 +7,7 @@ spring:
     username: ENC(/nW6jbEwEA2bza/dA1QI9hwPhDqXRyU1KnrPAtQ/oMqDfmE/mP1T/uK44W7S3kCc)
     password: ENC(19JPpH3BoBvy/NO3FAvwX12J1zsAJAaglWVjR7YwhezEfik601BwD7Mb3swoD5Vu)
     driver-class-name: org.postgresql.Driver
+    schema: classpath:schema-postgresql.sql
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
