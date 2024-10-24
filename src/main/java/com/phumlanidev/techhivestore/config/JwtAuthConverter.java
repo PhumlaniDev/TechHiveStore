@@ -1,5 +1,6 @@
 package com.phumlanidev.techhivestore.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
@@ -28,12 +29,12 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter();
 
-    @Value("${jwt.auth.converter.principle-attribute}")
+    @Value("${keycloak.principle-attribute}")
     private String principleAttribute;
-    @Value("${jwt.auth.converter.resource-id}")
+    @Value("${keycloak.resource}")
     private String resourceId;
 
-    @Override
+  @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
         Collection<GrantedAuthority> authorities = Stream.concat(
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
