@@ -18,7 +18,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 
     properties:
       hibernate:
@@ -37,12 +37,12 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 keycloak:
-  auth-server-url: http://localhost:8080/auth
+  auth-server-url: http://localhost:8080
   realm: mac-apps
-  resource: ecommerce
+  resource: tech-hive-store-api
   principle-attribute: preferred_username
   credentials:
-    secret: ENC(iMzRIa4KN3yUZ9UKSfTuXcHvLkS48kI0OMv8qQ64lcZyYSp3SIhyjOk53JmFoSm3Z6qg89RwIT2eXx+dXzCMIg+Lb5pTH+LrzLngJPvOTdw=)
+    secret: ENC(v+l2EWntxAO03Ob1OXFpkSuoqTmI7cb+kOQwOVHnhPrQavklRhbUsow/l5+Ibj/jIVQO6I5+HigWyXOmw5NwtR4zY1FP4qdhzoqSd46rcQM=)
   admin:
     username: admin
     password: admin
@@ -61,4 +61,4 @@ logging:
             sql: TRACE
 
 server:
-  port: 9000
+  port: 9500

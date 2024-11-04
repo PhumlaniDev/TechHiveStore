@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final AuthService authService;
+    private final AuthService authService;
 
+    /**
+     * <p> comment </p>.
+     */
   @PostMapping("/register")
   public ResponseEntity<ResponseDto> register(@RequestBody UserDto userDTO) {
     authService.registerUser(userDTO);
@@ -32,12 +35,12 @@ public class AuthController {
             .body(new ResponseDto(Constant.STATUS_CODE_CREATED, "You have successfully Registered."));
   }
 
-
+  /**
+   * <p> comment </p>.
+   */
   @PostMapping("/login")
-  public ResponseEntity<ResponseDto> login(@RequestBody LoginDto loginDto) {
+  public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
     String token = authService.login(loginDto);
-    return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(new ResponseDto(HttpStatus.OK.toString(), "You have been successfully Authenticated"));
+    return ResponseEntity.ok(new JwtResponse(token));
   }
 }
