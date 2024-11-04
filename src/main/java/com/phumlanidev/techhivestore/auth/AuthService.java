@@ -11,7 +11,7 @@ import com.phumlanidev.techhivestore.repository.AddressRepository;
 import com.phumlanidev.techhivestore.repository.UsersRepository;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
@@ -20,7 +20,6 @@ import org.keycloak.admin.client.resource.ClientResource;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -37,7 +36,7 @@ import java.util.Collections;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthService {
 
   private static final String ENABLED_ATTRIBUTE = "enabled";
@@ -117,52 +116,6 @@ public class AuthService {
       log.error("Exception occurred while creating user {} in Keycloak: {}", userDto.getUsername(), e.getMessage(), e);
     }
   }
-
-//  private void registerKeycloakUser(UserDto userDto) {
-//    try {
-//      RealmResource realmResource = keycloak.realm(keycloakRealm);
-//
-//      UsersResource usersResource = realmResource.users();
-//
-//      // Create a new Keycloak user
-//      UserRepresentation keycloakUser = createUserRepresentation(userDto);
-//
-//      // Create the Keycloak user
-//      Response response = usersResource.create(keycloakUser);
-//
-//
-//      // Check if user creation was successful
-//      try {
-//        if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
-//          log.info("Keycloak user created successfully for username: {}", userDto.getUsername());
-//
-//          // Step 5: Set user credentials (password)
-//          String userId = getUserIdFromLocation(response.getLocation());
-//          UserResource userResource = usersResource.get(userId);
-//
-//          if ("ADMIN".equalsIgnoreCase(userDto.getRole().toString())) {
-//            assignRealmRole(userResource, realmResource, "admin");
-//            assignClientRole(userResource, realmResource, "client_admin");
-//          } else if ("USER".equalsIgnoreCase(userDto.getRole().toString())) {
-//            assignRealmRole(userResource, realmResource, "user");
-//            assignClientRole(userResource, realmResource, "client_user");
-//          }
-//
-//          setPasswordForUser(usersResource, userId, userDto.getPassword());
-//
-//        } else {
-//          log.error("Failed to create Keycloak user: {}", response.getStatusInfo().toString());
-//          throw new RuntimeException("Keycloak user creation failed");
-//        }
-//      } catch (NotAuthorizedException e) {
-//        log.error("Authorization failed during user creation: {}", e.getMessage());
-//        // Handle the 401 Unauthorized error here
-//      }
-//    } catch (Exception e) {
-//      log.error("Exception occurred while creating user {} in Keycloak: {}", userDto.getUsername(), e.getMessage(), e);
-//    }
-//
-//  }
 
   private String getUserIdFromLocation(URI location) {
     String path = location.getPath();
