@@ -9,7 +9,6 @@ spring:
     console:
       enabled: true
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
   security:
@@ -24,7 +23,7 @@ keycloak:
   resource: tech-hive-store-api
   principle-attribute: preferred_username
   credentials:
-    secret: Bw421P4VwyPsBj8vthwOQiIJ4WyCznSr
+    secret: ENC(v+l2EWntxAO03Ob1OXFpkSuoqTmI7cb+kOQwOVHnhPrQavklRhbUsow/l5+Ibj/jIVQO6I5+HigWyXOmw5NwtR4zY1FP4qdhzoqSd46rcQM=)
   admin:
     username: admin
     password: admin
