@@ -21,7 +21,8 @@ spring:
 keycloak:
   auth-server-url: http://localhost:8080
   realm: mac-apps
-  resource: ecommerce
+  resource: tech-hive-store-api
+  principle-attribute: preferred_username
   credentials:
     secret: Bw421P4VwyPsBj8vthwOQiIJ4WyCznSr
   admin:
@@ -31,12 +32,6 @@ keycloak:
   #  sql:
   #    init:
   #      mode: always
-
-jwt:
-  auth:
-    converter:
-      resource-id: ecommerce
-      principle-attribute: preferred_username
 
 logging:
   level:
