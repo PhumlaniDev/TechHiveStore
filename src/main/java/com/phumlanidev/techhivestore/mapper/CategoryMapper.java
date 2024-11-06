@@ -9,6 +9,7 @@ public class CategoryMapper {
 
   public Category toEntity(CategoryDto dto, Category category) {
     category.setCategoryName(dto.getCategoryName());
+    category.setDescription(dto.getDescription());
     return category;
   }
 

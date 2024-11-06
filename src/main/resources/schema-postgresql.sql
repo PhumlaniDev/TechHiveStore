@@ -1,11 +1,11 @@
 -- Create database (if required, uncomment and configure appropriately)
- CREATE DATABASE IF NOT EXISTS tech_hive_db
- WITH OWNER = macgyver
- ENCODING = 'UTF8'
- CONNECTION LIMIT = -1;
-
- -- Use the newly created or existing database
- USE tech_hive_db;
+--  CREATE DATABASE IF NOT EXISTS tech_hive_db
+--  WITH OWNER = macgyver
+--  ENCODING = 'UTF8'
+--  CONNECTION LIMIT = -1;
+--
+--  -- Use the newly created or existing database
+--  USE tech_hive_db;
 
 CREATE TABLE IF NOT EXISTS Address (
     address_id AUTO_INCREMENT PRIMARY KEY,
@@ -83,8 +83,8 @@ CREATE TABLE IF NOT EXISTS OrderItem (
     FOREIGN KEY (product_id) REFERENCES Product (product_id)
     );
 
- -- Grant all privileges to the user 'phumlanidev'
- GRANT ALL PRIVILEGES ON tech_hive_db.* TO 'macgyver'@'localhost';
-
- -- Make sure privileges are reloaded
- FLUSH PRIVILEGES;
+--  -- Grant all privileges to the user 'phumlanidev'
+--  GRANT ALL PRIVILEGES ON tech_hive_db.* TO 'macgyver'@'localhost';
+--
+--  -- Make sure privileges are reloaded
+--  FLUSH PRIVILEGES;

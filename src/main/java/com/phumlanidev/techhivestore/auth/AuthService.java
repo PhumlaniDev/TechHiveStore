@@ -1,6 +1,9 @@
 package com.phumlanidev.techhivestore.auth;
 
 
+
+
+
 import com.phumlanidev.techhivestore.dto.LoginDto;
 import com.phumlanidev.techhivestore.dto.UserDto;
 import com.phumlanidev.techhivestore.mapper.AddressMapper;
@@ -80,18 +83,14 @@ public class AuthService {
 
       UsersResource usersResource = realmResource.users();
 
-      // Create a new Keycloak user
       UserRepresentation keycloakUser = createUserRepresentation(userDto);
 
-      // Create the Keycloak user
       Response response = usersResource.create(keycloakUser);
 
-      // Check if user creation was successful
       try {
         if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
           log.info("Keycloak user created successfully for username: {}", userDto.getUsername());
 
-          // Step 5: Set user credentials (password)
           String userId = getUserIdFromLocation(response.getLocation());
           UserResource userResource = usersResource.get(userId);
 
@@ -110,7 +109,6 @@ public class AuthService {
         }
       } catch (NotAuthorizedException e) {
         log.error("Authorization failed during user creation: {}", e.getMessage());
-        // Handle the 401 Unauthorized error here
       }
     } catch (Exception e) {
       log.error("Exception occurred while creating user {} in Keycloak: {}", userDto.getUsername(), e.getMessage(), e);

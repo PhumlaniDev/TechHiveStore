@@ -1,38 +1,54 @@
 package com.phumlanidev.techhivestore.controller;
 
+import com.phumlanidev.techhivestore.auth.ResponseDto;
+import com.phumlanidev.techhivestore.constant.Constant;
+import com.phumlanidev.techhivestore.dto.ProductDto;
 import com.phumlanidev.techhivestore.service.ProductService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping(path = "/api/v1/products", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequiredArgsConstructor
+@Validated
 public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDto> createProduct(@Valid @RequestBody ProductDto productDto) {
+        productService.createProduct(productDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ResponseDto(Constant.STATUS_CODE_CREATED, "Product created successfully"));
     }
 
-//    @PostMapping
-//    public ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductDto productDTO) {
-//        return new  ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
-//    }
+    @PostMapping("/update")
+    public ResponseEntity<ResponseDto> updateProduct(@Valid @RequestBody ProductDto productDto) {
+        boolean isUpdated = productService.updateProduct(productDto);
 
-//    private Product mapProductDTOToEntity(ProductDTO productDTO) {
-//        Product product = new Product();
-//        product.setName(productDTO.getName());
-//        product.setDescription(productDTO.getDescription());
-//        product.setPrice(productDTO.getPrice());
-//        product.setQuantity(productDTO.getQuantity());
-//        product.setImageURL(productDTO.getImageURL());
-//
-//        // Map CategoryDTO to Category entity
-//        Category category = new Category();
-//        category.setCategoryName(productDTO.getCategory().getCategoryName());
-//        category.setDescription(productDTO.getCategory().getDescription());
-//        product.setCategory(category);
-//
-//        return product;
-//    }
+        if (isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(Constant.STATUS_CODE_ok, "Product updated successfully"));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDto(Constant.STATUS_500, Constant.MESSAGE_500));
+        }
+
+    }
+
+    @PostMapping("/find")
+    public ResponseEntity<ProductDto> findProductById(@Valid @RequestParam Long productId) {
+        ProductDto product = productService.findProductById(productId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(product);
+    }
 }

@@ -1,7 +1,7 @@
 package com.phumlanidev.techhivestore.dto;
 
 import com.phumlanidev.techhivestore.model.Category;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -15,11 +15,11 @@ import lombok.*;
 @AllArgsConstructor
 public class ProductDto {
 
-  @NotBlank(message = "Name must not be blank")
+  @NotEmpty(message = "Name must not be blank")
   private String name;
-  @NotBlank(message = "Description must not be blank")
+  @NotEmpty(message = "Description must not be blank")
   private String description;
-  @NotBlank(message = "Price must not be blank")
+  @NotEmpty(message = "Price is required")
   private String price;
   @NotNull(message = "Quantity must not be null")
   private Integer quantity;

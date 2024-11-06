@@ -17,7 +17,7 @@ public class ProductMapper {
         return product;
     }
 
-    public ProductDto toDTO(Product product, ProductDto dto) {
+    public ProductDto toDto(Product product, ProductDto dto) {
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
