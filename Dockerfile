@@ -13,7 +13,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Second stage: create the final image to run the application
-FROM azul/zulu-openjdk-alpine:17
+FROM azul/zulu-openjdk-alpine:23
 
 # Set the working directory inside the container
 WORKDIR /app
