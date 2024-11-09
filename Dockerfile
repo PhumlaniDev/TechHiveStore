@@ -1,5 +1,5 @@
 # First stage: build the application using Maven
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -21,8 +21,8 @@ WORKDIR /app
 # Copy the built JAR file from the first stage
 COPY --from=build /app/target/techtivestore-0.0.1-SNAPSHOT.jar app.jar
 
-# Make port 8080 available to the world outside this container
-EXPOSE 7000
+# Make port 9500 available to the world outside this container
+EXPOSE 9500
 
 # Run the JAR file
 ENTRYPOINT ["java", "-jar", "app.jar"]
