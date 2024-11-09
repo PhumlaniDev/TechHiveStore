@@ -3,9 +3,17 @@ package com.phumlanidev.techhivestore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * <p> comment </p>.
+ */
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
-public class Product {
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +22,9 @@ public class Product {
   private String description;
   private String price;
   private Integer quantity;
-  @ManyToOne
-  private Category category;
   private String imageURL;
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "category_id", nullable = false)
+  private Category category;
+
 }

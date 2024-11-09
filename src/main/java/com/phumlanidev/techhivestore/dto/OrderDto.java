@@ -1,13 +1,17 @@
 package com.phumlanidev.techhivestore.dto;
 
-import com.phumlanidev.techhivestore.enums.*;
-import lombok.*;
+import com.phumlanidev.techhivestore.enums.OrderStatus;
+import com.phumlanidev.techhivestore.enums.PaymentStatus;
+import lombok.Data;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
+/**
+ * <p> comment </p>.
+ */
 @Data
-public class OrderDTO {
+public class OrderDto {
 
   private Long orderId;
   private UUID orderNumber;

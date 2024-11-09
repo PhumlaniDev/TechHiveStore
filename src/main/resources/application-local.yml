@@ -1,12 +1,16 @@
+server:
+  port: 9500
+
 spring:
   application:
     name: Tech Hive e-Store
 
   datasource:
     url: jdbc:postgresql://localhost:5432/tech_hive_db
-    username: phumlanidev
-    password: password
+    username: ENC(/nW6jbEwEA2bza/dA1QI9hwPhDqXRyU1KnrPAtQ/oMqDfmE/mP1T/uK44W7S3kCc)
+    password: ENC(19JPpH3BoBvy/NO3FAvwX12J1zsAJAaglWVjR7YwhezEfik601BwD7Mb3swoD5Vu)
     driver-class-name: org.postgresql.Driver
+    schema: classpath:schema-postgresql.sql
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
@@ -17,25 +21,44 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
         format_sql: true
         show_sql: true
-        use_sql_comments: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 50
+    open-in-view: false
 
-#  sql:
-#    init:
-#      mode: always
+  sql:
+    init:
+      mode: always
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/admin
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+keycloak:
+  auth-server-url: http://localhost:8080
+  realm: mac-apps
+  resource: tech-hive-store-api
+  principle-attribute: preferred_username
+  credentials:
+    secret: ENC(v+l2EWntxAO03Ob1OXFpkSuoqTmI7cb+kOQwOVHnhPrQavklRhbUsow/l5+Ibj/jIVQO6I5+HigWyXOmw5NwtR4zY1FP4qdhzoqSd46rcQM=)
+  admin:
+    username: admin
+    password: admin
 
 logging:
   level:
-    root: info
     org:
-      springframework:
-        web: debug
-
-server:
-  port: 7000
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE

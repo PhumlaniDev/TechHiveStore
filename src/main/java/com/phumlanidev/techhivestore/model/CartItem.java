@@ -3,8 +3,15 @@ package com.phumlanidev.techhivestore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * <p> comment </p>.
+ */
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartItem {
 
   @Id

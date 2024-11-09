@@ -2,8 +2,11 @@ package com.phumlanidev.techhivestore.dto;
 
 import lombok.Data;
 
+/**
+ * <p> comment </p>.
+ */
 @Data
-public class CartItemDTO {
+public class CartItemDto {
 
   private Long cartItemsId;
   private Long cartId; // foreign key reference

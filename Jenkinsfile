@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker-agent:latest' // Your custom Jenkins agent image
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for docker commands
+        }
+    }
 
     environment {
         POSTGRES_DB = 'tech_hive_db'
@@ -11,83 +16,28 @@ pipeline {
         DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
         DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
         SONAR_TOKEN = credentials('SONAR_TOKEN')
+        IMAGE_NAME = 'tech-hive-store'
     }
 
-    stages {
-        stage('Setup') {
+     stages {
+        stage('Checkout') {
             steps {
-                script {
-                    checkout scm
-                    sh 'sudo apt-get update'
-                    sh 'sudo apt-get install -y openjdk-17-jdk maven docker.io'
-                    sh 'mvn dependency:go-offline'
-                }
+                // Checkout your repository from GitHub
+                git 'https://github.com/PhumlaniDev/TechHiveStore.git'
             }
         }
-
+        
         stage('Build') {
             steps {
-                script {
-                    docker.image('postgres:latest').inside('-p 5432:5432') {
-                        sh 'mvn clean install'
-                        sh '''
-                        docker build -t $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER} .
-                        docker tag $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER} $DOCKERHUB_USERNAME/tech-hive-store:latest
-                        echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-                        docker push $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                        docker push $DOCKERHUB_USERNAME/tech-hive-store:latest
-                        '''
-                    }
-                }
+                // Clean and build the project using Maven
+                sh 'mvn clean install'
             }
         }
 
-        stage('Unit Tests') {
+         stage('Unite Test') {
             steps {
-                script {
-                    docker.image('postgres:latest').inside('-p 5432:5432') {
-                        sh 'mvn test'
-                    }
-                }
-            }
-        }
-
-        stage('Code Analysis') {
-            steps {
-                script {
-                    docker.image('postgres:latest').inside('-p 5432:5432') {
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN'
-                    }
-                }
-            }
-        }
-
-        stage('Vulnerability Scan') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                        sh '''
-                        docker pull $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                        trivy image --format json --output trivy-report.json $DOCKERHUB_USERNAME/tech-hive-store:${BUILD_NUMBER}
-                        '''
-                    }
-                }
-            }
-        }
-
-        stage('Job Summary') {
-            steps {
-                script {
-                    sh '''
-                    curl -u $SONAR_TOKEN https://sonarcloud.io/api/project_analyses/search?project=PhumlaniDev_TechHiveStore -o sonar-report.json
-                    echo "# Analysis and Vulnerability Report" > report.md
-                    echo "## SonarCloud Analysis" >> report.md
-                    cat sonar-report.json | jq . >> report.md
-                    echo "## Vulnerabilities" >> report.md
-                    cat trivy-report.json | jq -r '.[] | "Package: \(.Target)\nSeverity: \(.Severity)\nDescription: \(.VulnerabilityID)\n"' >> report.md
-                    '''
-                    archiveArtifacts artifacts: 'report.md', allowEmptyArchive: true
-                }
+                // Clean and build the project using Maven
+                sh 'mvn test'
             }
         }
     }

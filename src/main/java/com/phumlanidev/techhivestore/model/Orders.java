@@ -1,14 +1,22 @@
 package com.phumlanidev.techhivestore.model;
 
-import com.phumlanidev.techhivestore.enums.*;
+import com.phumlanidev.techhivestore.enums.OrderStatus;
+import com.phumlanidev.techhivestore.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
+/**
+ * <p> comment </p>.
+ */
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Orders {
 
   @Id
