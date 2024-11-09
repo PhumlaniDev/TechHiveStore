@@ -1,25 +1,48 @@
+server:
+  port: 9500
+
 spring:
+  application:
+    name: Tech Hive e-Store
+
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: test
-    password: test
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:postgresql://localhost:5432/testdb
+    username: ENC(/nW6jbEwEA2bza/dA1QI9hwPhDqXRyU1KnrPAtQ/oMqDfmE/mP1T/uK44W7S3kCc)
+    password: ENC(19JPpH3BoBvy/NO3FAvwX12J1zsAJAaglWVjR7YwhezEfik601BwD7Mb3swoD5Vu)
+    driver-class-name: org.postgresql.Driver
+    schema: classpath:schema-postgresql.sql
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+      pool-name: HikariCP
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+        format_sql: true
+        show_sql: true
+        jdbc:
+          batch_size: 50
+    open-in-view: false
+
+  sql:
+    init:
+      mode: always
+
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/admin
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
-#  sql:
-#    init:
-#      schema-locations: classpath:schema-h2.sql
+
 keycloak:
   auth-server-url: http://localhost:8080
   realm: mac-apps
@@ -31,13 +54,11 @@ keycloak:
     username: admin
     password: admin
 
-  #  sql:
-  #    init:
-  #      mode: always
-
 logging:
   level:
-    root: info
     org:
-      springframework:
-        web: debug
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE

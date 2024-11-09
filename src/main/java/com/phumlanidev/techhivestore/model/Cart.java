@@ -14,12 +14,12 @@ import lombok.*;
 @NoArgsConstructor
 public class Cart {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long cartId;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users userId;
-    private double totalPrice;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Long cartId;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private Users userId;
+  private double totalPrice;
 }

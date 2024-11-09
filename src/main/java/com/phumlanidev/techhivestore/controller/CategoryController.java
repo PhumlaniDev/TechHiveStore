@@ -14,5 +14,5 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CategoryController {
 
-    private final CategoryService categoryService;
+  private final CategoryService categoryService;
 }

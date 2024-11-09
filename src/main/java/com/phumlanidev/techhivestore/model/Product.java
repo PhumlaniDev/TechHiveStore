@@ -11,8 +11,9 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor @NoArgsConstructor
-public class Product extends BaseEntity{
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class Product extends BaseEntity{
   private String price;
   private Integer quantity;
   private String imageURL;
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 

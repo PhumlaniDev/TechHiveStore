@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class CategoryDto {
 
-    @NotBlank(message = "Category name must not be blank")
-    private String categoryName;
-    private String description;
+  @NotBlank(message = "Category name must not be blank")
+  private String categoryName;
+  private String description;
 
 }

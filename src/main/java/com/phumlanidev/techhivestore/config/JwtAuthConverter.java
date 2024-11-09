@@ -25,46 +25,46 @@ import java.util.stream.Stream;
 @Component
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
-            new JwtGrantedAuthoritiesConverter();
+  private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
+          new JwtGrantedAuthoritiesConverter();
 
-    @Value("${keycloak.principle-attribute}")
-    private String principleAttribute;
-    @Value("${keycloak.resource}")
-    private String resourceId;
+  @Value("${keycloak.principle-attribute}")
+  private String principleAttribute;
+  @Value("${keycloak.resource}")
+  private String resourceId;
 
   @Override
-    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
-        Collection<GrantedAuthority> authorities = Stream.concat(
-                jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
-                extractResourceRoles(jwt).stream()
-        ).collect(Collectors.toSet());
+  public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
+    Collection<GrantedAuthority> authorities = Stream.concat(
+            jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
+            extractResourceRoles(jwt).stream()
+    ).collect(Collectors.toSet());
 
-        return new JwtAuthenticationToken(
-                jwt, authorities, getPrincipleClaimName(jwt));
+    return new JwtAuthenticationToken(
+            jwt, authorities, getPrincipleClaimName(jwt));
+  }
+
+  private String getPrincipleClaimName(Jwt jwt) {
+    String claimName = JwtClaimNames.SUB;
+    if (principleAttribute != null) {
+      claimName = principleAttribute;
     }
+    return jwt.getClaim(claimName);
+  }
 
-    private String getPrincipleClaimName(Jwt jwt) {
-        String claimName = JwtClaimNames.SUB;
-        if (principleAttribute != null) {
-            claimName = principleAttribute;
-        }
-        return jwt.getClaim(claimName);
+  private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
+    Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
+    Map<String, Object> resource;
+    Collection<String> resourceRoles;
+
+    if (resourceAccess == null
+            || (resource = (Map<String, Object>) resourceAccess.get(resourceId)) == null
+            || (resourceRoles = (Collection<String>) resource.get("roles")) == null) {
+      return Set.of();
     }
-
-    private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
-        Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
-        Map<String, Object> resource;
-        Collection<String> resourceRoles;
-
-        if (resourceAccess == null
-                || (resource = (Map<String, Object>) resourceAccess.get(resourceId)) == null
-                || (resourceRoles = (Collection<String>) resource.get("roles")) == null) {
-            return Set.of();
-        }
-        return resourceRoles
-                .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toSet());
-    }
+    return resourceRoles
+            .stream()
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+            .collect(Collectors.toSet());
+  }
 }

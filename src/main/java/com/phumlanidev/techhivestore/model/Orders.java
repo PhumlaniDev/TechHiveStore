@@ -19,22 +19,22 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Orders {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long orderId;
-    @Column(name = "order_number")
-    private UUID orderNumber;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users userId; //foreign key
-    @Column(name = "order_created_date")
-    private LocalDateTime orderCreatedDate;
-    @Column(name = "status")
-    private OrderStatus status;
-    @Column(name = "total_price")
-    private double totalPrice;
-    @Column(name = "payment_status")
-    private PaymentStatus paymentStatus;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Long orderId;
+  @Column(name = "order_number")
+  private UUID orderNumber;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private Users userId; //foreign key
+  @Column(name = "order_created_date")
+  private LocalDateTime orderCreatedDate;
+  @Column(name = "status")
+  private OrderStatus status;
+  @Column(name = "total_price")
+  private double totalPrice;
+  @Column(name = "payment_status")
+  private PaymentStatus paymentStatus;
 
 }

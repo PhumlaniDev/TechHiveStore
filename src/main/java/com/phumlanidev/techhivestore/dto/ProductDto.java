@@ -1,6 +1,5 @@
 package com.phumlanidev.techhivestore.dto;
 
-import com.phumlanidev.techhivestore.model.Category;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -25,6 +24,6 @@ public class ProductDto {
   private Integer quantity;
   private String imageURL;
   @NotNull(message = "Category must not be null")
-  private Category category;
+  private CategoryDto category;
 
 }

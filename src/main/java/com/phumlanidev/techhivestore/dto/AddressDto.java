@@ -12,9 +12,9 @@ import lombok.*;
 @AllArgsConstructor
 public class AddressDto {
 
-    private String streetName;
-    private String city;
-    private String province;
-    private String zipCode;
-    private String country;
+  private String streetName;
+  private String city;
+  private String province;
+  private String zipCode;
+  private String country;
 }

@@ -20,9 +20,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
-    private CategoryMapper categoryMapper;
-    private UsersRepository usersRepository;
+  private CategoryRepository categoryRepository;
+  private CategoryMapper categoryMapper;
+  private UsersRepository usersRepository;
 
   // create a method that will create a category, the method should be annotated with @Transactional, should be created by an admin, should not save a category with null values, should also check if the method already exists
   @Transactional
@@ -30,7 +30,7 @@ public class CategoryService {
     Category category = categoryMapper.toEntity(categoryDto, new Category());
     Optional<Category> optionalCategory = categoryRepository.findByCategoryName(categoryDto.getCategoryName());
 
-    optionalCategory.ifPresent(value ->{
+    optionalCategory.ifPresent(value -> {
       throw new CategoryAlreadyExistException("Category already exist");
     });
 

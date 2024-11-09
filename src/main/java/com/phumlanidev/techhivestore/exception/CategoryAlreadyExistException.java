@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class CategoryAlreadyExistException extends RuntimeException {
 
-    public CategoryAlreadyExistException(String message) {
-        super(message);
-    }
+  public CategoryAlreadyExistException(String message) {
+    super(message);
+  }
 }

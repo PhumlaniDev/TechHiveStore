@@ -11,6 +11,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
   security:
     oauth2:
       resourceserver:
@@ -38,3 +40,6 @@ logging:
     org:
       springframework:
         web: debug
+
+server:
+  port: 9500
