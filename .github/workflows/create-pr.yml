@@ -2,7 +2,7 @@ name: Create Pull Request
 
 on:
   workflow_run:
-    workflows: ["CI/CD Pipeline"]
+    workflows: [Build-Test-Analyze Code]
     types:
       - completed
 

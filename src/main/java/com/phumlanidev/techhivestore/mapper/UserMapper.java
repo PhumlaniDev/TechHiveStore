@@ -4,10 +4,15 @@ import com.phumlanidev.techhivestore.dto.UserDto;
 import com.phumlanidev.techhivestore.model.Users;
 import org.springframework.stereotype.Component;
 
+/**
+ * Comment: this is the placeholder for documentation.
+ */
 @Component
 public class UserMapper {
 
-
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   public Users toEntity(UserDto dto, Users users) {
     users.setUsername(dto.getUsername());
     users.setEmail(dto.getEmail());
@@ -20,8 +25,10 @@ public class UserMapper {
 
   }
 
-
-  public UserDto toDTO(Users users, UserDto dto) {
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
+  public UserDto toDto(Users users, UserDto dto) {
     dto.setUsername(users.getUsername());
     dto.setEmail(users.getEmail());
     dto.setFirstName(users.getFirstName());

@@ -1,10 +1,15 @@
 package com.phumlanidev.techhivestore.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
+
 @Getter
 @Setter
 @ToString

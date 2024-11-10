@@ -7,18 +7,24 @@ import com.phumlanidev.techhivestore.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Comment: this is the placeholder for documentation.
+ */
 @Component
 @RequiredArgsConstructor
 public class ProductMapper {
 
   private final CategoryMapper categoryMapper;
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   public Product toEntity(ProductDto dto, Product product) {
     product.setName(dto.getName());
     product.setDescription(dto.getDescription());
     product.setPrice(dto.getPrice());
     product.setQuantity(dto.getQuantity());
-    product.setImageURL(dto.getImageURL());
+    product.setImageUrl(dto.getImageUrl());
 
     if (dto.getCategory() != null) {
       Category category = categoryMapper.toEntity(dto.getCategory(), new Category());
@@ -28,15 +34,18 @@ public class ProductMapper {
     return product;
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   public ProductDto toDto(Product product, ProductDto dto) {
     dto.setName(product.getName());
     dto.setDescription(product.getDescription());
     dto.setPrice(product.getPrice());
     dto.setQuantity(product.getQuantity());
-    dto.setImageURL(product.getImageURL());
+    dto.setImageUrl(product.getImageUrl());
 
     if (product.getCategory() != null) {
-      CategoryDto categoryDto = categoryMapper.toDTO(new Category(), dto.getCategory());
+      CategoryDto categoryDto = categoryMapper.toDto(new Category(), dto.getCategory());
       dto.setCategory(categoryDto);
     }
 

@@ -11,13 +11,15 @@ import com.phumlanidev.techhivestore.repository.CategoryRepository;
 import com.phumlanidev.techhivestore.repository.ProductRepository;
 import com.phumlanidev.techhivestore.repository.UsersRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+/**
+ * Comment: this is the placeholder for documentation.
+ */
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -29,6 +31,9 @@ public class ProductService {
   private final CategoryMapper categoryMapper;
 
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @Transactional
   public void createProduct(ProductDto productDto) {
 
@@ -42,7 +47,8 @@ public class ProductService {
 
     Product product = productMapper.toEntity(productDto, new Product());
 
-    Users createdBy = usersRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+    Users createdBy = usersRepository.findByUsername(
+            SecurityContextHolder.getContext().getAuthentication().getName());
 
     CategoryDto categoryDto = productDto.getCategory();
     if (categoryDto == null) {
@@ -58,6 +64,9 @@ public class ProductService {
   }
 
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @Transactional
   public boolean updateProduct(Long productId, ProductDto productDto) {
 
@@ -68,7 +77,8 @@ public class ProductService {
 
     Product updatedProduct = productMapper.toEntity(productDto, existingProduct);
 
-    Category category = categoryRepository.findByCategoryName(productDto.getCategory().getCategoryName())
+    Category category = categoryRepository.findByCategoryName(
+            productDto.getCategory().getCategoryName())
             .orElseThrow(() -> new RuntimeException("Category not found"));
     existingProduct.setCategory(category);
 
@@ -78,6 +88,9 @@ public class ProductService {
     return isUpdated;
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @Transactional
   public ProductDto findProductById(Long productId) {
     Product product = productRepository.findById(productId)
@@ -85,6 +98,9 @@ public class ProductService {
     return productMapper.toDto(product, new ProductDto());
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @Transactional
   public boolean deleteProductTest(Long productId) {
 
@@ -99,6 +115,9 @@ public class ProductService {
     return isDeleted;
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @Transactional
   public List<ProductDto> findAllProducts() {
     return productRepository.findAll()

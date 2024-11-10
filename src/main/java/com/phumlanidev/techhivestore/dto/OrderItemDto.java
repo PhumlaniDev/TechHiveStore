@@ -3,7 +3,7 @@ package com.phumlanidev.techhivestore.dto;
 import lombok.Data;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @Data
 public class OrderItemDto {

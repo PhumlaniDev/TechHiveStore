@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Comment: this is the placeholder for documentation.
+ */
 @Configuration
 public class KeycloakConfig {
 
@@ -28,6 +31,9 @@ public class KeycloakConfig {
   @Value("${keycloak.admin.password")
   private String keycloakClientAdminPassword;
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @Bean
   public Keycloak keycloak() {
     return KeycloakBuilder.builder()

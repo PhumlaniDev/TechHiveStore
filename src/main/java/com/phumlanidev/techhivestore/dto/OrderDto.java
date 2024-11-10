@@ -2,13 +2,12 @@ package com.phumlanidev.techhivestore.dto;
 
 import com.phumlanidev.techhivestore.enums.OrderStatus;
 import com.phumlanidev.techhivestore.enums.PaymentStatus;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Data;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @Data
 public class OrderDto {
