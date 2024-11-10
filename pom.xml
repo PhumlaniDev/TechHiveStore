@@ -17,6 +17,7 @@
     <java.version>17</java.version>
     <sonar.organization>phumlanidev</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <encoding>UTF-8</encoding>
   </properties>
   <dependencies>
     <dependency>
@@ -155,6 +156,33 @@
 
   <build>
     <plugins>
+      <!-- Checkstyle Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.2.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>10.20.1</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- Path to your custom or Google checks configuration -->
+          <configLocation>google_checks.xml</configLocation>
+          <failOnViolation>true</failOnViolation>
+          <linkXRef>false</linkXRef>
+        </configuration>
+      </plugin>
 <!--spring maven-->
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -168,13 +196,13 @@
           </excludes>
         </configuration>
       </plugin>
-<!--jasypt-->
+<!-- jasypt -->
       <plugin>
         <groupId>com.github.ulisesbocchio</groupId>
         <artifactId>jasypt-maven-plugin</artifactId>
         <version>3.0.3</version>
       </plugin>
-<!--maven deploy-->
+<!-- maven deploy -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -191,8 +219,21 @@
     </plugins>
   </build>
 
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <configLocation>google_checks.xml</configLocation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <profiles>
-<!--jacoco-->
+<!-- jacoco -->
     <profile>
       <id>coverage</id>
       <build>

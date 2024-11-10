@@ -1,5 +1,8 @@
 package com.phumlanidev.techhivestore.enums;
 
+/**
+ * Comment: this is the placeholder for documentation.
+ */
 public enum PaymentStatus {
 
   PENDING,       // Payment has been initiated but not completed

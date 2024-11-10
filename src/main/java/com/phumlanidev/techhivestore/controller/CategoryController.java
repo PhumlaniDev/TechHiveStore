@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @RestController
 @RequestMapping("/api/v1/category")

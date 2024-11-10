@@ -2,14 +2,24 @@ package com.phumlanidev.techhivestore.model;
 
 import com.phumlanidev.techhivestore.enums.OrderStatus;
 import com.phumlanidev.techhivestore.enums.PaymentStatus;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @Entity
 @Getter

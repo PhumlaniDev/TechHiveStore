@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @RestController
 @RequestMapping("/api/v1/auth/")
@@ -25,18 +25,19 @@ public class AuthController {
   private final AuthService authService;
 
   /**
-   * <p> comment </p>.
+   * Comment: this is the placeholder for documentation.
    */
   @PostMapping("/register")
-  public ResponseEntity<ResponseDto> register(@RequestBody UserDto userDTO) {
-    authService.registerUser(userDTO);
+  public ResponseEntity<ResponseDto> register(@RequestBody UserDto userDto) {
+    authService.registerUser(userDto);
     return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(new ResponseDto(Constant.STATUS_CODE_CREATED, "You have successfully Registered."));
+            .body(new ResponseDto(Constant.STATUS_CODE_CREATED,
+                    "You have successfully Registered."));
   }
 
   /**
-   * <p> comment </p>.
+   * Comment: this is the placeholder for documentation.
    */
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {

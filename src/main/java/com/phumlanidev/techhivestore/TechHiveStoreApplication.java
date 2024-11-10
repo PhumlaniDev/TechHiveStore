@@ -6,13 +6,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @SpringBootApplication
 @EnableEncryptableProperties
 @EnableJpaAuditing
 public class TechHiveStoreApplication {
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   public static void main(String[] args) {
     SpringApplication.run(TechHiveStoreApplication.class, args);
   }

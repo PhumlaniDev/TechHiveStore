@@ -1,6 +1,5 @@
 package com.phumlanidev.techhivestore.auth;
 
-
 import com.phumlanidev.techhivestore.dto.LoginDto;
 import com.phumlanidev.techhivestore.dto.UserDto;
 import com.phumlanidev.techhivestore.mapper.AddressMapper;
@@ -11,6 +10,8 @@ import com.phumlanidev.techhivestore.repository.AddressRepository;
 import com.phumlanidev.techhivestore.repository.UsersRepository;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
+import java.net.URI;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.OAuth2Constants;
@@ -27,13 +28,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-import java.util.Collections;
-
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -56,6 +53,10 @@ public class AuthService {
   @Value("${keycloak.credentials.secret}")
   private String keycloakClientSecret;
 
+
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   public void registerUser(UserDto userDto) {
     // Step 1: Hash the password
     userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -108,7 +109,8 @@ public class AuthService {
         log.error("Authorization failed during user creation: {}", e.getMessage());
       }
     } catch (Exception e) {
-      log.error("Exception occurred while creating user {} in Keycloak: {}", userDto.getUsername(), e.getMessage(), e);
+      log.error("Exception occurred while creating user {} in Keycloak: {}",
+              userDto.getUsername(), e.getMessage(), e);
     }
   }
 
@@ -117,12 +119,12 @@ public class AuthService {
     return path.substring(path.lastIndexOf('/') + 1);
   }
 
-  private UserRepresentation createUserRepresentation(UserDto userDTO) {
+  private UserRepresentation createUserRepresentation(UserDto userDto) {
     UserRepresentation userRepresentation = new UserRepresentation();
-    userRepresentation.setUsername(userDTO.getUsername());
-    userRepresentation.setEmail(userDTO.getEmail());
-    userRepresentation.setFirstName(userDTO.getFirstName());
-    userRepresentation.setLastName(userDTO.getLastName());
+    userRepresentation.setUsername(userDto.getUsername());
+    userRepresentation.setEmail(userDto.getEmail());
+    userRepresentation.setFirstName(userDto.getFirstName());
+    userRepresentation.setLastName(userDto.getLastName());
     userRepresentation.singleAttribute(ENABLED_ATTRIBUTE, TRUE_VALUE);
     userRepresentation.setEnabled(true);
     return userRepresentation;
@@ -138,18 +140,27 @@ public class AuthService {
     log.info("Password set for user ID {} in Keycloak", userId);
   }
 
-  private void assignRealmRole(UserResource userResource, RealmResource realmResource, String roleName) {
+  private void assignRealmRole(
+          UserResource userResource,
+          RealmResource realmResource,
+          String roleName) {
     RoleRepresentation realmRole = realmResource.roles().get(roleName).toRepresentation();
     userResource.roles().realmLevel().add(Collections.singletonList(realmRole));
   }
 
-  private void assignClientRole(UserResource userResource, RealmResource realmResource, String clientRoleName) {
+  private void assignClientRole(
+          UserResource userResource,
+          RealmResource realmResource,
+          String clientRoleName) {
     String clientId = "your_client_id"; // Replace with your Keycloak client ID
     ClientResource clientResource = realmResource.clients().get(clientId);
     RoleRepresentation clientRole = clientResource.roles().get(clientRoleName).toRepresentation();
     userResource.roles().clientLevel(clientId).add(Collections.singletonList(clientRole));
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   public String login(LoginDto loginDto) {
     try (Keycloak keycloak = KeycloakBuilder.builder()
             .serverUrl(keycloakServerUrl)

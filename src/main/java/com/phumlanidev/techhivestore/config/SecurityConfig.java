@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @Configuration
 @EnableWebSecurity
@@ -25,13 +25,16 @@ public class SecurityConfig {
   public static final String USER = "user";
   private final JwtAuthConverter jwtAuthConverter;
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
   /**
-   * <p> comment </p>.
+   * Comment: this is the placeholder for documentation.
    */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

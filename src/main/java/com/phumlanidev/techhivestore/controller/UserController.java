@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
 
   /**
-   * <p> comment </p>.
+   * Comment: this is the placeholder for documentation.
    */
   @GetMapping("/user")
   public String getHelloWorldFromUser() {
@@ -21,7 +21,7 @@ public class UserController {
   }
 
   /**
-   * <p> comment </p>.
+   * Comment: this is the placeholder for documentation.
    */
   @GetMapping("/admin")
   public String getHelloWorldFromAdmin() {

@@ -2,10 +2,14 @@ package com.phumlanidev.techhivestore.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
- * <p> comment </p>.
+ * Comment: this is the placeholder for documentation.
  */
 @Getter
 @Setter
@@ -22,7 +26,7 @@ public class ProductDto {
   private String price;
   @NotNull(message = "Quantity must not be null")
   private Integer quantity;
-  private String imageURL;
+  private String imageUrl;
   @NotNull(message = "Category must not be null")
   private CategoryDto category;
 

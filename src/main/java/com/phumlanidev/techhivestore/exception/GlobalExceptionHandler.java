@@ -1,6 +1,10 @@
 package com.phumlanidev.techhivestore.exception;
 
 import com.phumlanidev.techhivestore.dto.ErrorResponseDto;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -13,17 +17,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+/**
+ * Comment: this is the placeholder for documentation.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
-          MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+          MethodArgumentNotValidException ex,
+          HttpHeaders headers,
+          HttpStatusCode status,
+          WebRequest request) {
 
     Map<String, String> validationErrors = new HashMap<>();
     List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
@@ -36,6 +41,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception ex, WebRequest request) {
 
@@ -49,8 +57,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @ExceptionHandler(UserNotFoundException.class)
-  public ResponseEntity<ErrorResponseDto> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+  public ResponseEntity<ErrorResponseDto> handleUserNotFoundException(
+          UserNotFoundException ex, WebRequest request) {
     ErrorResponseDto errorResponseDto = new ErrorResponseDto(
             request.getDescription(false),
             HttpStatus.NOT_FOUND,
@@ -61,8 +73,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @ExceptionHandler(UserAlreadyExistException.class)
-  public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistException(UserAlreadyExistException ex, WebRequest request) {
+  public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistException(
+          UserAlreadyExistException ex, WebRequest request) {
     ErrorResponseDto errorResponseDto = new ErrorResponseDto(
             request.getDescription(false),
             HttpStatus.BAD_REQUEST,
@@ -73,8 +89,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
   }
 
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
   @ExceptionHandler(CategoryAlreadyExistException.class)
-  public ResponseEntity<ErrorResponseDto> handleCategoryAlreadyExistException(CategoryAlreadyExistException ex, WebRequest request) {
+  public ResponseEntity<ErrorResponseDto> handleCategoryAlreadyExistException(
+          CategoryAlreadyExistException ex, WebRequest request) {
     ErrorResponseDto errorResponseDto = new ErrorResponseDto(
             request.getDescription(false),
             HttpStatus.BAD_REQUEST,

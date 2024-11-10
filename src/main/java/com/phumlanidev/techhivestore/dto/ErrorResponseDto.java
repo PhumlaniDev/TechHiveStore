@@ -1,11 +1,13 @@
 package com.phumlanidev.techhivestore.dto;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
-
+/**
+ * Comment: this is the placeholder for documentation.
+ */
 @Data
 @AllArgsConstructor
 public class ErrorResponseDto {
