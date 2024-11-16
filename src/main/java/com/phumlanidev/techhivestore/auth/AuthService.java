@@ -5,9 +5,9 @@ import com.phumlanidev.techhivestore.dto.UserDto;
 import com.phumlanidev.techhivestore.mapper.AddressMapper;
 import com.phumlanidev.techhivestore.mapper.UserMapper;
 import com.phumlanidev.techhivestore.model.Address;
-import com.phumlanidev.techhivestore.model.Users;
+import com.phumlanidev.techhivestore.model.User;
 import com.phumlanidev.techhivestore.repository.AddressRepository;
-import com.phumlanidev.techhivestore.repository.UsersRepository;
+import com.phumlanidev.techhivestore.repository.UserRepository;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
@@ -38,7 +38,7 @@ public class AuthService {
 
   private static final String ENABLED_ATTRIBUTE = "enabled";
   private static final String TRUE_VALUE = "true";
-  private final UsersRepository usersRepository;
+  private final UserRepository userRepository;
   private final AddressRepository addressRepository;
   private final PasswordEncoder passwordEncoder;
   private final Keycloak keycloak;
@@ -62,13 +62,13 @@ public class AuthService {
     userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
     // Step 2: Map DTO to Entity
-    Users users = userMapper.toEntity(userDto, new Users());
+    User user = userMapper.toEntity(userDto, new User());
     Address address = addressMapper.toEntity(userDto.getAddress(), new Address());
 
     // Step 3: Save Address and Users in PostgreSQL
     Address savedAddress = addressRepository.save(address);
-    users.setAddress(savedAddress);
-    usersRepository.save(users);
+    user.setAddress(savedAddress);
+    userRepository.save(user);
 
     // Step 4: Register the user in Keycloak
     registerKeycloakUser(userDto);

@@ -1,6 +1,6 @@
-package com.phumlanidev.techhivestore.service;
+package com.phumlanidev.techhivestore.service.impl;
 
-import com.phumlanidev.techhivestore.repository.UsersRepository;
+import com.phumlanidev.techhivestore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminService {
 
-  private UsersRepository usersRepository;
+  private UserRepository userRepository;
 
   /**
    * Comment: this is the placeholder for documentation.
    */
   public void deleteUser(Long id) {
-    usersRepository.deleteById(id);
+    userRepository.deleteById(id);
   }
 }

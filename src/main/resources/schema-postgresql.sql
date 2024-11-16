@@ -67,10 +67,12 @@ CREATE TABLE IF NOT EXISTS Orders (
     order_id AUTO_INCREMENT PRIMARY KEY,
     order_number VARCHAR(50) NOT NULL UNIQUE,
     user_id INT,
+    address_id BIGINT,
     order_created_date TIMESTAMP NOT NULL,
     order_status VARCHAR(50) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users (user_id)
+    FOREIGN KEY (address_id) REFERENCES address(address_id);
     );
 
 CREATE TABLE IF NOT EXISTS OrderItem (

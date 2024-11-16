@@ -1,6 +1,6 @@
 package com.phumlanidev.techhivestore.repository;
 
-import com.phumlanidev.techhivestore.model.Orders;
+import com.phumlanidev.techhivestore.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +8,10 @@ import org.springframework.stereotype.Repository;
  * Comment: this is the placeholder for documentation.
  */
 @Repository
-public interface OrdersRepository extends JpaRepository<Orders, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
+
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
+  User findByUsername(String username);
 }

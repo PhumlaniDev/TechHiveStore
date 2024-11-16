@@ -1,4 +1,4 @@
-package com.phumlanidev.techhivestore.service;
+package com.phumlanidev.techhivestore.service.impl;
 
 import com.phumlanidev.techhivestore.dto.CategoryDto;
 import com.phumlanidev.techhivestore.dto.ProductDto;
@@ -6,10 +6,10 @@ import com.phumlanidev.techhivestore.mapper.CategoryMapper;
 import com.phumlanidev.techhivestore.mapper.ProductMapper;
 import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.model.Product;
-import com.phumlanidev.techhivestore.model.Users;
+import com.phumlanidev.techhivestore.model.User;
 import com.phumlanidev.techhivestore.repository.CategoryRepository;
 import com.phumlanidev.techhivestore.repository.ProductRepository;
-import com.phumlanidev.techhivestore.repository.UsersRepository;
+import com.phumlanidev.techhivestore.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ public class ProductService {
 
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
-  private final UsersRepository usersRepository;
+  private final UserRepository userRepository;
   private final ProductMapper productMapper;
   private final CategoryMapper categoryMapper;
 
@@ -47,7 +47,7 @@ public class ProductService {
 
     Product product = productMapper.toEntity(productDto, new Product());
 
-    Users createdBy = usersRepository.findByUsername(
+    User createdBy = userRepository.findByUsername(
             SecurityContextHolder.getContext().getAuthentication().getName());
 
     CategoryDto categoryDto = productDto.getCategory();

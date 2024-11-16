@@ -1,4 +1,4 @@
-package com.phumlanidev.techhivestore.service;
+package com.phumlanidev.techhivestore.service.impl;
 
 
 import com.phumlanidev.techhivestore.dto.CategoryDto;
@@ -6,7 +6,7 @@ import com.phumlanidev.techhivestore.exception.CategoryAlreadyExistException;
 import com.phumlanidev.techhivestore.mapper.CategoryMapper;
 import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.repository.CategoryRepository;
-import com.phumlanidev.techhivestore.repository.UsersRepository;
+import com.phumlanidev.techhivestore.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class CategoryService {
 
   private CategoryRepository categoryRepository;
   private CategoryMapper categoryMapper;
-  private UsersRepository usersRepository;
+  private UserRepository userRepository;
 
   /**
    * Comment: this is the placeholder for documentation.

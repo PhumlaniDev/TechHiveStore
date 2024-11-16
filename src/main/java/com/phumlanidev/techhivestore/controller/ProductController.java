@@ -3,7 +3,7 @@ package com.phumlanidev.techhivestore.controller;
 import com.phumlanidev.techhivestore.auth.ResponseDto;
 import com.phumlanidev.techhivestore.constant.Constant;
 import com.phumlanidev.techhivestore.dto.ProductDto;
-import com.phumlanidev.techhivestore.service.ProductService;
+import com.phumlanidev.techhivestore.service.impl.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

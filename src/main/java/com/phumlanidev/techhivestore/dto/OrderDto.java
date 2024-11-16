@@ -2,7 +2,8 @@ package com.phumlanidev.techhivestore.dto;
 
 import com.phumlanidev.techhivestore.enums.OrderStatus;
 import com.phumlanidev.techhivestore.enums.PaymentStatus;
-import java.time.LocalDateTime;
+import com.phumlanidev.techhivestore.model.User;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 
@@ -14,9 +15,10 @@ public class OrderDto {
 
   private Long orderId;
   private UUID orderNumber;
-  private Long userId; // foreign key reference
-  private LocalDateTime orderCreatedDate;
-  private OrderStatus status;
+  private User userId; // foreign key reference
+  private OrderStatus orderStatus;
   private double totalPrice;
   private PaymentStatus paymentStatus;
+  private AddressDto address;
+  private List<OrderItemDto> items;
 }
