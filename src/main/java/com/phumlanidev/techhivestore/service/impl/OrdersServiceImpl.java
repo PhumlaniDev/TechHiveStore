@@ -50,7 +50,7 @@ public class OrdersServiceImpl implements IOrdersService {
         .orElseThrow(() -> new RuntimeException("Address not found"));
 
     // Fetch cart
-    Cart cart = cartRepository.findByUser(user)
+    Cart cart = cartRepository.findByUser_UserId(user.getUserId())
         .orElseThrow(() -> new RuntimeException("Cart not found"));
 
     if (cart.getTotalPrice() <= 0) {
@@ -110,7 +110,7 @@ public class OrdersServiceImpl implements IOrdersService {
   @Transactional
   @Override
   public List<OrderDto> getUserOrders(Long userId) {
-    List<Order> orders = orderRepository.findByUserId(userId);
+    List<Order> orders = orderRepository.findByUserId_UserId(userId);
     return orders.stream()
         .map(order -> orderMapper.toDto(order, new OrderDto()))
         .collect(Collectors.toList());

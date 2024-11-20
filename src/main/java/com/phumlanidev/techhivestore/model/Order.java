@@ -38,19 +38,19 @@ public class Order extends BaseEntity {
   private Long orderId;
   @Column(name = "order_number")
   private UUID orderNumber;
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User userId; //foreign key
   @Column(name = "status")
   private OrderStatus orderStatus;
   @Column(name = "total_price")
   private double totalPrice;
   @Column(name = "payment_status")
   private PaymentStatus paymentStatus;
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "address_id", referencedColumnName = "addressId")
-  private Address addressId;
   @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderItem> items;
+  @ManyToOne
+  @JoinColumn(name = "user_id", referencedColumnName = "userId")
+  private User userId;
+  @ManyToOne
+  @JoinColumn(name = "address_id", referencedColumnName = "addressId")
+  private Address addressId;
 
 }
