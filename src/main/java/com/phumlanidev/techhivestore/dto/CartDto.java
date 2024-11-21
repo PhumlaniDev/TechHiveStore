@@ -1,5 +1,7 @@
 package com.phumlanidev.techhivestore.dto;
 
+import com.phumlanidev.techhivestore.model.User;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -9,6 +11,7 @@ import lombok.Data;
 public class CartDto {
 
   private Long cartId;
-  private Long userId; // foreign key reference
+  private User user; // foreign key reference
   private double totalPrice;
+  private List<CartItemDto> cartItemDtoList;
 }

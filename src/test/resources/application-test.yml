@@ -4,7 +4,6 @@ spring:
     driver-class-name: org.h2.Driver
     username: test
     password: test
-    schema: classpath:schema-h2.sql
   h2:
     console:
       enabled: true
@@ -19,6 +18,9 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/admin
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  sql:
+    init:
+      schema-locations: classpath:schema-h2.sql
 keycloak:
   auth-server-url: http://localhost:8080
   realm: mac-apps

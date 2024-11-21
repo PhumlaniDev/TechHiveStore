@@ -1,5 +1,7 @@
 package com.phumlanidev.techhivestore.dto;
 
+import com.phumlanidev.techhivestore.model.Cart;
+import com.phumlanidev.techhivestore.model.Product;
 import lombok.Data;
 
 /**
@@ -8,9 +10,8 @@ import lombok.Data;
 @Data
 public class CartItemDto {
 
-  private Long cartItemsId;
-  private Long cartId; // foreign key reference
-  private Long productId; // foreign key reference
+  private Cart cart; // foreign key reference
+  private Product productId; // foreign key reference
   private Integer quantity;
   private Integer price;
 }
