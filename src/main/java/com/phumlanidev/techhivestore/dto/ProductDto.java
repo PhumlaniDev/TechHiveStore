@@ -27,7 +27,5 @@ public class ProductDto {
   @NotNull(message = "Quantity must not be null")
   private Integer quantity;
   private String imageUrl;
-  @NotNull(message = "Category must not be null")
-  private CategoryDto category;
 
 }

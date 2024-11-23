@@ -1,8 +1,6 @@
 package com.phumlanidev.techhivestore.mapper;
 
-import com.phumlanidev.techhivestore.dto.CategoryDto;
 import com.phumlanidev.techhivestore.dto.ProductDto;
-import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ProductMapper {
 
-  private final CategoryMapper categoryMapper;
-
   /**
    * Comment: this is the placeholder for documentation.
    */
@@ -25,11 +21,6 @@ public class ProductMapper {
     product.setPrice(dto.getPrice());
     product.setQuantity(dto.getQuantity());
     product.setImageUrl(dto.getImageUrl());
-
-    if (dto.getCategory() != null) {
-      Category category = categoryMapper.toEntity(dto.getCategory(), new Category());
-      product.setCategory(category);
-    }
 
     return product;
   }
@@ -43,11 +34,6 @@ public class ProductMapper {
     dto.setPrice(product.getPrice());
     dto.setQuantity(product.getQuantity());
     dto.setImageUrl(product.getImageUrl());
-
-    if (product.getCategory() != null) {
-      CategoryDto categoryDto = categoryMapper.toDto(new Category(), dto.getCategory());
-      dto.setCategory(categoryDto);
-    }
 
     return dto;
   }

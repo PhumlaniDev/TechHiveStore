@@ -46,25 +46,11 @@ public class ProductController {
    * Comment: this is the placeholder for documentation.
    */
   @PutMapping("/update/{productId}")
-  public ResponseEntity<ResponseDto> updateProduct(@Valid @PathVariable Long productId,
+  public ResponseEntity<ProductDto> updateProduct(@Valid @PathVariable Long productId,
                                                    @RequestBody ProductDto productDto) {
-    try {
-      boolean isUpdated = productService.updateProduct(productId, productDto);
+    ProductDto updatedProduct = productService.updateProduct(productId, productDto);
+    return ResponseEntity.ok(updatedProduct);
 
-      if (isUpdated) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResponseDto(Constant.STATUS_CODE_ok, "Product updated successfully"));
-      } else {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ResponseDto(Constant.STATUS_500, Constant.MESSAGE_500));
-      }
-    } catch (RuntimeException ex) {
-      return ResponseEntity
-              .status(HttpStatus.NOT_FOUND)
-              .body(new ResponseDto(HttpStatus.NOT_FOUND.toString(), "Product not found."));
-    }
   }
 
   /**
@@ -83,7 +69,7 @@ public class ProductController {
    */
   @DeleteMapping("/delete/{productId}")
   public ResponseEntity<ResponseDto> deleteProduct(@PathVariable Long productId) {
-    productService.deleteProductTest(productId);
+    productService.deleteProductById(productId);
     return ResponseEntity
             .status(HttpStatus.OK)
             .body(new ResponseDto(Constant.STATUS_CODE_ok, Constant.MESSAGE_200));

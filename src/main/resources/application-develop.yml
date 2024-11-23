@@ -6,9 +6,9 @@ spring:
     name: Tech Hive e-Store
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/testdb
-    username: ENC(/nW6jbEwEA2bza/dA1QI9hwPhDqXRyU1KnrPAtQ/oMqDfmE/mP1T/uK44W7S3kCc)
-    password: ENC(19JPpH3BoBvy/NO3FAvwX12J1zsAJAaglWVjR7YwhezEfik601BwD7Mb3swoD5Vu)
+    url: jdbc:postgresql://localhost:5432/tech_hive_db
+    username: ENC(1zCSDe7LfMxdRCAAPYjhVeoTfiu6Aw5hDwkLJuE9wd+1/9ga9c2T74nLlphUqEjW)
+    password: ENC(ZRyOk//jjSW6MvacKd1HnjGJJY6epUBDczc/h3WGvCrpJnlB+qRspR/+q0F5IAXl)
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -20,7 +20,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
