@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/tech_hive_db
     username: ENC(1zCSDe7LfMxdRCAAPYjhVeoTfiu6Aw5hDwkLJuE9wd+1/9ga9c2T74nLlphUqEjW)
-    password: ENC(ZRyOk//jjSW6MvacKd1HnjGJJY6epUBDczc/h3WGvCrpJnlB+qRspR/+q0F5IAXl)
+    password: ENC(Qja1d3V4JZqQbGTGo1CPXcbKLkqbomeNpfO+5ZXSf6NKWB3FSS/Bgk5PFaVUYo1Y)
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -40,7 +40,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/admin
+          issuer-uri: http://localhost:8080
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 keycloak:
@@ -49,7 +49,7 @@ keycloak:
   resource: tech-hive-store-api
   principle-attribute: preferred_username
   credentials:
-    secret: ENC(v+l2EWntxAO03Ob1OXFpkSuoqTmI7cb+kOQwOVHnhPrQavklRhbUsow/l5+Ibj/jIVQO6I5+HigWyXOmw5NwtR4zY1FP4qdhzoqSd46rcQM=)
+    secret: mepwLJ9VCDR5g4B8irSg2bIRqV8Aclvh
   admin:
     username: admin
     password: admin

@@ -28,14 +28,15 @@ public class KeycloakConfig {
   private String keycloakClientSecret;
   @Value("${keycloak.admin.username}")
   private String keycloakClientAdminUsername;
-  @Value("${keycloak.admin.password")
+  @Value("${keycloak.admin.password}")
   private String keycloakClientAdminPassword;
 
   /**
-   * Comment: this is the placeholder for documentation.
+   * Keycloak instance for admin actions.
    */
   @Bean
   public Keycloak keycloak() {
+    logger.info("Configuring Keycloak Admin Client...");
     return KeycloakBuilder.builder()
             .serverUrl(keycloakServerUrl)
             .realm(keycloakRealm)
@@ -45,5 +46,20 @@ public class KeycloakConfig {
             .password(keycloakClientAdminPassword)
             .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
             .build();
+  }
+
+  /**
+   * Keycloak instance for service client actions.
+   */
+  @Bean
+  public Keycloak keycloakServiceClient() {
+    logger.info("Configuring Keycloak Service Client...");
+    return KeycloakBuilder.builder()
+      .serverUrl(keycloakServerUrl)
+      .realm(keycloakRealm)
+      .clientId(keycloakClientId)
+      .clientSecret(keycloakClientSecret)
+      .grantType(OAuth2Constants.CLIENT_CREDENTIALS) // Service-to-service authentication
+      .build();
   }
 }

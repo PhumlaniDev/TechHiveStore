@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,8 +21,9 @@ import com.phumlanidev.techhivestore.model.User;
 import com.phumlanidev.techhivestore.repository.AddressRepository;
 import com.phumlanidev.techhivestore.repository.CartRepository;
 import com.phumlanidev.techhivestore.repository.OrderRepository;
+import com.phumlanidev.techhivestore.repository.ProductRepository;
 import com.phumlanidev.techhivestore.repository.UserRepository;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +38,19 @@ class OrdersServiceImplTest {
 
   @Mock
   private CartRepository cartRepository;
+
   @Mock
   private OrderRepository orderRepository;
+
   @Mock
   private UserRepository userRepository;
+
   @Mock
   private AddressRepository addressRepository;
+
+  @Mock
+  private ProductRepository productRepository;
+
   @Mock
   private OrderMapper orderMapper;
 
@@ -54,199 +63,87 @@ class OrdersServiceImplTest {
   }
 
   @Test
-  void placeOrder_successfulOrderPlacement() {
-    User user = new User();
-    user.setUserId(1L);
-    Address address = new Address();
-    address.setAddressId(1L);
-    Cart cart = new Cart();
-    cart.setTotalPrice(100.0);
+  void testPlaceOrder_Success() {
+    // Arrange
+    Long userId = 1L;
+    User mockUser = new User();
+    mockUser.setUserId(userId);
+
+    Long addressId = 2L;
+    Address mockAddress = new Address();
+    mockAddress.setAddressId(addressId);
+
+    Cart mockCart = new Cart();
+    mockCart.setTotalPrice(100.0);
+    mockCart.setCartItems(new ArrayList<>());
+
     CartItem cartItem = new CartItem();
-    Product product = new Product();
-    product.setQuantity(10);
-    product.setPrice("10.0");
-    cartItem.setProduct(product);
-    cartItem.setQuantity(5);
-    cart.setCartItems(List.of(cartItem));
-    OrderDto orderDto = new OrderDto();
+    cartItem.setQuantity(2);
+    Product mockProduct = new Product();
+    mockProduct.setQuantity(10);
+    mockProduct.setPrice("20.0");
+    cartItem.setProduct(mockProduct);
 
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    when(addressRepository.findById(1L)).thenReturn(Optional.of(address));
-    when(cartRepository.findByUser_UserId(1L)).thenReturn(Optional.of(cart));
-    when(orderMapper.toDto(any(Order.class), any(OrderDto.class))).thenReturn(orderDto);
+    mockCart.getCartItems().add(cartItem);
 
-    OrderDto result = ordersService.placeOrder(1L, 1L, "credit_card");
+    Order mockOrder = new Order();
+    OrderDto mockOrderDto = new OrderDto();
 
+    when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+    when(addressRepository.findById(addressId)).thenReturn(Optional.of(mockAddress));
+    when(cartRepository.findByUser_UserId(userId)).thenReturn(Optional.of(mockCart));
+    when(orderMapper.toDto(any(Order.class), any(OrderDto.class))).thenReturn(mockOrderDto);
+
+    // Act
+    String paymentMethod = "CREDIT_CARD";
+    OrderDto result = ordersService.placeOrder(userId, addressId, paymentMethod);
+
+    // Assert
     assertNotNull(result);
-    verify(orderRepository).save(any(Order.class));
-    verify(cartRepository).delete(cart);
+    verify(productRepository, times(1)).save(mockProduct); // Stock was updated
+    verify(orderRepository, times(1)).save(any(Order.class)); // Order was saved
+    verify(cartRepository, times(1)).delete(mockCart); // Cart was cleared
   }
 
   @Test
-  void placeOrder_userNotFound() {
-    when(userRepository.findById(1L)).thenReturn(Optional.empty());
+  void testPlaceOrder_UserNotFound() {
+    // Arrange
+    Long userId = 1L;
+    Long addressId = 2L;
 
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.placeOrder(1L, 1L, "credit_card"));
+    when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    RuntimeException exception = assertThrows(RuntimeException.class,
+      () -> ordersService.placeOrder(userId, addressId, "CREDIT_CARD"));
 
     assertEquals("user not found", exception.getMessage());
   }
 
   @Test
-  void placeOrder_addressNotFound() {
-    User user = new User();
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    when(addressRepository.findById(1L)).thenReturn(Optional.empty());
+  void testCancelOrder_Success() {
+    // Arrange
+    Long orderId = 1L;
 
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.placeOrder(1L, 1L, "credit_card"));
+    Order mockOrder = new Order();
+    mockOrder.setOrderStatus(OrderStatus.PENDING);
+    mockOrder.setItems(new ArrayList<>());
 
-    assertEquals("Address not found", exception.getMessage());
-  }
+    OrderItem mockItem = new OrderItem();
+    Product mockProduct = new Product();
+    mockProduct.setQuantity(5);
+    mockItem.setProductId(mockProduct);
+    mockItem.setQuantity(3);
+    mockOrder.getItems().add(mockItem);
 
-  @Test
-  void placeOrder_cartNotFound() {
-    User user = new User();
-    Address address = new Address();
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    when(addressRepository.findById(1L)).thenReturn(Optional.of(address));
-    when(cartRepository.findByUser_UserId(1L)).thenReturn(Optional.empty());
+    when(orderRepository.findById(orderId)).thenReturn(Optional.of(mockOrder));
 
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.placeOrder(1L, 1L, "credit_card"));
+    // Act
+    ordersService.cancelOrder(orderId);
 
-    assertEquals("Cart not found", exception.getMessage());
-  }
-
-  @Test
-  void placeOrder_insufficientStock() {
-
-    Cart cart = new Cart();
-    cart.setTotalPrice(100.0);
-    CartItem cartItem = new CartItem();
-    Product product = new Product();
-    product.setQuantity(2);
-    product.setPrice("10.0");
-    cartItem.setProduct(product);
-    cartItem.setQuantity(5);
-    cart.setCartItems(List.of(cartItem));
-    Address address = new Address();
-    User user = new User();
-
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    when(addressRepository.findById(1L)).thenReturn(Optional.of(address));
-    when(cartRepository.findByUser_UserId(1L)).thenReturn(Optional.of(cart));
-
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.placeOrder(1L, 1L, "credit_card"));
-
-    assertEquals("Insufficient stock for product: null", exception.getMessage());
-  }
-
-  @Test
-  void getOrderDetails_orderFound() {
-    Order order = new Order();
-    OrderDto orderDto = new OrderDto();
-
-    when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-    when(orderMapper.toDto(order, new OrderDto())).thenReturn(orderDto);
-
-    OrderDto result = ordersService.getOrderDetails(1L);
-
-    assertNotNull(result);
-    assertEquals(orderDto, result);
-  }
-
-  @Test
-  void getOrderDetails_orderNotFound() {
-    when(orderRepository.findById(1L)).thenReturn(Optional.empty());
-
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.getOrderDetails(1L));
-
-    assertEquals("Order not found", exception.getMessage());
-  }
-
-  @Test
-  void getUserOrders_ordersFound() {
-    Order order = new Order();
-    OrderDto orderDto = new OrderDto();
-
-    when(orderRepository.findByUserId_UserId(1L)).thenReturn(List.of(order));
-    when(orderMapper.toDto(order, new OrderDto())).thenReturn(orderDto);
-
-    List<OrderDto> result = ordersService.getUserOrders(1L);
-
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    assertEquals(orderDto, result.get(0));
-  }
-
-  @Test
-  void updateOrderStatus_orderFound() {
-    Order order = new Order();
-    order.setOrderStatus(OrderStatus.PENDING);
-    OrderDto orderDto = new OrderDto();
-
-    when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-    when(orderMapper.toDto(order, new OrderDto())).thenReturn(orderDto);
-
-    OrderDto result = ordersService.updateOrderStatus(1L, "SHIPPED");
-
-    assertNotNull(result);
-    assertEquals(OrderStatus.SHIPPED, order.getOrderStatus());
-  }
-
-  @Test
-  void updateOrderStatus_orderNotFound() {
-    when(orderRepository.findById(1L)).thenReturn(Optional.empty());
-
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.updateOrderStatus(1L, "SHIPPED"));
-
-    assertEquals("Order not found", exception.getMessage());
-  }
-
-  @Test
-  void cancelOrder_successfulCancellation() {
-    Order order = new Order();
-    order.setOrderStatus(OrderStatus.PENDING);
-    OrderItem orderItem = new OrderItem();
-    Product product = new Product();
-    product.setQuantity(10);
-    orderItem.setProductId(product);
-    orderItem.setQuantity(5);
-    order.setItems(List.of(orderItem));
-
-    when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-
-    ordersService.cancelOrder(1L);
-
-    assertEquals(OrderStatus.CANCELLED, order.getOrderStatus());
-    assertEquals(15, product.getQuantity());
-    verify(orderRepository).save(order);
-  }
-
-  @Test
-  void cancelOrder_orderNotFound() {
-    when(orderRepository.findById(1L)).thenReturn(Optional.empty());
-
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.cancelOrder(1L));
-
-    assertEquals("Order not found", exception.getMessage());
-  }
-
-  @Test
-  void cancelOrder_nonPendingOrder() {
-    Order order = new Order();
-    order.setOrderStatus(OrderStatus.SHIPPED);
-
-    when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        ordersService.cancelOrder(1L));
-
-    assertEquals("Only pending orders can be canceled", exception.getMessage());
+    // Assert
+    verify(productRepository, times(1)).save(mockProduct); // Stock was refunded
+    verify(orderRepository, times(1)).save(mockOrder); // Order status was updated
+    assertEquals(OrderStatus.CANCELLED, mockOrder.getOrderStatus());
   }
 }

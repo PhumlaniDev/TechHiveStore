@@ -78,14 +78,10 @@ public class AuthService {
   private void registerKeycloakUser(UserDto userDto) {
     try {
       RealmResource realmResource = keycloak.realm(keycloakRealm);
-
       UsersResource usersResource = realmResource.users();
-
       UserRepresentation keycloakUser = createUserRepresentation(userDto);
 
-      Response response = usersResource.create(keycloakUser);
-
-      try {
+      try (Response response = usersResource.create(keycloakUser)) { // Try-with-resources
         if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
           log.info("Keycloak user created successfully for username: {}", userDto.getUsername());
 
@@ -99,8 +95,7 @@ public class AuthService {
             assignRealmRole(userResource, realmResource, "user");
             assignClientRole(userResource, realmResource, "client_user");
           }
-          setPasswordForUser(usersResource, userId, userDto.getPassword());
-
+          //setPasswordForUser(usersResource, userId, userDto.getPassword());
         } else {
           log.error("Failed to create Keycloak user: {}", response.getStatusInfo().toString());
           throw new RuntimeException("Keycloak user creation failed");
@@ -110,9 +105,10 @@ public class AuthService {
       }
     } catch (Exception e) {
       log.error("Exception occurred while creating user {} in Keycloak: {}",
-              userDto.getUsername(), e.getMessage(), e);
+          userDto.getUsername(), e.getMessage(), e);
     }
   }
+
 
   private String getUserIdFromLocation(URI location) {
     String path = location.getPath();
@@ -127,18 +123,25 @@ public class AuthService {
     userRepresentation.setLastName(userDto.getLastName());
     userRepresentation.singleAttribute(ENABLED_ATTRIBUTE, TRUE_VALUE);
     userRepresentation.setEnabled(true);
+
+    CredentialRepresentation credential = new CredentialRepresentation();
+    credential.setTemporary(false);
+    credential.setType(CredentialRepresentation.PASSWORD);
+    credential.setValue(userDto.getPassword());
+    userRepresentation.setCredentials(Collections.singletonList(credential));
+    log.info("Password set for user ID {} in Keycloak", userDto.getUsername());
     return userRepresentation;
   }
 
 
-  private void setPasswordForUser(UsersResource usersResource, String userId, String password) {
-    CredentialRepresentation credential = new CredentialRepresentation();
-    credential.setTemporary(false);
-    credential.setType(CredentialRepresentation.PASSWORD);
-    credential.setValue(password);
-    usersResource.get(userId).resetPassword(credential);
-    log.info("Password set for user ID {} in Keycloak", userId);
-  }
+//  private void setPasswordForUser(UsersResource usersResource, String userId, String password) {
+//    CredentialRepresentation credential = new CredentialRepresentation();
+//    credential.setTemporary(false);
+//    credential.setType(CredentialRepresentation.PASSWORD);
+//    credential.setValue(password);
+//    usersResource.get(userId).resetPassword(credential);
+//    log.info("Password set for user ID {} in Keycloak", userId);
+//  }
 
   private void assignRealmRole(
           UserResource userResource,

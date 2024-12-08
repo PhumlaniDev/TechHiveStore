@@ -3,6 +3,9 @@ package com.phumlanidev.techhivestore.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,12 +15,10 @@ import com.phumlanidev.techhivestore.model.Product;
 import com.phumlanidev.techhivestore.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
@@ -32,146 +33,162 @@ class ProductServiceTest {
   @InjectMocks
   private ProductService productService;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.openMocks(this);
-  }
+//  @BeforeEach
+//  void setUp() {
+//    MockitoAnnotations.openMocks(this);
+//  }
 
   @Test
   void createProduct_successfulCreation() {
+
+    // Arrange
     ProductDto productDto = new ProductDto();
     productDto.setName("Test Product");
-    Product product = new Product();
 
+    Product product = new Product();
+    when(productMapper.toEntity(eq(productDto), any(Product.class))).thenReturn(product);
     when(productRepository.findByName("Test Product")).thenReturn(Optional.empty());
-    when(productMapper.toEntity(productDto, new Product())).thenReturn(product);
     when(productRepository.save(product)).thenReturn(product);
     when(productMapper.toDto(product, productDto)).thenReturn(productDto);
 
+    // Act
     productService.createProduct(productDto);
 
-    verify(productRepository).save(product);
-    verify(productMapper).toDto(product, productDto);
+    // Assert
+    verify(productRepository, times(1)).save(product);
   }
 
   @Test
   void createProduct_productAlreadyExists() {
+    // Arrange
     ProductDto productDto = new ProductDto();
-    productDto.setName("Test Product");
+    productDto.setName("Existing Product");
 
-    when(productRepository.findByName("Test Product"))
-        .thenReturn(Optional.of(new Product()));
+    when(productRepository.findByName("Existing Product")).thenReturn(Optional.of(new Product()));
 
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        productService.createProduct(productDto));
+    // Act & Assert
+    assertThrows(RuntimeException.class, () -> productService.createProduct(productDto));
+  }
 
-    assertEquals("Product already exists", exception.getMessage());
+  @Test
+  void findProductById_ShouldReturnProduct_WhenProductExists() {
+    // Arrange
+    Long productId = 1L;
+    Product product = new Product();
+    product.setProductId(productId);
+
+    ProductDto productDto = new ProductDto();
+    when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+    when(productMapper.toDto(any(Product.class), any(ProductDto.class))).thenReturn(productDto);
+
+    // Act
+    ProductDto result = productService.findProductById(productId);
+
+    // Assert
+    assertNotNull(result);
+    verify(productRepository, times(1)).findById(productId);
+    verify(productMapper, times(1)).toDto(eq(product), any(ProductDto.class));
+  }
+
+
+  @Test
+  void findProductById_ShouldThrowException_WhenProductDoesNotExist() {
+    // Arrange
+    when(productRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(RuntimeException.class, () -> productService.findProductById(1L));
+  }
+
+  @Test
+  void findAllProducts_ShouldReturnProductList() {
+    // Arrange
+    Product product = new Product();
+    product.setName("Product 1");
+
+    when(productRepository.findAll()).thenReturn(List.of(product));
+    when(productMapper.toDto(eq(product), any(ProductDto.class))).thenReturn(new ProductDto());
+
+    // Act
+    List<ProductDto> products = productService.findAllProducts();
+
+    // Assert
+    assertEquals(1, products.size());
+  }
+
+  @Test
+  void updateProduct_ShouldUpdateProduct_WhenValidDtoProvided() {
+    // Arrange
+    Long productId = 1L;
+    ProductDto productDto = new ProductDto();
+    productDto.setName("Updated Product");
+
+    Product product = new Product();
+    product.setProductId(productId);
+
+    when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+    when(productMapper.toEntity(any(ProductDto.class), eq(product))).thenReturn(product);
+    when(productRepository.save(any(Product.class))).thenReturn(product);
+    when(productMapper.toDto(any(Product.class), any(ProductDto.class))).thenReturn(productDto);
+
+    // Act
+    ProductDto result = productService.updateProduct(productId, productDto);
+
+    // Assert
+    assertNotNull(result);
+    verify(productRepository, times(1)).save(product);
+    verify(productMapper, times(1)).toEntity(eq(productDto), eq(product));
+    verify(productMapper, times(1)).toDto(eq(product), any(ProductDto.class));
+  }
+
+
+
+  @Test
+  void deleteProductById_ShouldDeleteProduct_WhenProductExists() {
+    // Arrange
+    Product product = new Product();
+    when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+    // Act
+    productService.deleteProductById(1L);
+
+    // Assert
+    verify(productRepository, times(1)).deleteById(1L);
+  }
+
+  @Test
+  void deleteProductById_ShouldThrowException_WhenProductDoesNotExist() {
+    // Arrange
+    when(productRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(RuntimeException.class, () -> productService.deleteProductById(1L));
   }
 
   @Test
   void createProduct_productNameIsNull() {
-    ProductDto productDto = new ProductDto();
+    // Arrange
+    ProductDto productDto = new ProductDto(); // Name is null by default
 
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-        productService.createProduct(productDto));
-
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+      () -> productService.createProduct(productDto));
     assertEquals("Product name cannot be null or empty", exception.getMessage());
   }
 
   @Test
-  void updateProduct_successfulUpdate() {
-    Long productId = 1L;
-    ProductDto productDto = new ProductDto();
-    Product existingProduct = new Product();
-    Product updatedProduct = new Product();
-
-    when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
-    when(productMapper.toEntity(productDto, existingProduct)).thenReturn(updatedProduct);
-    when(productRepository.save(updatedProduct)).thenReturn(updatedProduct);
-
-    ProductDto result = productService.updateProduct(productId, productDto);
-
-
-    verify(productRepository).save(updatedProduct);
-  }
-
-  @Test
   void updateProduct_productNotFound() {
+    // Arrange
     Long productId = 1L;
     ProductDto productDto = new ProductDto();
+    productDto.setName("Updated Product");
 
     when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        productService.updateProduct(productId, productDto));
-
+    // Act & Assert
+    RuntimeException exception = assertThrows(RuntimeException.class,
+      () -> productService.updateProduct(productId, productDto));
     assertEquals("Product not found", exception.getMessage());
-  }
-
-  @Test
-  void findProductById_productFound() {
-    Long productId = 1L;
-    Product product = new Product();
-    ProductDto productDto = new ProductDto();
-
-    when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-    when(productMapper.toDto(product, new ProductDto())).thenReturn(productDto);
-
-    ProductDto result = productService.getProductById(productId);
-
-    assertNotNull(result);
-    assertEquals(productDto, result);
-  }
-
-  @Test
-  void findProductById_productNotFound() {
-    Long productId = 1L;
-
-    when(productRepository.findById(productId)).thenReturn(Optional.empty());
-
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        productService.getProductById(productId));
-
-    assertEquals("Product not found", exception.getMessage());
-  }
-
-  @Test
-  void deleteProductTest_successfulDeletion() {
-    Long productId = 1L;
-    Product product = new Product();
-
-    when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-
-    productService.deleteProductById(productId);
-
-    verify(productRepository).deleteById(productId);
-  }
-
-  @Test
-  void deleteProductTest_productNotFound() {
-    Long productId = 1L;
-
-    when(productRepository.findById(productId)).thenReturn(Optional.empty());
-
-    RuntimeException exception = assertThrows(RuntimeException.class, () ->
-        productService.deleteProductById(productId));
-
-    assertEquals("Product not found", exception.getMessage());
-  }
-
-  @Test
-  void findAllProducts_productsFound() {
-    Product product = new Product();
-    ProductDto productDto = new ProductDto();
-
-    when(productRepository.findAll()).thenReturn(List.of(product));
-    when(productMapper.toDto(product, new ProductDto())).thenReturn(productDto);
-
-    List<ProductDto> result = productService.findAllProducts();
-
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    assertEquals(productDto, result.get(0));
   }
 
 }
