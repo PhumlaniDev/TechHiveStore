@@ -123,6 +123,7 @@ public class AuthService {
     userRepresentation.setLastName(userDto.getLastName());
     userRepresentation.singleAttribute(ENABLED_ATTRIBUTE, TRUE_VALUE);
     userRepresentation.setEnabled(true);
+    userRepresentation.isEmailVerified();
 
     CredentialRepresentation credential = new CredentialRepresentation();
     credential.setTemporary(false);
@@ -155,7 +156,7 @@ public class AuthService {
           UserResource userResource,
           RealmResource realmResource,
           String clientRoleName) {
-    String clientId = "your_client_id"; // Replace with your Keycloak client ID
+    String clientId = keycloakClientId; // Replace with your Keycloak client ID
     ClientResource clientResource = realmResource.clients().get(clientId);
     RoleRepresentation clientRole = clientResource.roles().get(clientRoleName).toRepresentation();
     userResource.roles().clientLevel(clientId).add(Collections.singletonList(clientRole));

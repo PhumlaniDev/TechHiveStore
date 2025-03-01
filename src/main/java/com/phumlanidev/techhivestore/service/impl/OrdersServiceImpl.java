@@ -41,12 +41,12 @@ public class OrdersServiceImpl implements IOrdersService {
 
   @Transactional
   @Override
-  public OrderDto placeOrder(Long userId, Long addressId, String paymentMethod) {
+  public OrderDto placeOrder(Long userId, Long addressId) {
 
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("user not found"));
 
-    final Address address = addressRepository.findById(addressId)
+    Address address = addressRepository.findById(addressId)
         .orElseThrow(() -> new RuntimeException("Address not found"));
 
     // Fetch cart

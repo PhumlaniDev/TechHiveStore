@@ -12,7 +12,7 @@ public interface IOrdersService {
    * Comment: this is the placeholder for documentation.
    * return
    */
-  OrderDto placeOrder(Long userId, Long addressId, String paymentMethod);
+  OrderDto placeOrder(Long userId, Long addressId);
 
   /**
    * Comment: this is the placeholder for documentation.

@@ -36,6 +36,12 @@ spring:
       mode: always
       schema-locations: classpath:schema-postgresql.sql
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 1.0.0
+
   security:
     oauth2:
       resourceserver:
@@ -49,16 +55,28 @@ keycloak:
   resource: tech-hive-store-api
   principle-attribute: preferred_username
   credentials:
-    secret: mepwLJ9VCDR5g4B8irSg2bIRqV8Aclvh
+    secret: ENC(4Wb9DlLL3XGCO5Jvx03E4RN6jJryNjO1vlD+YP4y7oz5km3Wc3+6tDnjNL7HjS8kr3btqyc9JoggojdZwVvcawBp9rJo4DK3jFSHrh1Socg=)
   admin:
-    username: admin
-    password: admin
+    username: aphumlanidev
+    password: apR,Pp,0Uc)?e!6u(*(dRA%|[
 
 logging:
   level:
+    # Hibernate loggers
     org:
       hibernate:
         SQL: DEBUG
         type:
           descriptor:
             sql: TRACE
+    # Application loggers
+    com:
+      phumlanidev:
+        techhivestore: DEBUG
+    root: INFO
+    # Console loggers
+    file:
+      path: src/main/resources/logs
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -96,7 +96,7 @@ class OrdersServiceImplTest {
 
     // Act
     String paymentMethod = "CREDIT_CARD";
-    OrderDto result = ordersService.placeOrder(userId, addressId, paymentMethod);
+    OrderDto result = ordersService.placeOrder(userId, addressId);
 
     // Assert
     assertNotNull(result);
@@ -108,17 +108,18 @@ class OrdersServiceImplTest {
   @Test
   void testPlaceOrder_UserNotFound() {
     // Arrange
-    Long userId = 1L;
+    Long userId = 1L; // Test-specific setup
     Long addressId = 2L;
 
-    when(userRepository.findById(userId)).thenReturn(Optional.empty());
+    when(userRepository.findById(userId)).thenReturn(Optional.empty()); // Only required mock
 
     // Act & Assert
     RuntimeException exception = assertThrows(RuntimeException.class,
-      () -> ordersService.placeOrder(userId, addressId, "CREDIT_CARD"));
+      () -> ordersService.placeOrder(userId, addressId));
 
     assertEquals("user not found", exception.getMessage());
   }
+
 
   @Test
   void testCancelOrder_Success() {

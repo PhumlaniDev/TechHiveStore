@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.ToString;
  * Comment: this is the placeholder for documentation.
  */
 @Entity
+@Table
 @Getter
 @Setter
 @ToString

@@ -1,17 +1,15 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: test
-    password: test
-  h2:
-    console:
-      enabled: true
+    url: jdbc:postgresql://localhost:5432/test_db
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:test}
+    password: ${DB_PASSWORD:test}
+    data: classpath:data-test.sql
   jpa:
     hibernate:
       ddl-auto: create-drop
-    database: h2
-    database-platform: org.hibernate.dialect.H2Dialect
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   security:
     oauth2:
       resourceserver:
@@ -20,21 +18,24 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
   sql:
     init:
-      schema-locations: classpath:schema-h2.sql
+      schema-locations: classpath:schema-test.sql
+      data-locations: classpath:data-test.sql
+      mode: always
+
 keycloak:
   auth-server-url: http://localhost:8080
   realm: mac-apps
   resource: tech-hive-store-api
   principle-attribute: preferred_username
   credentials:
-    secret: ENC(v+l2EWntxAO03Ob1OXFpkSuoqTmI7cb+kOQwOVHnhPrQavklRhbUsow/l5+Ibj/jIVQO6I5+HigWyXOmw5NwtR4zY1FP4qdhzoqSd46rcQM=)
+    secret: ENC(4Wb9DlLL3XGCO5Jvx03E4RN6jJryNjO1vlD+YP4y7oz5km3Wc3+6tDnjNL7HjS8kr3btqyc9JoggojdZwVvcawBp9rJo4DK3jFSHrh1Socg=)
   admin:
     username: admin
     password: admin
 
-  #  sql:
-  #    init:
-  #      mode: always
+jasypt:
+  encryptor:
+    password: ilovecode
 
 logging:
   level:
@@ -42,6 +43,16 @@ logging:
     org:
       springframework:
         web: debug
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+
+testcontainers:
+  reuse:
+    enable: true
 
 server:
   port: 9500
