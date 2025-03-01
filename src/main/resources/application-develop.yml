@@ -36,12 +36,6 @@ spring:
       mode: always
       schema-locations: classpath:schema-postgresql.sql
 
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-    baseline-version: 1.0.0
-
   security:
     oauth2:
       resourceserver:

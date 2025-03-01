@@ -123,9 +123,19 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
 
+
   unit_tests:
     runs-on: ubuntu-latest
     needs: [ build ]
+    services:
+      postgres:
+        image: postgres:16  # ✅ Use a PostgreSQL 16 service instead of Testcontainers
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432  # Expose PostgreSQL
 
     steps:
       - name: Check out code
@@ -137,9 +147,6 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Debug Cache Key
-        run: echo "${{ steps.cache-dependencies.outputs.cache-key }}"
-
       - name: Restore Maven cache
         uses: actions/cache@v4
         with:
@@ -147,10 +154,10 @@ jobs:
           key: ${{ needs.setup.outputs.cache-key || 'default-key' }}
           fail-on-cache-miss: false
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests with PostgreSQL
         run: mvn test
         env:
-          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/test_db
           SPRING_DATASOURCE_USERNAME: test
           SPRING_DATASOURCE_PASSWORD: test
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}

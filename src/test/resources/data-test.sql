@@ -20,35 +20,35 @@ VALUES
     (3, 'Clothing', 'Apparel and accessories for men, women, and children.');
 
 -- Test data for Product table
-INSERT INTO Product (product_id, name, description, price, category_id)
+INSERT INTO Product (product_id, name, description, price, quantity, imageURL)
 VALUES
-    (1, 'Smartphone', 'Latest model smartphone with advanced features.', 8999.99, 1),
-    (2, 'Laptop', 'Lightweight laptop suitable for work and gaming.', 15999.99, 1),
-    (3, 'Novel', 'Bestselling fiction book.', 199.99, 2),
-    (4, 'T-shirt', 'Cotton t-shirt in various sizes.', 99.99, 3);
+    (1, 'Smartphone', 'Latest model smartphone with advanced features.', 8999.99, 10, 'https://test.com'),
+    (2, 'Laptop', 'Lightweight laptop suitable for work and gaming.', 15999.99, 10, 'https://test.com'),
+    (3, 'Novel', 'Bestselling fiction book.', 199.99, 10, 'https://test.com'),
+    (4, 'T-shirt', 'Cotton t-shirt in various sizes.', 99.99, 10, 'https://test.com');
+
+-- Test Data for Cart table
+INSERT INTO Cart (cart_id, user_id, total_price)
+VALUES
+    (1, 1, 15999.99), -- Cart for User 1
+    (2, 2, 15999.99); -- Cart for User 2
 
 -- Test Data for CartItem table
-INSERT INTO Cart (cart_id, user_id, created_at, updated_at)
+INSERT INTO CartItem (cart_item_id, cart_id, product_id, quantity, price)
 VALUES
-    (1, 1, 2025-01-24 14:38:22, 2025-01-24 14:38:22), -- Cart for User 1
-    (2, 2, 2025-01-24 14:38:22, 2025-01-24 14:38:22); -- Cart for User 2
-
--- Test Data for CartItem table
-INSERT INTO CartItem (cart_item_id, cart_id, product_id, quantity, created_at, updated_at)
-VALUES
-    (1, 1, 1, 2, 2025-01-24 14:38:22, 2025-01-24 14:38:22), -- User 1's cart has 2 units of Product 1
-    (2, 1, 2, 1, 2025-01-24 14:38:22, 2025-01-24 14:38:22), -- User 1's cart has 1 unit of Product 2
-    (3, 2, 3, 3, 2025-01-24 14:38:22, 2025-01-24 14:38:22); -- User 2's cart has 3 units of Product 3
+    (1, 1, 1, 2, 15999.99), -- User 1's cart has 2 units of Product 1
+    (2, 1, 2, 1, 15999.99), -- User 1's cart has 1 unit of Product 2
+    (3, 2, 3, 3, 15999.99); -- User 2's cart has 3 units of Product 3
 
 -- Test Data for Orders
-INSERT INTO Orders (order_id, user_id, address_id, total_price, status, created_at, updated_at)
+INSERT INTO Orders (order_id, order_number, user_id, address_id, total_price, order_status, payment_status)
 VALUES
-    (1, 1, 1, 799.98, 'Completed', 2025-01-24 14:38:22, 2025-01-24 14:38:22), -- Order for User 1
-    (2, 2, 2, 1499.97, 'Pending', 2025-01-24 14:38:22, 2025-01-24 14:38:22); -- Order for User 2
+    (1, '6a340425-68d1-43fd-97e0-abe963d5d2da', 1, 1, 799.98, 'COMPLETED', 'COMPLETED'), -- Order for User 1
+    (2, '87cb9606-f510-41f9-888b-76521f016644', 2, 2, 1499.97, 'PROCESSING', 'PARTIALLY_REFUNDED'); -- Order for User 2
 
 -- Test Data for OrderItem
-INSERT INTO OrderItem (order_item_id, order_id, product_id, quantity, price, created_at, updated_at)
+INSERT INTO OrderItem (order_item_id, order_id, product_id, quantity, price)
 VALUES
-    (1, 1, 1, 2, 399.99, 2025-01-24 14:38:22, 2025-01-24 14:38:22), -- User 1 ordered 2 units of Product 1
-    (2, 1, 2, 1, 399.99, 2025-01-24 14:38:22, 2025-01-24 14:38:22), -- User 1 ordered 1 unit of Product 2
-    (3, 2, 3, 3, 499.99, 2025-01-24 14:38:22, 2025-01-24 14:38:22); -- User 2 ordered 3 units of Product 3
+    (1, 1, 1, 2, 399.99), -- User 1 ordered 2 units of Product 1
+    (2, 1, 2, 1, 399.99), -- User 1 ordered 1 unit of Product 2
+    (3, 2, 3, 3, 499.99); -- User 2 ordered 3 units of Product 3
