@@ -25,13 +25,10 @@ public class CartService  implements ICartService {
   /**
    * Comment: this is the placeholder for documentation.
    *
-   * @param userId
-   * @param productId
-   * @param quantity
    */
   @Override
   public void addItemToCart(Long userId, Long productId, int quantity) {
-    Cart cart = cartRepository.findByUser_UserId(userId)
+    Cart cart = cartRepository.findByUserUserId(userId)
       .orElseGet(() -> {
         Cart newCart = new Cart();
         newCart.setUser(userRepository.findById(userId)
@@ -61,12 +58,10 @@ public class CartService  implements ICartService {
   /**
    * Comment: this is the placeholder for documentation.
    *
-   * @param userId
-   * @param productId
    */
   @Override
   public void removeItemFromCart(Long userId, Long productId) {
-    Cart cart = cartRepository.findByUser_UserId(userId)
+    Cart cart = cartRepository.findByUserUserId(userId)
       .orElseThrow(() -> new RuntimeException("Cart not found"));
 
     CartItem cartItem = cart.getCartItems().stream()
@@ -81,11 +76,10 @@ public class CartService  implements ICartService {
   /**
    * Comment: this is the placeholder for documentation.
    *
-   * @param userId
    */
   @Override
   public void clearCart(Long userId) {
-    Cart cart = cartRepository.findByUser_UserId(userId)
+    Cart cart = cartRepository.findByUserUserId(userId)
       .orElseThrow(() -> new RuntimeException("Cart not found"));
 
     cart.getCartItems().clear();
@@ -95,11 +89,10 @@ public class CartService  implements ICartService {
   /**
    * Comment: this is the placeholder for documentation.
    *
-   * @param userId
    */
   @Override
   public Cart getCartDetails(Long userId) {
-    return cartRepository.findByUser_UserId(userId)
+    return cartRepository.findByUserUserId(userId)
       .orElseThrow(() -> new RuntimeException("Cart not found"));
   }
 }

@@ -25,6 +25,7 @@ import com.phumlanidev.techhivestore.repository.ProductRepository;
 import com.phumlanidev.techhivestore.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,13 +58,20 @@ class OrdersServiceImplTest {
   @InjectMocks
   private OrdersServiceImpl ordersService;
 
+  private AutoCloseable mocks;
+
   @BeforeEach
   void setUp() {
-    MockitoAnnotations.openMocks(this);
+    mocks = MockitoAnnotations.openMocks(this);
+  }
+
+  @AfterEach
+  void tearDown() throws Exception {
+    mocks.close();
   }
 
   @Test
-  void testPlaceOrder_Success() {
+  void testPlaceOrderSuccess() {
     // Arrange
     Long userId = 1L;
     User mockUser = new User();
@@ -86,16 +94,16 @@ class OrdersServiceImplTest {
 
     mockCart.getCartItems().add(cartItem);
 
-    Order mockOrder = new Order();
+    //    Order mockOrder = new Order();
     OrderDto mockOrderDto = new OrderDto();
 
     when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
     when(addressRepository.findById(addressId)).thenReturn(Optional.of(mockAddress));
-    when(cartRepository.findByUser_UserId(userId)).thenReturn(Optional.of(mockCart));
+    when(cartRepository.findByUserUserId(userId)).thenReturn(Optional.of(mockCart));
     when(orderMapper.toDto(any(Order.class), any(OrderDto.class))).thenReturn(mockOrderDto);
 
     // Act
-    String paymentMethod = "CREDIT_CARD";
+    //    String paymentMethod = "CREDIT_CARD";
     OrderDto result = ordersService.placeOrder(userId, addressId);
 
     // Assert
@@ -106,7 +114,7 @@ class OrdersServiceImplTest {
   }
 
   @Test
-  void testPlaceOrder_UserNotFound() {
+  void testPlaceOrderUserNotFound() {
     // Arrange
     Long userId = 1L; // Test-specific setup
     Long addressId = 2L;
@@ -114,18 +122,16 @@ class OrdersServiceImplTest {
     when(userRepository.findById(userId)).thenReturn(Optional.empty()); // Only required mock
 
     // Act & Assert
-    RuntimeException exception = assertThrows(RuntimeException.class,
-      () -> ordersService.placeOrder(userId, addressId));
+    RuntimeException exception =
+      assertThrows(RuntimeException.class, () -> ordersService.placeOrder(userId, addressId));
 
     assertEquals("user not found", exception.getMessage());
   }
 
 
   @Test
-  void testCancelOrder_Success() {
+  void testCancelOrderSuccess() {
     // Arrange
-    Long orderId = 1L;
-
     Order mockOrder = new Order();
     mockOrder.setOrderStatus(OrderStatus.PENDING);
     mockOrder.setItems(new ArrayList<>());
@@ -136,6 +142,8 @@ class OrdersServiceImplTest {
     mockItem.setProductId(mockProduct);
     mockItem.setQuantity(3);
     mockOrder.getItems().add(mockItem);
+
+    Long orderId = 1L;
 
     when(orderRepository.findById(orderId)).thenReturn(Optional.of(mockOrder));
 

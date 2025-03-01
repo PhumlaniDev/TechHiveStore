@@ -135,14 +135,14 @@ public class AuthService {
   }
 
 
-//  private void setPasswordForUser(UsersResource usersResource, String userId, String password) {
-//    CredentialRepresentation credential = new CredentialRepresentation();
-//    credential.setTemporary(false);
-//    credential.setType(CredentialRepresentation.PASSWORD);
-//    credential.setValue(password);
-//    usersResource.get(userId).resetPassword(credential);
-//    log.info("Password set for user ID {} in Keycloak", userId);
-//  }
+  //  private void setPasswordForUser(UsersResource usersResource, String userId, String password) {
+  //    CredentialRepresentation credential = new CredentialRepresentation();
+  //    credential.setTemporary(false);
+  //    credential.setType(CredentialRepresentation.PASSWORD);
+  //    credential.setValue(password);
+  //    usersResource.get(userId).resetPassword(credential);
+  //    log.info("Password set for user ID {} in Keycloak", userId);
+  //  }
 
   private void assignRealmRole(
           UserResource userResource,
