@@ -5,7 +5,7 @@ spring:
     data: classpath:data-test.sql
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   security:
@@ -17,7 +17,6 @@ spring:
   sql:
     init:
       schema-locations: classpath:schema-test.sql
-      data-locations: classpath:data-test.sql
       mode: always
 
 keycloak:

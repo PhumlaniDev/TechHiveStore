@@ -21,7 +21,7 @@ import lombok.ToString;
  * Comment: this is the placeholder for documentation.
  */
 @Entity
-@Table
+@Table(name = "users")
 @Getter
 @Setter
 @ToString

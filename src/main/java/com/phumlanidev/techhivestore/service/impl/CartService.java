@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CartService  implements ICartService {
+public class CartService implements ICartService {
 
   private final CartRepository cartRepository;
   private final ProductRepository productRepository;
@@ -24,24 +24,21 @@ public class CartService  implements ICartService {
 
   /**
    * Comment: this is the placeholder for documentation.
-   *
    */
   @Override
   public void addItemToCart(Long userId, Long productId, int quantity) {
-    Cart cart = cartRepository.findByUserUserId(userId)
-      .orElseGet(() -> {
-        Cart newCart = new Cart();
-        newCart.setUser(userRepository.findById(userId)
-          .orElseThrow(() -> new RuntimeException("User not found")));
-        return cartRepository.save(newCart);
-      });
+    Cart cart = cartRepository.findByUserUserId(userId).orElseGet(() -> {
+      Cart newCart = new Cart();
+      newCart.setUser(
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
+      return cartRepository.save(newCart);
+    });
 
     Product product = productRepository.findById(productId)
       .orElseThrow(() -> new RuntimeException("Product not found"));
 
     CartItem cartItem = cart.getCartItems().stream()
-      .filter(item -> item.getProduct().getProductId().equals(productId))
-      .findFirst()
+      .filter(item -> item.getProduct().getProductId().equals(productId)).findFirst()
       .orElseGet(() -> {
         CartItem newItem = new CartItem();
         newItem.setCart(cart);
@@ -57,7 +54,6 @@ public class CartService  implements ICartService {
 
   /**
    * Comment: this is the placeholder for documentation.
-   *
    */
   @Override
   public void removeItemFromCart(Long userId, Long productId) {
@@ -65,8 +61,7 @@ public class CartService  implements ICartService {
       .orElseThrow(() -> new RuntimeException("Cart not found"));
 
     CartItem cartItem = cart.getCartItems().stream()
-      .filter(item -> item.getProduct().getProductId().equals(productId))
-      .findFirst()
+      .filter(item -> item.getProduct().getProductId().equals(productId)).findFirst()
       .orElseThrow(() -> new RuntimeException("Product not found in cart"));
 
     cart.getCartItems().remove(cartItem);
@@ -75,7 +70,6 @@ public class CartService  implements ICartService {
 
   /**
    * Comment: this is the placeholder for documentation.
-   *
    */
   @Override
   public void clearCart(Long userId) {
@@ -88,7 +82,6 @@ public class CartService  implements ICartService {
 
   /**
    * Comment: this is the placeholder for documentation.
-   *
    */
   @Override
   public Cart getCartDetails(Long userId) {

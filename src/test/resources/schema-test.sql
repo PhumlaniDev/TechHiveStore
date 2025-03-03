@@ -108,12 +108,12 @@ CREATE TABLE IF NOT EXISTS OrderItem (
     FOREIGN KEY (product_id) REFERENCES Product (product_id)
     );
 
-ALTER TABLE cartitem
-DROP CONSTRAINT cartitem_product_id_fkey,
-ADD CONSTRAINT cartitem_product_id_fkey
-FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE;
-
-ALTER TABLE orderitem
-DROP CONSTRAINT orderitem_product_id_fkey,
-ADD CONSTRAINT orderitem_product_id_fkey
-FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE;
+--ALTER TABLE cartitem
+--DROP CONSTRAINT cartitem_product_id_fkey,
+--ADD CONSTRAINT cartitem_product_id_fkey
+--FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE;
+--
+--ALTER TABLE orderitem
+--DROP CONSTRAINT orderitem_product_id_fkey,
+--ADD CONSTRAINT orderitem_product_id_fkey
+--FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE;

@@ -45,9 +45,8 @@ public class OrderMapper {
     dto.setTotalPrice(order.getTotalPrice());
     dto.setPaymentStatus(order.getPaymentStatus());
     dto.setAddress(addressMapper.toDto(order.getAddressId(), new AddressDto()));
-    dto.setItems(order.getItems().stream()
-        .map(orderItemMapper::toDto)
-        .collect(Collectors.toList()));
+    dto.setItems(
+      order.getItems().stream().map(orderItemMapper::toDto).collect(Collectors.toList()));
 
     return dto;
   }

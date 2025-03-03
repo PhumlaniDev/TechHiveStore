@@ -132,7 +132,7 @@ public class OrdersServiceImpl implements IOrdersService {
       orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
     if (!OrderStatus.PENDING.equals(order.getOrderStatus())) {
-      throw new RuntimeException("Only pending orders can be canceled");
+      throw new RuntimeException("Only pending order can be canceled");
     }
 
     // Refund stock

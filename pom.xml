@@ -252,15 +252,10 @@
           <!-- Generate report after tests -->
           <execution>
             <id>report</id>
-            <phase>verify</phase>
+            <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
-            <configuration>
-              <formats>
-                <format>XML</format>
-              </formats>
-            </configuration>
           </execution>
         </executions>
       </plugin>
