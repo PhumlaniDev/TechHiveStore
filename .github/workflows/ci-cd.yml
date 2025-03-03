@@ -100,7 +100,7 @@ jobs:
           cp .github/settings.xml ~/.m2/settings.xml
 
       - name: Build with Maven
-        run: mvn clean install -Dspring.profiles.active=local --settings .github/settings.xml
+        run: mvn clean install -Dspring.profiles.active=test --settings .github/settings.xml
         env:
           GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
@@ -153,6 +153,16 @@ jobs:
           path: ~/.m2/repository
           key: ${{ needs.setup.outputs.cache-key || 'default-key' }}
           fail-on-cache-miss: false
+
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+
+      - name: Check PostgreSQL Connection
+        run: PGPASSWORD=test psql -h localhost -U test -d test_db -c "\dt"
 
       - name: Run Unit Tests with PostgreSQL
         run: mvn test

@@ -54,6 +54,10 @@ keycloak:
     username: aphumlanidev
     password: apR,Pp,0Uc)?e!6u(*(dRA%|[
 
+jasypt:
+  encryptor:
+    password: ilovecode
+
 logging:
   level:
     # Hibernate loggers
