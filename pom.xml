@@ -230,6 +230,25 @@
           </execution>
         </executions>
       </plugin>
+      <!--  Maven Surefire  -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <forkCount>1</forkCount>
+          <reuseForks>true</reuseForks>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <printSummary>true</printSummary>
+          <testFailureIgnore>false</testFailureIgnore>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+          <systemPropertyVariables>
+            <spring.test.context.failure-threshold>5</spring.test.context.failure-threshold>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
