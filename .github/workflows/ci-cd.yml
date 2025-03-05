@@ -32,10 +32,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Set Cache Key Output
-        run: echo "CACHE_KEY=${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}" >> $GITHUB_ENV
-
   checkstyle:
     runs-on: ubuntu-latest
     needs: [ setup ]
@@ -84,15 +80,17 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Debug Cache Key
+        run:
+          echo "Using cache key: ${{ needs.setup.outputs.cache-key }}"
+
       - name: Restore Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ env.CACHE_KEY }}
-          fail-on-cache-miss: false
-
-      - name: Set Jasypt Encryptor Password
-        run: echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
+          key: ${{ needs.setup.outputs.cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Copy Maven settings
         run: |
@@ -147,12 +145,17 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Debug Cache Key
+        run:
+          echo "Using cache key: ${{ needs.setup.outputs.cache-key }}"
+
       - name: Restore Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ env.CACHE_KEY }}
-          fail-on-cache-miss: false
+          key: ${{ needs.setup.outputs.cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Wait for PostgreSQL
         run: |
@@ -274,8 +277,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ env.CACHE_KEY }}
-          fail-on-cache-miss: false
+          key: ${{ needs.setup.outputs.cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Cache Trivy DB
         uses: actions/cache@v4
@@ -315,14 +319,16 @@ jobs:
           java-version: '17'
 
       - name: Debug Cache Key
-        run: echo "${{ steps.cache-dependencies.outputs.cache-key }}"
+        run:
+          echo "Using cache key: ${{ needs.setup.outputs.cache-key }}"
 
       - name: Restore Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ env.CACHE_KEY }}
-          fail-on-cache-miss: false
+          key: ${{ needs.setup.outputs.cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Deploy Maven Artifacts to GitHub Packages
         if: github.ref != 'refs/heads/devlop'
