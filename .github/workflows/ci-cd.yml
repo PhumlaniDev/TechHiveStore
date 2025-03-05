@@ -34,7 +34,10 @@ jobs:
 
       - name: Output Cache Key (Debugging)
         run:
-          echo "Cache Key: ${{ steps.cache-dependencies.outputs.cache-key }}"
+          echo "Cache Key: $CACHE_KEY"
+        env:
+          CACHE_KEY: ${{ steps.cache-dependencies.outputs.cache-key }}
+
 
   checkstyle:
     runs-on: ubuntu-latest
@@ -83,9 +86,12 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Debug Cache Key
+      - name: Output Cache Key (Debugging)
         run:
-          echo "Cache Key: ${{ needs.setup.outputs.cache-key }}"
+          echo "Cache Key: $CACHE_KEY"
+        env:
+          CACHE_KEY: ${{ steps.cache-dependencies.outputs.cache-key }}
+
 
       - name: Restore Maven cache
         uses: actions/cache@v4
