@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS Address (
     updated_at TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS Users (
     user_id SERIAL PRIMARY KEY,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Users (
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (address_id) REFERENCES Address (address_id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS Category (
     category_id SERIAL PRIMARY KEY,
@@ -36,9 +36,7 @@ CREATE TABLE IF NOT EXISTS Category (
     updated_at TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255)
-    );
-
---ALTER TABLE category ADD CONSTRAINT unique_category_name UNIQUE (category_name);
+);
 
 CREATE TABLE IF NOT EXISTS Product (
     product_id SERIAL PRIMARY KEY,
@@ -51,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Product (
     updated_at TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS Cart (
     cart_id SERIAL PRIMARY KEY,
@@ -62,7 +60,7 @@ CREATE TABLE IF NOT EXISTS Cart (
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES Users (user_id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS CartItem (
     cart_item_id SERIAL PRIMARY KEY,
@@ -76,7 +74,7 @@ CREATE TABLE IF NOT EXISTS CartItem (
     updated_by VARCHAR(255),
     FOREIGN KEY (cart_id) REFERENCES Cart (cart_id),
     FOREIGN KEY (product_id) REFERENCES Product (product_id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS Orders (
     order_id SERIAL PRIMARY KEY,
@@ -91,8 +89,8 @@ CREATE TABLE IF NOT EXISTS Orders (
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES Users (user_id),
-    FOREIGN KEY (address_id) REFERENCES address(address_id)
-    );
+    FOREIGN KEY (address_id) REFERENCES Address (address_id)
+);
 
 CREATE TABLE IF NOT EXISTS OrderItem (
     order_item_id SERIAL PRIMARY KEY,
@@ -106,4 +104,4 @@ CREATE TABLE IF NOT EXISTS OrderItem (
     updated_by VARCHAR(255),
     FOREIGN KEY (order_id) REFERENCES Orders (order_id),
     FOREIGN KEY (product_id) REFERENCES Product (product_id)
-    );
+);
