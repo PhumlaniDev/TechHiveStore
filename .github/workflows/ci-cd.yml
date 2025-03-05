@@ -33,7 +33,7 @@ jobs:
             maven-${{ runner.os }}-
 
       - name: Output Cache Key (Debugging)
-        run:
+        run: |
           echo "Cache Key: $CACHE_KEY"
         env:
           CACHE_KEY: ${{ steps.cache-dependencies.outputs.cache-key }}
@@ -87,11 +87,10 @@ jobs:
           java-version: '17'
 
       - name: Output Cache Key (Debugging)
-        run:
+        run: |
           echo "Cache Key: $CACHE_KEY"
         env:
           CACHE_KEY: ${{ steps.cache-dependencies.outputs.cache-key }}
-
 
       - name: Restore Maven cache
         uses: actions/cache@v4
