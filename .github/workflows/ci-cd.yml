@@ -30,7 +30,7 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            ${{ runner.os }}-
 
   checkstyle:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up Java and Maven
+      - name: Set up Java snd Maven
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -184,9 +184,59 @@ jobs:
           SPRING_DATASOURCE_USERNAME: test
           SPRING_DATASOURCE_PASSWORD: test
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:4.0.0.4121:sonar -Pcoverage, test -Dsonar.projectKey=PhumlaniDev_TechHiveStore -Dsonar.host.url=https://sonarcloud.io
+
+  #  integration_test:
+  #    runs-on: ubuntu-latest
+  #    needs: [ code_analysis ]
+  #    services:
+  #      postgres:
+  #        image: postgres:latest
+  #        ports:
+  #          - 5432:5432
+  #        env:
+  #          POSTGRES_DB: techhive
+  #          POSTGRES_USER: phumlanidev
+  #          POSTGRES_PASSWORD: password
+  #        options: >-
+  #          --health-cmd "pg_isready -U $POSTGRES_USER"
+  #          --health-interval 10s
+  #          --health-timeout 5s
+  #          --health-retries 5
+  #
+  #    steps:
+  #      - name: Check out code
+  #        uses: actions/checkout@v4
+  #
+  #      - name: Set up Java
+  #        uses: actions/setup-java@v4
+  #        with:
+  #          distribution: 'zulu'
+  #          java-version: '17'
+  #
+  #      - name: Restore Maven cache
+  #        uses: actions/cache@v4
+  #        with:
+  #          path: ~/.m2/repository
+  #          key: ${{ needs.setup.outputs.cache-key }}
+  #
+  #      - name: Restore Maven cache
+  #        uses: actions/cache@v4
+  #        with:
+  #          path: ~/.m2/repository
+  #          key: ${{ needs.setup.outputs.cache-key }}
+  #
+  #      - name: Wait for Postgres
+  #        run: |
+  #          until pg_isready -h localhost -p 5432; do
+  #          echo "Waiting for PostgreSQL..."
+  #          sleep 2
+  #          done
+  #
+  #      - name: Run Integration Tests
+  #        run: mvn verify -Dspring.profiles.active=test
 
   vulnerability_scan:
     runs-on: ubuntu-latest
@@ -260,8 +310,9 @@ jobs:
           fail-on-cache-miss: false
 
       - name: Deploy Maven Artifacts to GitHub Packages
-        if: github.ref != 'refs/heads/develop'
+        if: github.ref != 'refs/heads/devlop'
         run: mvn deploy -DskipTests --settings .github/settings.xml
+
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
@@ -270,7 +321,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ publish_nexus ]
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Generate code analysis report
