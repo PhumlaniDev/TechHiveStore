@@ -31,15 +31,9 @@ jobs:
           key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             maven-${{ runner.os }}-
-      - name: Check if cache was restored
-        if: steps.cache-dependencies.outputs.cache-hit == 'true'
-        run: echo "Cache was restored successfully."
 
-      - name: Output Cache Key (Debugging)
-        run: |
-          echo "Cache Key: $CACHE_KEY"
-        env:
-          CACHE_KEY: ${{ steps.cache-dependencies.outputs.cache-key }}
+      - name: Manually set cache-key output (Fix)
+        run: echo "cache-key=maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}" >> $GITHUB_ENV
 
   checkstyle:
     runs-on: ubuntu-latest
@@ -75,9 +69,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ needs.setup.outputs.cache-key }}
+          key: ${{ needs.setup.outputs.cache-key || 'maven-${{ runner.os }}-' }}
           restore-keys: |
             maven-${{ runner.os }}-
+
       - name: Check if cache was restored
         if: steps.cache-dependencies.outputs.cache-hit == 'true'
         run: echo "Cache was restored successfully."
@@ -130,7 +125,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ needs.setup.outputs.cache-key }}
+          key: ${{ needs.setup.outputs.cache-key || 'maven-${{ runner.os }}-' }}
           restore-keys: |
             maven-${{ runner.os }}-
 
@@ -166,7 +161,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ needs.setup.outputs.cache-key }}
+          key: ${{ needs.setup.outputs.cache-key || 'maven-${{ runner.os }}-' }}
           restore-keys: |
             maven-${{ runner.os }}-
 
