@@ -9,7 +9,7 @@ on:
 jobs:
 
   setup:
-    uses: PhumlaniDev/reusable-workflows/.github/workflows/java-maven-setup.yml
+    uses: PhumlaniDev/reusable-workflows/.github/workflows/java-maven-setup.yml@main
 
   checkstyle:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
 
   build:
     needs: [ setup ]
-    uses: PhumlaniDev/reusable-workflows/.github/workflows/java-maven-build-test.yml
+    uses: PhumlaniDev/reusable-workflows/.github/workflows/java-maven-build-test.yml@main
     with:
       project_name: tech-hive-store
       database_name: tech_hive_db
