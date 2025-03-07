@@ -1,5 +1,9 @@
 name: Build-Test-Analyze Code
 
+permissions:
+  issues: read
+
+
 on:
   pull_request:
     branches: [ develop, main ]
