@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug Cache Key
-        run:
+        run: |
           echo "Cache Key: ${{ needs.setup.outputs.cache-key }}"
 
   build:
