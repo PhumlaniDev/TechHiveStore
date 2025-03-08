@@ -104,8 +104,8 @@ public class AuthService {
         log.error("Authorization failed during user creation: {}", e.getMessage());
       }
     } catch (Exception e) {
-      log.error("Exception occurred while creating user {} in Keycloak: {}",
-          userDto.getUsername(), e.getMessage(), e);
+      log.error("Exception occurred while creating user {} in Keycloak: {}", userDto.getUsername(),
+        e.getMessage(), e);
     }
   }
 
@@ -123,6 +123,7 @@ public class AuthService {
     userRepresentation.setLastName(userDto.getLastName());
     userRepresentation.singleAttribute(ENABLED_ATTRIBUTE, TRUE_VALUE);
     userRepresentation.setEnabled(true);
+    userRepresentation.isEmailVerified();
 
     CredentialRepresentation credential = new CredentialRepresentation();
     credential.setTemporary(false);
@@ -134,28 +135,24 @@ public class AuthService {
   }
 
 
-//  private void setPasswordForUser(UsersResource usersResource, String userId, String password) {
-//    CredentialRepresentation credential = new CredentialRepresentation();
-//    credential.setTemporary(false);
-//    credential.setType(CredentialRepresentation.PASSWORD);
-//    credential.setValue(password);
-//    usersResource.get(userId).resetPassword(credential);
-//    log.info("Password set for user ID {} in Keycloak", userId);
-//  }
+  //  private void setPasswordForUser(UsersResource usersResource, String userId, String password) {
+  //    CredentialRepresentation credential = new CredentialRepresentation();
+  //    credential.setTemporary(false);
+  //    credential.setType(CredentialRepresentation.PASSWORD);
+  //    credential.setValue(password);
+  //    usersResource.get(userId).resetPassword(credential);
+  //    log.info("Password set for user ID {} in Keycloak", userId);
+  //  }
 
-  private void assignRealmRole(
-          UserResource userResource,
-          RealmResource realmResource,
-          String roleName) {
+  private void assignRealmRole(UserResource userResource, RealmResource realmResource,
+                               String roleName) {
     RoleRepresentation realmRole = realmResource.roles().get(roleName).toRepresentation();
     userResource.roles().realmLevel().add(Collections.singletonList(realmRole));
   }
 
-  private void assignClientRole(
-          UserResource userResource,
-          RealmResource realmResource,
-          String clientRoleName) {
-    String clientId = "your_client_id"; // Replace with your Keycloak client ID
+  private void assignClientRole(UserResource userResource, RealmResource realmResource,
+                                String clientRoleName) {
+    String clientId = keycloakClientId; // Replace with your Keycloak client ID
     ClientResource clientResource = realmResource.clients().get(clientId);
     RoleRepresentation clientRole = clientResource.roles().get(clientRoleName).toRepresentation();
     userResource.roles().clientLevel(clientId).add(Collections.singletonList(clientRole));
@@ -165,20 +162,15 @@ public class AuthService {
    * Comment: this is the placeholder for documentation.
    */
   public String login(LoginDto loginDto) {
-    try (Keycloak keycloak = KeycloakBuilder.builder()
-            .serverUrl(keycloakServerUrl)
-            .realm(keycloakRealm)
-            .clientId(keycloakClientId)
-            .clientSecret(keycloakClientSecret)
-            .grantType(OAuth2Constants.PASSWORD)
-            .username(loginDto.getUsername())
-            .password(loginDto.getPassword())
-            .build()) {
+    try (Keycloak keycloak = KeycloakBuilder.builder().serverUrl(keycloakServerUrl)
+      .realm(keycloakRealm).clientId(keycloakClientId).clientSecret(keycloakClientSecret)
+      .grantType(OAuth2Constants.PASSWORD).username(loginDto.getUsername())
+      .password(loginDto.getPassword()).build()) {
 
       return keycloak.tokenManager().getAccessToken().getToken();
     } catch (Exception e) {
-      log.error("Exception occurred while logging in user {}: {}",
-              loginDto.getUsername(), e.getMessage(), e);
+      log.error("Exception occurred while logging in user {}: {}", loginDto.getUsername(),
+        e.getMessage(), e);
     }
     throw new RuntimeException("Invalid username or password");
   }

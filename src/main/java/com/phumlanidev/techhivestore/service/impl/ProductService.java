@@ -47,9 +47,9 @@ public class ProductService {
    */
   @Transactional
   public ProductDto findProductById(Long productId) {
-    Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new RuntimeException("Product not found"));
-    return productMapper.toDto(product, new ProductDto());
+    return productRepository.findById(productId)
+      .map(product -> productMapper.toDto(product, new ProductDto()))
+      .orElseThrow(() -> new RuntimeException("Product not found"));
   }
 
   /**
@@ -61,9 +61,8 @@ public class ProductService {
     List<Product> products = productRepository.findAll();
 
     return products.stream()
-        .filter(product -> product.getName() != null && !product.getName().isEmpty())
-        .map(product -> productMapper.toDto(product, new ProductDto()))
-        .collect(Collectors.toList());
+      .filter(product -> product.getName() != null && !product.getName().isEmpty())
+      .map(product -> productMapper.toDto(product, new ProductDto())).collect(Collectors.toList());
   }
 
   /**
@@ -72,7 +71,7 @@ public class ProductService {
   @Transactional
   public ProductDto getProductById(Long productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new RuntimeException("Product not found"));
+      .orElseThrow(() -> new RuntimeException("Product not found"));
     return productMapper.toDto(product, new ProductDto());
   }
 
@@ -86,7 +85,7 @@ public class ProductService {
     }
 
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new RuntimeException("Product not found"));
+      .orElseThrow(() -> new RuntimeException("Product not found"));
 
     productMapper.toEntity(productDto, product);
 
@@ -102,7 +101,7 @@ public class ProductService {
   public void deleteProductById(Long productId) {
 
     productRepository.findById(productId)
-        .orElseThrow(() -> new RuntimeException("Product not found"));
+      .orElseThrow(() -> new RuntimeException("Product not found"));
     productRepository.deleteById(productId);
   }
 }

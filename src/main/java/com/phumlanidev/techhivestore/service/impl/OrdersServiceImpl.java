@@ -41,17 +41,14 @@ public class OrdersServiceImpl implements IOrdersService {
 
   @Transactional
   @Override
-  public OrderDto placeOrder(Long userId, Long addressId, String paymentMethod) {
+  public OrderDto placeOrder(Long userId, Long addressId) {
 
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new RuntimeException("user not found"));
-
-    final Address address = addressRepository.findById(addressId)
-        .orElseThrow(() -> new RuntimeException("Address not found"));
+    User user =
+      userRepository.findById(userId).orElseThrow(() -> new RuntimeException("user not found"));
 
     // Fetch cart
-    Cart cart = cartRepository.findByUser_UserId(user.getUserId())
-        .orElseThrow(() -> new RuntimeException("Cart not found"));
+    Cart cart = cartRepository.findByUserUserId(user.getUserId())
+      .orElseThrow(() -> new RuntimeException("Cart not found"));
 
     if (cart.getTotalPrice() <= 0) {
       throw new RuntimeException("Cart is empty");
@@ -64,6 +61,10 @@ public class OrdersServiceImpl implements IOrdersService {
     order.setOrderStatus(OrderStatus.PENDING);
     order.setPaymentStatus(PaymentStatus.PENDING);
     order.setTotalPrice(cart.getTotalPrice());
+
+    Address address = addressRepository.findById(addressId)
+      .orElseThrow(() -> new RuntimeException("Address not found"));
+
     order.setAddressId(address);
 
     //Convert cart item to order items
@@ -102,8 +103,8 @@ public class OrdersServiceImpl implements IOrdersService {
   @Transactional
   @Override
   public OrderDto getOrderDetails(Long orderId) {
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
+    Order order =
+      orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
     return orderMapper.toDto(order, new OrderDto());
   }
 
@@ -111,16 +112,15 @@ public class OrdersServiceImpl implements IOrdersService {
   @Override
   public List<OrderDto> getUserOrders(Long userId) {
     List<Order> orders = orderRepository.findByUserId_UserId(userId);
-    return orders.stream()
-        .map(order -> orderMapper.toDto(order, new OrderDto()))
-        .collect(Collectors.toList());
+    return orders.stream().map(order -> orderMapper.toDto(order, new OrderDto()))
+      .collect(Collectors.toList());
   }
 
   @Transactional
   @Override
   public OrderDto updateOrderStatus(Long orderId, String status) {
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
+    Order order =
+      orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
     order.setOrderStatus(OrderStatus.valueOf(status.toUpperCase()));
     return orderMapper.toDto(orderRepository.save(order), new OrderDto());
@@ -128,11 +128,11 @@ public class OrdersServiceImpl implements IOrdersService {
 
   @Override
   public void cancelOrder(Long orderId) {
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
+    Order order =
+      orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
     if (!OrderStatus.PENDING.equals(order.getOrderStatus())) {
-      throw new RuntimeException("Only pending orders can be canceled");
+      throw new RuntimeException("Only pending order can be canceled");
     }
 
     // Refund stock
