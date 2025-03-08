@@ -26,6 +26,14 @@ jobs:
       - name: Run Checkstyle
         run: mvn --batch-mode checkstyle:check
 
+  debug-cache-key:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug Cache Key
+        run:
+          echo "Cache Key: ${{ needs.setup.outputs.cache-key }}"
+
   build:
     needs: [ checkstyle ]
     uses: PhumlaniDev/reusable-workflows/.github/workflows/java-maven-build-test.yml@main
