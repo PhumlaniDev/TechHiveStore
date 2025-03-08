@@ -4,8 +4,6 @@ permissions:
   issues: read
   contents: read
   actions: read
-  
-
 
 on:
   pull_request:
@@ -29,7 +27,7 @@ jobs:
         run: mvn --batch-mode checkstyle:check
 
   build:
-    needs: [ setup ]
+    needs: [ checkstyle ]
     uses: PhumlaniDev/reusable-workflows/.github/workflows/java-maven-build-test.yml@main
     with:
       project_name: tech-hive-store
