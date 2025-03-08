@@ -35,9 +35,8 @@ public class OrderController {
   @PostMapping("/place-order")
   public ResponseEntity<OrderDto> placeOrder(
       @RequestParam Long userId,
-      @RequestParam Long addressId,
-      @RequestParam String paymentMethod) {
-    OrderDto createdOrder = ordersService.placeOrder(userId, addressId, paymentMethod);
+      @RequestParam Long addressId) {
+    OrderDto createdOrder = ordersService.placeOrder(userId, addressId);
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(createdOrder);

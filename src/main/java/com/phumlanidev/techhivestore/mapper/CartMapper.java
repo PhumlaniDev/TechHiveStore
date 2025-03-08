@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CartMapper {
-  
+
   private final CartItemMapper cartItemMapper;
-  
+
   /**
    * Comment: this is the placeholder for documentation.
    */
@@ -25,11 +25,11 @@ public class CartMapper {
     cart.setCartId(cartDto.getCartId());
     cart.setUser(cartDto.getUser());
     cart.setCartItems(cartDto.getCartItemDtoList().stream()
-            .map(cartItemDto -> cartItemMapper.toEntity(new CartItem(), cartItemDto))
-            .collect(Collectors.toList()));
+      .map(cartItemDto -> cartItemMapper.toEntity(new CartItem(), cartItemDto))
+      .collect(Collectors.toList()));
     return cart;
   }
-  
+
   /**
    * Comment: this is the placeholder for documentation.
    */
@@ -37,8 +37,8 @@ public class CartMapper {
     cartDto.setCartId(cart.getCartId());
     cartDto.setUser(cart.getUser());
     cartDto.setCartItemDtoList(cart.getCartItems().stream()
-            .map(cartItemDto -> cartItemMapper.toDto(cartItemDto, new CartItemDto()))
-            .collect(Collectors.toList()));
+      .map(cartItemDto -> cartItemMapper.toDto(cartItemDto, new CartItemDto()))
+      .collect(Collectors.toList()));
     return cartDto;
   }
 }
