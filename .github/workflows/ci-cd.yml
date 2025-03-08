@@ -41,7 +41,7 @@ jobs:
       project_name: tech-hive-store
       database_name: tech_hive_db
       test_database_name: tech_hive_test_db
-      cache-key: ${{ env.cache_key }}
+      cache-key: ${{ needs.setup.outputs.cache-key }}
 
 #  unit_tests:
 #    runs-on: ubuntu-latest
