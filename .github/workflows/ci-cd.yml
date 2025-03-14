@@ -26,6 +26,9 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
+      - name: Pre-fetch Maven dependencies
+        run: mvn dependency:go-offline
+
   checkstyle:
     name: Checkstyle
     runs-on: ubuntu-latest
