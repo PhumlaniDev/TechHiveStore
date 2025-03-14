@@ -5,24 +5,24 @@ CREATE TABLE IF NOT EXISTS Address (
     province VARCHAR(100),
     zip_code VARCHAR(20) NOT NULL,
     country VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS Users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    user_id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(255) UNIQUE NOT NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     phone_number VARCHAR(20),
     role VARCHAR(20),
     address_id INT,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (address_id) REFERENCES Address (address_id)
@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS Category (
     category_id SERIAL PRIMARY KEY,
     category_name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255)
 );
@@ -45,18 +45,18 @@ CREATE TABLE IF NOT EXISTS Product (
     price DECIMAL(10, 2) NOT NULL,
     quantity INT NOT NULL,
     imageURL VARCHAR(255),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS Cart (
     cart_id SERIAL PRIMARY KEY,
-    user_id INT,
+    user_id BIGINT NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES Users (user_id)
@@ -64,12 +64,12 @@ CREATE TABLE IF NOT EXISTS Cart (
 
 CREATE TABLE IF NOT EXISTS CartItem (
     cart_item_id SERIAL PRIMARY KEY,
-    cart_id INT,
-    product_id INT,
-    quantity INT NOT NULL,
+    cart_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity BIGINT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (cart_id) REFERENCES Cart (cart_id),
@@ -77,15 +77,15 @@ CREATE TABLE IF NOT EXISTS CartItem (
 );
 
 CREATE TABLE IF NOT EXISTS Orders (
-    order_id SERIAL PRIMARY KEY,
-    order_number VARCHAR(50) NOT NULL UNIQUE,
-    user_id INT,
-    address_id INT,
+    order_id BIGSERIAL PRIMARY KEY,
+    order_number VARCHAR(36) UNIQUE NOT NULL,
+    user_id BIGINT NOT NULL,
+    address_id BIGINT NOT NULL,
     order_status VARCHAR(50) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
     payment_status VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES Users (user_id),
@@ -94,12 +94,12 @@ CREATE TABLE IF NOT EXISTS Orders (
 
 CREATE TABLE IF NOT EXISTS OrderItem (
     order_item_id SERIAL PRIMARY KEY,
-    order_id INT,
-    product_id INT,
-    quantity INT NOT NULL,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity BIGINT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     FOREIGN KEY (order_id) REFERENCES Orders (order_id),
