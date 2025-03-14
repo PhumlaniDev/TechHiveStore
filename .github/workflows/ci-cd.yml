@@ -162,7 +162,7 @@ jobs:
           docker run --rm -v $(pwd):/src -w /src owasp/dependency-check --scan . --format HTML --out owasp-report
 
       - name: Upload OWASP Dependency Check Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: owasp-report
           path: owasp-report
@@ -172,7 +172,7 @@ jobs:
           docker run --rm -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080 -g gen.conf -r zap-report.html
 
       - name: Upload OWASP ZAP Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: zap-report
           path: zap-report.html
@@ -202,10 +202,10 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
 
-      - name: Notify Discord on Failure
-        if: failure()
-        uses: rjstone/discord-webhook-notify@v1
-        with:
-          severity: error
-          text: "Security scan failed! Check reports."
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+#      - name: Notify Discord on Failure
+#        if: failure()
+#        uses: rjstone/discord-webhook-notify@v1
+#        with:
+#          severity: error
+#          text: "Security scan failed! Check reports."
+#          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
