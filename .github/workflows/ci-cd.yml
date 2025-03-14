@@ -12,51 +12,24 @@ on:
     branches: [ develop, main ]
 
 jobs:
-  #  setup:
-  #    uses: PhumlaniDev/reusable-workflows/.github/workflows/java-maven-setup.yml@main
-
   setup:
+    name: Setup Environment
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
-          cache: 'maven'  # Cache Maven dependencies
-
-      #      - name: Generate Cache Key
-      #        id: generate-cache-key
-      #        run: |
-      #          cache_key="maven-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}" >> "$GITHUB_ENV"  # Generate cache key
-      #          echo "generated Cache Key: $cache_key"  # Debug cache key
-      #          echo "cache_key=$cache_key" >> "$GITHUB_ENV"  # Set cache key as environment variable
-      #          echo "cache_key=$cache_key" >> "$GITHUB_OUTPUT"  # Set cache key as output
-      #
-      #      - name: Debug Generated Cache Key
-      #        run: |
-      #          echo "Generated Cache Key: ${{ env.cache_key }}"
-
-
-  #      - name: Cache Maven dependencies
-  #        id: cache-dependencies
-  #        uses: actions/cache@v4
-  #        with:
-  #          path: ~/.m2/repository
-  #          key: ${{ env.cache_key }}
-  #          restore-keys: |
-  #            maven-${{ runner.os }}-
-  #
-  #      - name: Install Dependencies
-  #        run: mvn -B dependency:resolve dependency:resolve-plugins
+          cache: 'maven'
 
   checkstyle:
+    name: Checkstyle
     runs-on: ubuntu-latest
-    needs: [ setup ]
-
+    needs: setup
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -65,10 +38,12 @@ jobs:
         run: mvn --batch-mode checkstyle:check
 
   build:
+    name: Build Application
     runs-on: ubuntu-latest
+    needs: checkstyle
     services:
       postgres:
-        image: postgres:16.0
+        image: postgres:16
         ports:
           - 5432:5432
         env:
@@ -76,7 +51,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -86,21 +61,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Debug Received Cache Key
-        run: |
-          echo "Received Cache Key: ${{ inputs.cache-key }}"
-
-      - name: Set Default Cache Key if Missing
-        if: ${{ inputs.cache-key == '' || inputs.cache-key == null }}
-        run: echo "cache-key=maven-default-key" >> "$GITHUB_ENV"
-
-      - name: Restore Cached Maven Dependencies
-        uses: actions/cache@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          path: ~/.m2/repository
-          key: ${{ inputs.cache-key || env.cache-key }}
-          restore-keys: |
-            maven-${{ runner.os }}-
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
 
       - name: Copy Maven settings
         run: |
@@ -111,7 +77,7 @@ jobs:
         run: mvn --batch-mode clean install -Dspring.profiles.active=local --settings .github/settings.xml
         env:
           GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ inputs.database_name }}
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/tech_hive_db
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
@@ -139,172 +105,112 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.project_name }}:${{ github.run_number }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.project_name }}:latest
 
-#  unit_tests:
-#    runs-on: ubuntu-latest
-#    needs: [ build ]
-#
-#    steps:
-#      - name: Check out code
-#        uses: actions/checkout@v4
-#
-#      - name: Restore Maven cache
-#        uses: actions/cache@v3
-#        with:
-#          path: ~/.m2/repository
-#          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
-#
-#      - name: Run unit tests with H2 database
-#        run: mvn --batch-mode test
-#        env:
-#          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
-#          SPRING_DATASOURCE_USERNAME: test
-#          SPRING_DATASOURCE_PASSWORD: test
-#          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-#
-#  code_analysis:
-#    runs-on: ubuntu-latest
-#    needs: [ build ]
-#    uses: PhumlaniDev/reusable-workflows/.github/workflows/java-code_analysis.yml
-#    with:
-#      project_key: ${{ secrets.SONAR_PROJECT_KEY }}
-#  #  integration_test:
-#  #    runs-on: ubuntu-latest
-#  #    needs: [ code_analysis ]
-#  #    services:
-#  #      postgres:
-#  #        image: postgres:latest
-#  #        ports:
-#  #          - 5432:5432
-#  #        env:
-#  #          POSTGRES_DB: techhive
-#  #          POSTGRES_USER: phumlanidev
-#  #          POSTGRES_PASSWORD: password
-#  #        options: >-
-#  #          --health-cmd "pg_isready -U $POSTGRES_USER"
-#  #          --health-interval 10s
-#  #          --health-timeout 5s
-#  #          --health-retries 5
-#  #
-#  #    steps:
-#  #      - name: Check out code
-#  #        uses: actions/checkout@v4
-#  #
-#  #      - name: Set up Java
-#  #        uses: actions/setup-java@v4
-#  #        with:
-#  #          distribution: 'zulu'
-#  #          java-version: '17'
-#  #
-#  #      - name: Restore Maven cache
-#  #        uses: actions/cache@v4
-#  #        with:
-#  #          path: ~/.m2/repository
-#  #          key: ${{ needs.setup.outputs.cache-key }}
-#  #
-#  #      - name: Restore Maven cache
-#  #        uses: actions/cache@v4
-#  #        with:
-#  #          path: ~/.m2/repository
-#  #          key: ${{ needs.setup.outputs.cache-key }}
-#  #
-#  #      - name: Wait for Postgres
-#  #        run: |
-#  #          until pg_isready -h localhost -p 5432; do
-#  #          echo "Waiting for PostgreSQL..."
-#  #          sleep 2
-#  #          done
-#  #
-#  #      - name: Run Integration Tests
-#  #        run: mvn verify -Dspring.profiles.active=test
-#
-#  vulnerability_scan:
-#    runs-on: ubuntu-latest
-#    needs: [ code_analysis ]
-#    steps:
-#      - name: Check out code
-#        uses: actions/checkout@v4
-#
-#      - name: Cache Trivy database
-#        uses: actions/cache@v3
-#        with:
-#          path: ~/.cache/trivy
-#          key: trivy-db-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: |
-#            trivy-db-
-#
-#      - name: Install Trivy
-#        run: |
-#          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-#
-#      - name: Run Trivy vulnerability scan
-#        run: trivy fs --exit-code 0 --severity HIGH,CRITICAL .
-#
-#      - name: Log in to Docker Hub
-#        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-#
-#      - name: Pull Docker Image
-#        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
-#
-#      - name: Run Trivy vulnerability scanner
-#        uses: aquasecurity/trivy-action@0.20.0
-#        with:
-#          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
-#          format: 'table'
-#          exit-code: '0'
-#          ignore-unfixed: true
-#          vuln-type: 'os,library'
-#          severity: 'CRITICAL,HIGH'
-#        env:
-#          GH_PAT: ${{ secrets.GH_PAT }}
-#
-#  publish_nexus:
-#    runs-on: ubuntu-latest
-#    needs: [ vulnerability_scan ]
-#    steps:
-#      - name: Check out code
-#        uses: actions/checkout@v4
-#
-#      - name: Debug Cache Key
-#        run: echo "${{ steps.cache-dependencies.outputs.cache-key }}"
-#
-#      - name: Restore Maven cache
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.m2/repository
-#          key: ${{ needs.setup.outputs.cache-key || 'default-key' }}
-#          fail-on-cache-miss: false
-#
-#      - name: Deploy Maven Artifacts to GitHub Packages
-#        if: github.ref != 'refs/heads/devlop'
-#        run: mvn deploy -DskipTests --settings .github/settings.xml
-#
-#        env:
-#          GH_PAT: ${{ secrets.GH_PAT }}
-#          GH_USERNAME: ${{ secrets.GH_USERNAME }}
-#
-#  job-summary:
-#    runs-on: ubuntu-latest
-#    needs: [ publish_nexus ]
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Generate code analysis report
-#        run: curl -u ${{ secrets.SONAR_TOKEN }} https://sonarcloud.io/api/project_analyses/search?project=${{ secrets.SONAR_PROJECT_KEY }} -o sonar-report.json
-#
-#      - name: Generate vulnerability report
-#        run: cat trivy-report.json | jq '.'
-#
-#      - name: Create summary table
-#        run: |
-#          echo "# Analysis and Vulnerability Report" > report.md
-#          echo "## SonarCloud Analysis" >> report.md
-#          cat sonar-report.json | jq . >> report.md
-#          echo "## Vulnerabilities" >> report.md
-#          cat trivy-report.json | jq -r '.[] | "Package: \(.Target)\nSeverity: \(.Severity)\nDescription: \(.VulnerabilityID)\n"' >> report.md
-#
-#      - name: Upload summary
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: summary-report
-#          path: report.md
+  unit-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Run Unit Tests with H2
+        run: mvn --batch-mode test -Dspring.profiles.active=test
+        env:
+          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: test
+          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+
+  code-analysis:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Run SonarCloud Analysis
+        env:
+          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: test
+          GH_PAT: ${{ secrets.GH_PAT }}
+          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          run: mvn --batch-mode verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage, test -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.host.url=https://sonarcloud.io
+
+  vulnerability-scan:
+    name: Security Scans
+    runs-on: ubuntu-latest
+    needs: code-analysis
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run OWASP Dependency Check
+        run: |
+          mkdir owasp-report
+          docker run --rm -v $(pwd):/src -w /src owasp/dependency-check --scan . --format HTML --out owasp-report
+
+      - name: Upload OWASP Dependency Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: owasp-report
+          path: owasp-report
+
+      - name: Run OWASP ZAP Scan
+        run: |
+          docker run --rm -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080 -g gen.conf -r zap-report.html
+
+      - name: Upload OWASP ZAP Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-report
+          path: zap-report.html
+
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+
+      - name: Run Trivy vulnerability scan
+        run: trivy fs --exit-code 0 --severity HIGH,CRITICAL .
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Pull Docker Image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+
+      - name: Notify Discord on Failure
+        if: failure()
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: error
+          text: "Security scan failed! Check reports."
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
