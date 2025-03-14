@@ -151,7 +151,7 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
           JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          run: mvn --batch-mode verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage, test -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.host.url=https://sonarcloud.io
+        run: mvn --batch-mode verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage, test -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.host.url=https://sonarcloud.io
 
   vulnerability-scan:
     name: Security Scans
