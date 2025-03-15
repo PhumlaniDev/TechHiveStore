@@ -171,7 +171,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          continue-on-error: true
+        continue-on-error: true
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
 
