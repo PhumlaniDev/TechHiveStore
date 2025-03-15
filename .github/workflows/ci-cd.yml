@@ -170,16 +170,14 @@ jobs:
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
+          image-ref: 'docker.io/${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}'
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
 
 #      - name: Notify Discord on Failure
 #        if: failure()
