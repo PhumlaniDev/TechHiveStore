@@ -172,14 +172,6 @@ jobs:
           ls -la dependency-check
           chmod +x dependency-check/dependency-check/bin/dependency-check.sh
 
-      - name: Install Docker Compose
-        run: sudo apt-get update && sudo apt-get install -y docker-compose
-
-      - name: Start Application (Docker)
-        run: |
-          docker-compose up -d
-          sleep 30 # Wait for services to start
-
       - name: ZAP Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
@@ -188,11 +180,6 @@ jobs:
           target: 'http://localhost:9500'  # Change this to match your app URL
           rules_file_name: '.zap/rules.tsv' # Optional: Custom rules file
           cmd_options: '-a'                 # Enable all checks
-
-      # Stop the application after scan
-      - name: Stop Application
-        if: always()
-        run: docker-compose down
 
       #      - name: Run OWASP Dependency Check (CLI)
       #        run: |
