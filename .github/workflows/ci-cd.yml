@@ -175,24 +175,37 @@ jobs:
       - name: Run OWASP Dependency Check (CLI)
         run: |
           mkdir -p owasp-report
-          ./dependency-check/dependency-check/bin/dependency-check.sh --scan . --format HTML --out owasp-report --nvdApiKey ${{ secrets.NVD_API_KEY }}
+
+          # Check if local database exists to avoid unnecessary updates
+          if [ ! -f "$HOME/.dependency-check/data/db.mv.db" ]; then
+            echo "Updating OWASP Dependency-Check database..."
+            ./dependency-check/dependency-check/bin/dependency-check.sh --updateonly --nvdApiKey ${{ secrets.NVD_API_KEY }}
+          else
+            echo "Using cached OWASP Dependency-Check database."
+          fi
+
+          # Run dependency check with disabled updates to reduce API calls
+          ./dependency-check/dependency-check/bin/dependency-check.sh --scan . --format HTML --out owasp-report --disableUpdate
+
           retry_count=0
           max_retries=3
           until [ $retry_count -ge $max_retries ]
           do
-            ./dependency-check/dependency-check/bin/dependency-check.sh --project "TechHiveStore" --scan "./"
+            ./dependency-check/dependency-check/bin/dependency-check.sh --project "TechHiveStore" --scan "./" --disableUpdate
             result=$?
             if [ $result -eq 0 ]; then
               break
             fi
             retry_count=$((retry_count+1))
-            echo "Retrying... ($retry_count/$max_retries)"
-            sleep 10
+            echo "Retrying in 60 seconds... ($retry_count/$max_retries)"
+            sleep 60
           done
+
           if [ $result -ne 0 ]; then
             echo "Dependency Check failed after $max_retries attempts."
             exit 1
           fi
+      
 
       - name: Upload OWASP Dependency Check Report
         uses: actions/upload-artifact@v4
