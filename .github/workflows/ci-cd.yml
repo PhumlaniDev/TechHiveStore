@@ -168,8 +168,9 @@ jobs:
       - name: Install OWASP Dependency Check
         run: |
           curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.6/dependency-check-9.0.6-release.zip -o dependency-check.zip
-          unzip dependency-check.zip -d dependency-check
-          chmod +x dependency-check/bin/dependency-check.sh
+          unzip dependency-check.zip -d dependency-check || (echo "Unzip failed!" && exit 1)
+          ls -la dependency-check
+          chmod +x dependency-check/dependency-check.sh
 
       - name: Run OWASP Dependency Check (CLI)
         run: |
