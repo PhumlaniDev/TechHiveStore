@@ -180,10 +180,16 @@ jobs:
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
 
       # Run the application container (ensure correct port mapping)
-      - name: Start Application from Docker
+      - name: Start Application from Docker (Use Host Network)
         run: |
-          docker run -d -p 8080:8080 --name tech-hive-store ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
-          sleep 30  # Wait for the app to be fully ready
+          docker run -d --network=host --name tech-hive-store ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
+          sleep 30  # Wait for the app to be ready
+
+      - name: List Running Containers (Debugging)
+        run: docker ps -a
+
+      - name: Check Container Logs (Debugging)
+        run: docker logs tech-hive-store
 
       # Verify that the application is accessible
       - name: Verify Application is Running
