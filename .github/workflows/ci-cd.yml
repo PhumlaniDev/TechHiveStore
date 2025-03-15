@@ -134,6 +134,8 @@ jobs:
     needs: build
     name: Software Composition Analysis (SCA)
     uses: PhumlaniDev/reusable-workflows/.github/workflows/sca.yml@main
+    with:
+      project_name: 'tech-hive-store'
 
   dast:
     needs: build
