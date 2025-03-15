@@ -172,6 +172,9 @@ jobs:
           ls -la dependency-check
           chmod +x dependency-check/dependency-check/bin/dependency-check.sh
 
+      - name: Install Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+
       - name: Start Application (Docker)
         run: |
           docker-compose up -d
@@ -185,9 +188,6 @@ jobs:
           target: 'http://localhost:9500'  # Change this to match your app URL
           rules_file_name: '.zap/rules.tsv' # Optional: Custom rules file
           cmd_options: '-a'                 # Enable all checks
-
-      - name: Install Docker Compose
-        run: sudo apt-get update && sudo apt-get install -y docker-compose
 
       # Stop the application after scan
       - name: Stop Application
