@@ -172,8 +172,8 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
           continue-on-error: true
-          env:
-            GH_PAT: ${{ secrets.GH_PAT }}
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
 
 #      - name: Notify Discord on Failure
 #        if: failure()
