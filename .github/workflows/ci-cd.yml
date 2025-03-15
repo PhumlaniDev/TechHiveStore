@@ -134,11 +134,20 @@ jobs:
     needs: build
     name: Software Composition Analysis (SCA)
     uses: PhumlaniDev/reusable-workflows/.github/workflows/sca.yml@main
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   dast:
     needs: build
     name: Dynamic Application Security Testing (DAST)
     uses: PhumlaniDev/reusable-workflows/.github/workflows/dast.yml@main
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #  code-analysis:
 #    name: SonarCloud Analysis
