@@ -156,10 +156,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set Java Version
+        run: |
+          sudo apt update && sudo apt install -y temurin-17-jdk
+          java -version
+
+      - name: Debug Java Version in OWASP Container
+        run: |
+          docker run --rm owasp/dependency-check java -version
+
+
       - name: Run OWASP Dependency Check
         run: |
-          mkdir owasp-report
-          docker run --rm -v $(pwd):/src -w /src owasp/dependency-check --scan . --format HTML --out owasp-report
+          export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
+          export PATH=$JAVA_HOME/bin:$PATH
+          mkdir -p owasp-report
+          docker run --rm -v $(pwd):/src -w /src \
+            -e JAVA_TOOL_OPTIONS="--enable-native-access=ALL-UNNAMED" \
+            owasp/dependency-check --scan . --format HTML --out owasp-report \
+            --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Upload OWASP Dependency Check Report
         uses: actions/upload-artifact@v4
