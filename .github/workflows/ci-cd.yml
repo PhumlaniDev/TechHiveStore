@@ -186,6 +186,9 @@ jobs:
           rules_file_name: '.zap/rules.tsv' # Optional: Custom rules file
           cmd_options: '-a'                 # Enable all checks
 
+      - name: Install Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+
       # Stop the application after scan
       - name: Stop Application
         if: always()
