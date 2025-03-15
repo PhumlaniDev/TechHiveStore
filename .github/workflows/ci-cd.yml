@@ -170,12 +170,12 @@ jobs:
           curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.6/dependency-check-9.0.6-release.zip -o dependency-check.zip
           unzip dependency-check.zip -d dependency-check || (echo "Unzip failed!" && exit 1)
           ls -la dependency-check
-          chmod +x dependency-check/bin/dependency-check.sh
+          chmod +x dependency-check/dependency-check/bin/dependency-check.sh
 
       - name: Run OWASP Dependency Check (CLI)
         run: |
           mkdir -p owasp-report
-          ./dependency-check/bin/dependency-check.sh --scan . --format HTML --out owasp-report --nvdApiKey ${{ secrets.NVD_API_KEY }}
+          ./dependency-check/dependency-check/bin/dependency-check.sh --scan . --format HTML --out owasp-report --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Upload OWASP Dependency Check Report
         uses: actions/upload-artifact@v4
