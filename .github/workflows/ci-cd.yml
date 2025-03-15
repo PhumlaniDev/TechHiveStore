@@ -165,15 +165,16 @@ jobs:
         run: |
           docker run --rm owasp/dependency-check java -version
 
-      - name: Run OWASP Dependency Check
+      - name: Install OWASP Dependency Check
+        run: |
+          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.6/dependency-check-9.0.6-release.zip -o dependency-check.zip
+          unzip dependency-check.zip -d dependency-check
+          chmod +x dependency-check/bin/dependency-check.sh
+
+      - name: Run OWASP Dependency Check (CLI)
         run: |
           mkdir -p owasp-report
-          docker run --rm -v $(pwd):/src -w /src \
-            --env JAVA_HOME=/usr/lib/jvm/temurin-17-jdk \
-            --env PATH=$JAVA_HOME/bin:$PATH \
-            -e JAVA_TOOL_OPTIONS="--enable-native-access=ALL-UNNAMED" \
-            owasp/dependency-check --scan . --format HTML --out owasp-report --nvdApiKey ${{ secrets.NVD_API_KEY }}
-
+          ./dependency-check/bin/dependency-check.sh --scan . --format HTML --out owasp-report --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Upload OWASP Dependency Check Report
         uses: actions/upload-artifact@v4
