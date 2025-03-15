@@ -165,16 +165,15 @@ jobs:
         run: |
           docker run --rm owasp/dependency-check java -version
 
-
       - name: Run OWASP Dependency Check
         run: |
-          export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
-          export PATH=$JAVA_HOME/bin:$PATH
           mkdir -p owasp-report
           docker run --rm -v $(pwd):/src -w /src \
+            --env JAVA_HOME=/usr/lib/jvm/temurin-17-jdk \
+            --env PATH=$JAVA_HOME/bin:$PATH \
             -e JAVA_TOOL_OPTIONS="--enable-native-access=ALL-UNNAMED" \
-            owasp/dependency-check --scan . --format HTML --out owasp-report \
-            --nvdApiKey ${{ secrets.NVD_API_KEY }}
+            owasp/dependency-check --scan . --format HTML --out owasp-report --nvdApiKey ${{ secrets.NVD_API_KEY }}
+
 
       - name: Upload OWASP Dependency Check Report
         uses: actions/upload-artifact@v4
