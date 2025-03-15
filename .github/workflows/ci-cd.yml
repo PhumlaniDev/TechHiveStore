@@ -4,6 +4,8 @@ permissions:
   issues: read
   contents: read
   actions: read
+  security-events: write  # 🔥 Add this line
+
 
 on:
   pull_request:
