@@ -38,20 +38,16 @@ public class SecurityConfig {
    */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/api/v1/auth/**").permitAll()
-                    .requestMatchers("/api/v1/products/**").permitAll()
-                    .requestMatchers("/api/v1/category/**").permitAll()
-                    .requestMatchers("/api/v1/store/**").permitAll()
-                    .requestMatchers("/api/v1/admin/**").hasRole(ADMIN)
-                    .requestMatchers("/api/v1/user/**").hasRole(USER)
-                    .anyRequest().authenticated())
-            .oauth2ResourceServer(oauth2 ->
-                    oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
+            authorize -> authorize.requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/actuator/**").permitAll().requestMatchers("/api/v1/products/**")
+                .permitAll().requestMatchers("/api/v1/category/**").permitAll()
+                .requestMatchers("/api/v1/store/**").permitAll().requestMatchers("/api/v1/admin/**")
+                .hasRole(ADMIN).requestMatchers("/api/v1/user/**").hasRole(USER).anyRequest()
+                .authenticated()).oauth2ResourceServer(
+            oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     return http.build();
   }
 }
