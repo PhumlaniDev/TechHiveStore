@@ -155,12 +155,31 @@ jobs:
       - dast
     if: always()
     with:
-      status: ${{ job.status }}
-      title: "🚀 Workflow Run - ${{ job.status }}"
+      status: >-
+        ${
+          {(
+            needs.unit-tests.result == 'success' &&
+            needs.sast.result == 'success' &&
+            needs.sca.result == 'success' &&
+            needs.dast.result == 'success'
+          ) && 'success' || 'failure'}
+        }
+      title: "🚀 Workflow Run - Combined Status"
       description: |
-        Branch: `${{ github.ref_name }}`
-        Commit: `${{ github.sha }}` by **${{ github.actor }}**
+        Unit Tests: `${{ needs.unit-tests.result }}`
+        SAST: `${{ needs.sast.result }}`
+        SCA: `${{ needs.sca.result }}`
+        DAST: `${{ needs.dast.result }}`
+        Commit: `${{ github.sha }}`
         [View Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
-      color: ${{ job.status == 'success' && '3066993' || '15158332' }}
+      color: >-
+        ${
+          {(
+            needs.unit-tests.result == 'success' &&
+            needs.sast.result == 'success' &&
+            needs.sca.result == 'success' &&
+            needs.dast.result == 'success'
+          ) && '3066993' || '15158332'}
+        }
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
