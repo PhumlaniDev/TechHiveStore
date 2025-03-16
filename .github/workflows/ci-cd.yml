@@ -147,7 +147,7 @@ jobs:
     secrets: inherit
 
   notify:
-    uses: PhumlaniDev/reusable-workflows/.github/workflows/discord-notify.yml
+    uses: PhumlaniDev/reusable-workflows/.github/workflows/discord-notify.yml@main
     needs:
       - unit-tests
       - sast
