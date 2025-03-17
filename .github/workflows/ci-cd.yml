@@ -6,14 +6,13 @@ permissions:
   actions: read
   security-events: write
 
-
 on:
   workflow_dispatch:
   workflow_call:
   pull_request:
-    branches: [ develop, main ]
+    branches: [develop, main]
   push:
-    branches: [ develop, main ]
+    branches: [develop, main]
 
 jobs:
   setup:
@@ -26,9 +25,9 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
 
       - name: Pre-fetch Maven dependencies
         run: mvn dependency:go-offline
@@ -71,9 +70,9 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
 
       - name: Copy Maven settings
         run: |
@@ -115,9 +114,9 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
 
       - name: Run Unit Tests with H2
         run: mvn --batch-mode test -Dspring.profiles.active=test
@@ -131,20 +130,26 @@ jobs:
     needs: build
     name: Static Application Security Testing (SAST)
     uses: PhumlaniDev/reusable-workflows/.github/workflows/sast.yml@main
-    with:
-      secrets: inherit
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_URL: ${{ secrets.SONAR_URL }}
 
   sca:
     needs: build
     name: Software Composition Analysis (SCA)
     uses: PhumlaniDev/reusable-workflows/.github/workflows/sca.yml@main
-    secrets: inherit
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   dast:
     needs: build
     name: Dynamic Application Security Testing (DAST)
     uses: PhumlaniDev/reusable-workflows/.github/workflows/dast.yml@main
-    secrets: inherit
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
   notify:
     uses: PhumlaniDev/reusable-workflows/.github/workflows/discord-notify.yml@main
