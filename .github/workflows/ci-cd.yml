@@ -8,7 +8,6 @@ permissions:
 
 on:
   workflow_dispatch:
-  workflow_call:
   pull_request:
     branches: [ develop, main ]
   push:
@@ -133,6 +132,8 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_URL: ${{ secrets.SONAR_URL }}
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
   sca:
     needs: build
