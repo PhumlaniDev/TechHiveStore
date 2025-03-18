@@ -8,7 +8,7 @@ on:
       - closed
       - synchronize
     branches:
-      - develop  # Your dependabot PRs target branch
+      - develop  # Matches target branch from your dependabot.yml
 
 permissions:
   contents: read
@@ -20,12 +20,13 @@ jobs:
     uses: ./.github/workflows/discord-notify.yml
     with:
       status: success
-      title: "🤖 Dependabot PR: ${{ github.event.action | capitalize }}"
+      title: "🤖 GitHub Bot PR: ${{ github.event.action | capitalize }}"
       description: |
         **Dependabot PR Notification**
         - PR: #${{ github.event.pull_request.number }}
         - Title: `${{ github.event.pull_request.title }}`
         - State: `${{ github.event.pull_request.state }}`
+        - Labels: `${{ join(github.event.pull_request.labels.*.name, ', ') }}`
         - Author: `${{ github.actor }}`
         [View PR](https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }})
       color: '7506394'
