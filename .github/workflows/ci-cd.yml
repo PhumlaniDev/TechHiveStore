@@ -163,7 +163,6 @@ jobs:
       - unit-tests
       - sast
       - sca
-      - dast
     if: always()
     with:
       status: >-
