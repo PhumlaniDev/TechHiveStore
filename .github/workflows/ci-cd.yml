@@ -101,6 +101,7 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:${{ github.run_number }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
 
+
   unit-tests:
     name: Run Unit Tests
     runs-on: ubuntu-latest
@@ -161,14 +162,8 @@ jobs:
     if: always()
     with:
       status: >-
-        ${
-          {(
-            needs.unit-tests.result == 'success' &&
-            needs.sast.result == 'success' &&
-            needs.sca.result == 'success' &&
-            needs.dast.result == 'success'
-          ) && 'success' || 'failure'}
-        }
+        ${{ (needs.unit-tests.result == 'success' && needs.sast.result == 'success' && needs.sca.result == 'success' \
+        && needs.dast.result == 'success') && 'success' || 'failure' }}
       title: "🚀 Workflow Run - Combined Status"
       description: |
         Unit Tests: `${{ needs.unit-tests.result }}`
@@ -178,13 +173,7 @@ jobs:
         Commit: `${{ github.sha }}`
         [View Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
       color: >-
-        ${
-          {(
-            needs.unit-tests.result == 'success' &&
-            needs.sast.result == 'success' &&
-            needs.sca.result == 'success' &&
-            needs.dast.result == 'success'
-          ) && '3066993' || '15158332'}
-        }
+        ${{ (needs.unit-tests.result == 'success' && needs.sast.result == 'success' && needs.sca.result == 'success' \
+        && needs.dast.result == 'success') && '3066993' || '15158332' }}
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
