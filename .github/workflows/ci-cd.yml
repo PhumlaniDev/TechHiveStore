@@ -1,4 +1,4 @@
-name: Build-Test-Analyze Code
+name: CI/CD Pipeline
 
 permissions:
   issues: read
