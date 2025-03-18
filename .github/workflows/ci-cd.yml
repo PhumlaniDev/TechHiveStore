@@ -152,6 +152,8 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+    with:
+      image-tag: ${{ secrets.DOCKERHUB_USERNAME }}/tech-hive-store:latest
 
   notify:
     uses: PhumlaniDev/reusable-workflows/.github/workflows/discord-notify.yml@main
