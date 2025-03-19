@@ -17,7 +17,7 @@ permissions:
 jobs:
   notify:
     if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
-    uses: ./.github/workflows/discord-notify.yml
+    uses: PhumlaniDev/reusable-workflows/.github/workflows/discord-notify.yml@main
     with:
       status: success
       title: "🤖 GitHub Bot PR: ${{ github.event.action | capitalize }}"
