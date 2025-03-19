@@ -38,9 +38,8 @@ public class CategoryController {
   @PostMapping("/create")
   public ResponseEntity<ResponseDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
     categoryService.createCategory(categoryDto);
-    return ResponseEntity
-      .status(HttpStatus.CREATED)
-      .body(new ResponseDto(Constant.STATUS_CODE_CREATED, "Category created successfully"));
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(new ResponseDto(Constant.STATUS_CODE_CREATED, "Category created successfully"));
   }
 
   /**
@@ -59,9 +58,7 @@ public class CategoryController {
   @GetMapping("/find/{categoryId}")
   public ResponseEntity<CategoryDto> findCategoryById(@Valid @PathVariable Long categoryId) {
     CategoryDto category = categoryService.getCategoryById(categoryId);
-    return ResponseEntity
-      .status(HttpStatus.OK)
-      .body(category);
+    return ResponseEntity.status(HttpStatus.OK).body(category);
   }
 
   /**
@@ -70,9 +67,8 @@ public class CategoryController {
   @DeleteMapping("/delete/{categoryId}")
   public ResponseEntity<ResponseDto> deleteCategory(@PathVariable Long categoryId) {
     categoryService.deleteCategoryById(categoryId);
-    return ResponseEntity
-      .status(HttpStatus.OK)
-      .body(new ResponseDto(Constant.STATUS_CODE_ok, Constant.MESSAGE_200));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new ResponseDto(Constant.STATUS_CODE_OK, Constant.MESSAGE_200));
   }
 
   /**
@@ -81,9 +77,7 @@ public class CategoryController {
   @GetMapping
   public ResponseEntity<List<CategoryDto>> getAllCategories() {
     List<CategoryDto> categories = categoryService.findAllcategories();
-    return ResponseEntity
-      .status(HttpStatus.OK)
-      .body(categories);
+    return ResponseEntity.status(HttpStatus.OK).body(categories);
   }
 
 }
