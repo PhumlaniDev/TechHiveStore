@@ -2,6 +2,8 @@ package com.phumlanidev.techhivestore.service.impl;
 
 import com.phumlanidev.techhivestore.constant.Constant;
 import com.phumlanidev.techhivestore.dto.ProductDto;
+import com.phumlanidev.techhivestore.exception.ProductNotFoundException;
+import com.phumlanidev.techhivestore.exception.product.ProductAlreadyExistsException;
 import com.phumlanidev.techhivestore.mapper.ProductMapper;
 import com.phumlanidev.techhivestore.model.Product;
 import com.phumlanidev.techhivestore.repository.ProductRepository;
@@ -32,7 +34,7 @@ public class ProductService {
     }
 
     if (productRepository.findByName(productDto.getName()).isPresent()) {
-      throw new RuntimeException("Product already exists");
+      throw new ProductAlreadyExistsException("Product already exists");
     }
 
     Product product = productMapper.toEntity(productDto, new Product());
@@ -49,7 +51,7 @@ public class ProductService {
   public ProductDto findProductById(Long productId) {
     return productRepository.findById(productId)
         .map(product -> productMapper.toDto(product, new ProductDto()))
-        .orElseThrow(() -> new RuntimeException(Constant.PRODUCT_NOT_FOUND));
+        .orElseThrow(() -> new ProductNotFoundException(Constant.PRODUCT_NOT_FOUND));
   }
 
   /**
@@ -71,7 +73,7 @@ public class ProductService {
   @Transactional
   public ProductDto getProductById(Long productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new RuntimeException(Constant.PRODUCT_NOT_FOUND));
+        .orElseThrow(() -> new ProductNotFoundException(Constant.PRODUCT_NOT_FOUND));
     return productMapper.toDto(product, new ProductDto());
   }
 
@@ -85,7 +87,7 @@ public class ProductService {
     }
 
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new RuntimeException(Constant.PRODUCT_NOT_FOUND));
+        .orElseThrow(() -> new ProductNotFoundException(Constant.PRODUCT_NOT_FOUND));
 
     productMapper.toEntity(productDto, product);
 
@@ -101,7 +103,7 @@ public class ProductService {
   public void deleteProductById(Long productId) {
 
     productRepository.findById(productId)
-        .orElseThrow(() -> new RuntimeException(Constant.PRODUCT_NOT_FOUND));
+        .orElseThrow(() -> new ProductNotFoundException(Constant.PRODUCT_NOT_FOUND));
     productRepository.deleteById(productId);
   }
 }
