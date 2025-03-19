@@ -125,7 +125,7 @@ public class ProductService {
     if (productName == null || productName.isBlank()) {
       productPage = productRepository.findAll(pageable);
     } else {
-      productPage = productRepository.findByNameContainingIgnoreCases(productName, pageable);
+      productPage = productRepository.findByNameContainingIgnoreCase(productName, pageable);
     }
 
     return productPage.map(product -> productMapper.toDto(product, new ProductDto()));
