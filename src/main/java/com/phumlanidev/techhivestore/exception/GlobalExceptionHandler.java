@@ -1,7 +1,6 @@
 package com.phumlanidev.techhivestore.exception;
 
 import com.phumlanidev.techhivestore.dto.ErrorResponseDto;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -26,14 +25,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                @NotNull HttpHeaders headers,
-                                                                @NotNull HttpStatusCode status,
-                                                                @NotNull WebRequest request) {
+                                                                HttpHeaders headers,
+                                                                HttpStatusCode status,
+                                                                WebRequest request) {
 
     Map<String, String> validationErrors = new HashMap<>();
     List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
 
-    validationErrorList.forEach((error) -> {
+    validationErrorList.forEach(error -> {
       String fieldName = ((FieldError) error).getField();
       String validationMsg = error.getDefaultMessage();
       validationErrors.put(fieldName, validationMsg);
@@ -48,8 +47,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception ex, WebRequest request) {
 
     ErrorResponseDto errorResponseDto =
-      new ErrorResponseDto(request.getDescription(false), HttpStatus.INTERNAL_SERVER_ERROR,
-        ex.getMessage(), LocalDateTime.now());
+        new ErrorResponseDto(request.getDescription(false), HttpStatus.INTERNAL_SERVER_ERROR,
+            ex.getMessage(), LocalDateTime.now());
 
     return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
   }
@@ -61,8 +60,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorResponseDto> handleUserNotFoundException(UserNotFoundException ex,
                                                                       WebRequest request) {
     ErrorResponseDto errorResponseDto =
-      new ErrorResponseDto(request.getDescription(false), HttpStatus.NOT_FOUND, ex.getMessage(),
-        LocalDateTime.now());
+        new ErrorResponseDto(request.getDescription(false), HttpStatus.NOT_FOUND, ex.getMessage(),
+            LocalDateTime.now());
 
     return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
   }
@@ -72,10 +71,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler(UserAlreadyExistException.class)
   public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistException(
-    UserAlreadyExistException ex, WebRequest request) {
+      UserAlreadyExistException ex, WebRequest request) {
     ErrorResponseDto errorResponseDto =
-      new ErrorResponseDto(request.getDescription(false), HttpStatus.BAD_REQUEST, ex.getMessage(),
-        LocalDateTime.now());
+        new ErrorResponseDto(request.getDescription(false), HttpStatus.BAD_REQUEST, ex.getMessage(),
+            LocalDateTime.now());
 
     return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
   }
@@ -85,12 +84,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler(CategoryAlreadyExistException.class)
   public ResponseEntity<ErrorResponseDto> handleCategoryAlreadyExistException(
-    CategoryAlreadyExistException ex, WebRequest request) {
+      CategoryAlreadyExistException ex, WebRequest request) {
     ErrorResponseDto errorResponseDto =
-      new ErrorResponseDto(request.getDescription(false), HttpStatus.BAD_REQUEST, ex.getMessage(),
-        LocalDateTime.now());
+        new ErrorResponseDto(request.getDescription(false), HttpStatus.BAD_REQUEST, ex.getMessage(),
+            LocalDateTime.now());
 
     return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+  }
+
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
+  @ExceptionHandler(BaseException.class)
+  public ResponseEntity<ErrorResponseDto> handleBaseException(BaseException ex,
+                                                              WebRequest request) {
+    ErrorResponseDto errorResponseDto =
+        new ErrorResponseDto(request.getDescription(false), ex.getStatus(), ex.getMessage(),
+            LocalDateTime.now());
+
+    return new ResponseEntity<>(errorResponseDto, ex.getStatus());
   }
 
 }

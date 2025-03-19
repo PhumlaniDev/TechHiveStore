@@ -1,15 +1,17 @@
 package com.phumlanidev.techhivestore.service.impl;
 
+import com.phumlanidev.techhivestore.constant.Constant;
 import com.phumlanidev.techhivestore.dto.OrderDto;
 import com.phumlanidev.techhivestore.enums.OrderStatus;
 import com.phumlanidev.techhivestore.enums.PaymentStatus;
+import com.phumlanidev.techhivestore.exception.UserNotFoundException;
+import com.phumlanidev.techhivestore.exception.cart.CartEmptyException;
+import com.phumlanidev.techhivestore.exception.order.OrderAlreadyProcessedException;
+import com.phumlanidev.techhivestore.exception.order.OrderNotFoundException;
 import com.phumlanidev.techhivestore.mapper.OrderMapper;
 import com.phumlanidev.techhivestore.model.Address;
 import com.phumlanidev.techhivestore.model.Cart;
-import com.phumlanidev.techhivestore.model.CartItem;
 import com.phumlanidev.techhivestore.model.Order;
-import com.phumlanidev.techhivestore.model.OrderItem;
-import com.phumlanidev.techhivestore.model.Product;
 import com.phumlanidev.techhivestore.model.User;
 import com.phumlanidev.techhivestore.repository.AddressRepository;
 import com.phumlanidev.techhivestore.repository.CartRepository;
@@ -18,10 +20,8 @@ import com.phumlanidev.techhivestore.repository.ProductRepository;
 import com.phumlanidev.techhivestore.repository.UserRepository;
 import com.phumlanidev.techhivestore.service.IOrdersService;
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,15 +43,15 @@ public class OrdersServiceImpl implements IOrdersService {
   @Override
   public OrderDto placeOrder(Long userId, Long addressId) {
 
-    User user =
-      userRepository.findById(userId).orElseThrow(() -> new RuntimeException("user not found"));
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new UserNotFoundException("user not found"));
 
     // Fetch cart
     Cart cart = cartRepository.findByUserUserId(user.getUserId())
-      .orElseThrow(() -> new RuntimeException("Cart not found"));
+        .orElseThrow(() -> new RuntimeException("Cart not found"));
 
     if (cart.getTotalPrice() <= 0) {
-      throw new RuntimeException("Cart is empty");
+      throw new CartEmptyException("Cart is empty");
     }
 
     // Create order entity
@@ -63,32 +63,9 @@ public class OrdersServiceImpl implements IOrdersService {
     order.setTotalPrice(cart.getTotalPrice());
 
     Address address = addressRepository.findById(addressId)
-      .orElseThrow(() -> new RuntimeException("Address not found"));
+        .orElseThrow(() -> new RuntimeException("Address not found"));
 
     order.setAddressId(address);
-
-    //Convert cart item to order items
-    List<OrderItem> orderItems = new ArrayList<>();
-    for (CartItem cartItem : cart.getCartItems()) {
-      Product product = cartItem.getProduct();
-
-      //Reduce stock
-      if (product.getQuantity() < cartItem.getQuantity()) {
-        throw new RuntimeException("Insufficient stock for product: " + product.getName());
-      }
-      product.setQuantity(product.getQuantity() - cartItem.getQuantity());
-      productRepository.save(product);
-
-      // Create order item
-      OrderItem orderItem = new OrderItem();
-      orderItem.setOrderId(order);
-      orderItem.setProductId(product);
-      orderItem.setQuantity(cartItem.getQuantity());
-      orderItem.setPrice(cartItem.getQuantity() * Double.parseDouble(product.getPrice()));
-      orderItems.add(orderItem);
-    }
-
-    order.setItems(orderItems);
 
     //Save order
     orderRepository.save(order);
@@ -103,8 +80,8 @@ public class OrdersServiceImpl implements IOrdersService {
   @Transactional
   @Override
   public OrderDto getOrderDetails(Long orderId) {
-    Order order =
-      orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException(Constant.ORDER_NOT_FOUND));
     return orderMapper.toDto(order, new OrderDto());
   }
 
@@ -112,15 +89,14 @@ public class OrdersServiceImpl implements IOrdersService {
   @Override
   public List<OrderDto> getUserOrders(Long userId) {
     List<Order> orders = orderRepository.findByUserId_UserId(userId);
-    return orders.stream().map(order -> orderMapper.toDto(order, new OrderDto()))
-      .collect(Collectors.toList());
+    return orders.stream().map(order -> orderMapper.toDto(order, new OrderDto())).toList();
   }
 
   @Transactional
   @Override
   public OrderDto updateOrderStatus(Long orderId, String status) {
-    Order order =
-      orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
 
     order.setOrderStatus(OrderStatus.valueOf(status.toUpperCase()));
     return orderMapper.toDto(orderRepository.save(order), new OrderDto());
@@ -128,18 +104,11 @@ public class OrdersServiceImpl implements IOrdersService {
 
   @Override
   public void cancelOrder(Long orderId) {
-    Order order =
-      orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException("Order not found"));
 
     if (!OrderStatus.PENDING.equals(order.getOrderStatus())) {
-      throw new RuntimeException("Only pending order can be canceled");
-    }
-
-    // Refund stock
-    for (OrderItem orderItem : order.getItems()) {
-      Product product = orderItem.getProductId();
-      product.setQuantity(product.getQuantity() + orderItem.getQuantity());
-      productRepository.save(product);
+      throw new OrderAlreadyProcessedException("Only pending order can be canceled");
     }
 
     // Update status

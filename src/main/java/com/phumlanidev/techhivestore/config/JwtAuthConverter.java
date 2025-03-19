@@ -1,7 +1,9 @@
 package com.phumlanidev.techhivestore.config;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Component;
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
   private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
-          new JwtGrantedAuthoritiesConverter();
+      new JwtGrantedAuthoritiesConverter();
 
   @Value("${keycloak.principle-attribute}")
   private String principleAttribute;
@@ -35,12 +37,11 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
   @Override
   public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
     Collection<GrantedAuthority> authorities = Stream.concat(
-            jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
-            extractResourceRoles(jwt).stream()
-    ).collect(Collectors.toSet());
+            Optional.ofNullable(jwtGrantedAuthoritiesConverter.convert(jwt))
+                .orElse(Collections.emptyList()).stream(), extractResourceRoles(jwt).stream())
+        .collect(Collectors.toSet());
 
-    return new JwtAuthenticationToken(
-            jwt, authorities, getPrincipleClaimName(jwt));
+    return new JwtAuthenticationToken(jwt, authorities, getPrincipleClaimName(jwt));
   }
 
   private String getPrincipleClaimName(Jwt jwt) {
@@ -56,14 +57,12 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     Map<String, Object> resource;
     Collection<String> resourceRoles;
 
-    if (resourceAccess == null
-            || (resource = (Map<String, Object>) resourceAccess.get(resourceId)) == null
-            || (resourceRoles = (Collection<String>) resource.get("roles")) == null) {
+    if (resourceAccess == null ||
+        (resource = (Map<String, Object>) resourceAccess.get(resourceId)) == null ||
+        (resourceRoles = (Collection<String>) resource.get("roles")) == null) {
       return Set.of();
     }
-    return resourceRoles
-            .stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-            .collect(Collectors.toSet());
+    return resourceRoles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+        .collect(Collectors.toSet());
   }
 }

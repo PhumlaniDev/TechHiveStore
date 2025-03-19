@@ -56,21 +56,9 @@ class ProductServiceTest {
     productDto.setImageUrl("https://test.com");
   }
 
-  @AfterEach
-  void tearDown() {
-    productRepository.deleteAll();
-  }
-
   @Test
   @Transactional
   void givenValidProductDto_whenCreateProduct_thenProductIsSavedSuccessfully() {
-    ProductDto productDto = new ProductDto();
-    productDto.setName("Test Product");
-    productDto.setDescription("Test Description");
-    productDto.setPrice("100.0");
-    productDto.setQuantity(10);
-    productDto.setImageUrl("https://test.com");
-
     productService.createProduct(productDto);
 
     Optional<Product> savedProduct = productRepository.findByName("Test Product");
@@ -78,32 +66,28 @@ class ProductServiceTest {
     assertThat(savedProduct.get().getName()).isEqualTo("Test Product");
   }
 
+  @AfterEach
+  void tearDown() {
+    productRepository.deleteAll();
+  }
+
   @Test
   @Transactional
   void givenProductDtoWithExistingName_whenCreateProduct_thenThrowsException() {
-    Product product = new Product();
-    product.setName("Existing Product");
-    product.setDescription("Description");
-    product.setPrice("100.0");
-    product.setQuantity(10);
-    product.setImageUrl("https://test.com");
     productRepository.save(product);
 
-    ProductDto productDto = new ProductDto();
-    productDto.setName("Existing Product");
-
     assertThatThrownBy(() -> productService.createProduct(productDto)).isInstanceOf(
-      RuntimeException.class).hasMessage("Product already exists");
+        RuntimeException.class).hasMessage("Product already exists");
   }
 
   @Test
   @Transactional
   void givenProductDtoWithNullName_whenCreateProduct_thenThrowsException() {
-    ProductDto productDto = new ProductDto();
-    productDto.setName(null);
+    ProductDto nullProductDto = new ProductDto();
+    nullProductDto.setName(null);
 
-    assertThatThrownBy(() -> productService.createProduct(productDto)).isInstanceOf(
-      IllegalArgumentException.class).hasMessage("Product name cannot be null or empty");
+    assertThatThrownBy(() -> productService.createProduct(nullProductDto)).isInstanceOf(
+        IllegalArgumentException.class).hasMessage("Product name cannot be null or empty");
   }
 
   @Test
@@ -132,22 +116,7 @@ class ProductServiceTest {
     Product savedProduct = productRepository.save(product);
     Long productId = savedProduct.getProductId();
 
-    ProductDto result = productService.updateProduct(productId, productDto);
-
-    assertThat(result).isNotNull();
-    assertThat(result.getName()).isEqualTo("Test Product");
-    assertThat(result.getDescription()).isEqualTo("Test Description");
-    assertThat(result.getPrice()).isEqualTo("100.0");
-    assertThat(result.getQuantity()).isEqualTo(10);
-    assertThat(result.getImageUrl()).isEqualTo("https://test.com");
-
-    Optional<Product> updatedProduct = productRepository.findById(productId);
-    assertThat(updatedProduct).isPresent();
-    assertThat(updatedProduct.get().getName()).isEqualTo("Test Product");
-    assertThat(updatedProduct.get().getDescription()).isEqualTo("Test Description");
-    assertThat(updatedProduct.get().getPrice()).isEqualTo("100.0");
-    assertThat(updatedProduct.get().getQuantity()).isEqualTo(10);
-    assertThat(updatedProduct.get().getImageUrl()).isEqualTo("https://test.com");
+    assertProductUpdated(productId);
   }
 
   @Test
@@ -157,7 +126,7 @@ class ProductServiceTest {
     updatedProductDto.setName("Updated Product");
 
     assertThatThrownBy(() -> productService.updateProduct(2L, updatedProductDto)).isInstanceOf(
-      RuntimeException.class).hasMessage("Product not found");
+        RuntimeException.class).hasMessage("Product not found");
   }
 
   @Test
@@ -176,7 +145,7 @@ class ProductServiceTest {
   @Transactional
   void givenNonExistingProductId_whenDeleteProductById_thenThrowRuntimeException() {
     assertThatThrownBy(() -> productService.deleteProductById(2L)).isInstanceOf(
-      RuntimeException.class).hasMessage("Product not found");
+        RuntimeException.class).hasMessage("Product not found");
   }
 
   @Test
@@ -185,22 +154,7 @@ class ProductServiceTest {
     Product savedProduct = productRepository.save(product);
     Long productId = savedProduct.getProductId();
 
-    ProductDto result = productService.updateProduct(productId, productDto);
-
-    assertThat(result).isNotNull();
-    assertThat(result.getName()).isEqualTo("Test Product");
-    assertThat(result.getDescription()).isEqualTo("Test Description");
-    assertThat(result.getPrice()).isEqualTo("100.0");
-    assertThat(result.getQuantity()).isEqualTo(10);
-    assertThat(result.getImageUrl()).isEqualTo("https://test.com");
-
-    Optional<Product> updatedProduct = productRepository.findById(productId);
-    assertThat(updatedProduct).isPresent();
-    assertThat(updatedProduct.get().getName()).isEqualTo("Test Product");
-    assertThat(updatedProduct.get().getDescription()).isEqualTo("Test Description");
-    assertThat(updatedProduct.get().getPrice()).isEqualTo("100.0");
-    assertThat(updatedProduct.get().getQuantity()).isEqualTo(10);
-    assertThat(updatedProduct.get().getImageUrl()).isEqualTo("https://test.com");
+    assertProductUpdated(productId);
   }
 
   @Test
@@ -209,8 +163,8 @@ class ProductServiceTest {
     Long nonExistingProductId = 999L;
 
     assertThatThrownBy(
-      () -> productService.updateProduct(nonExistingProductId, productDto)).isInstanceOf(
-      RuntimeException.class).hasMessage("Product not found");
+        () -> productService.updateProduct(nonExistingProductId, productDto)).isInstanceOf(
+        RuntimeException.class).hasMessage("Product not found");
   }
 
   @Test
@@ -235,7 +189,7 @@ class ProductServiceTest {
     Long nonExistingProductId = 999L;
 
     assertThatThrownBy(() -> productService.getProductById(nonExistingProductId)).isInstanceOf(
-      RuntimeException.class).hasMessage("Product not found");
+        RuntimeException.class).hasMessage("Product not found");
   }
 
   @Test
@@ -245,12 +199,32 @@ class ProductServiceTest {
 
     List<ProductDto> result = productService.findAllProducts();
 
-    assertThat(result).isNotEmpty();
-    assertThat(result).hasSize(1);
+
+    assertThat(result).hasSize(1).isNotEmpty();
     assertThat(result.get(0).getName()).isEqualTo("Test Product");
     assertThat(result.get(0).getDescription()).isEqualTo("Test Description");
     assertThat(result.get(0).getPrice()).isEqualTo("100.0");
     assertThat(result.get(0).getQuantity()).isEqualTo(10);
     assertThat(result.get(0).getImageUrl()).isEqualTo("https://test.com");
   }
+
+  private void assertProductUpdated(Long productId) {
+    ProductDto result = productService.updateProduct(productId, productDto);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getName()).isEqualTo("Test Product");
+    assertThat(result.getDescription()).isEqualTo("Test Description");
+    assertThat(result.getPrice()).isEqualTo("100.0");
+    assertThat(result.getQuantity()).isEqualTo(10);
+    assertThat(result.getImageUrl()).isEqualTo("https://test.com");
+
+    Optional<Product> updatedProduct = productRepository.findById(productId);
+    assertThat(updatedProduct).isPresent();
+    assertThat(updatedProduct.get().getName()).isEqualTo("Test Product");
+    assertThat(updatedProduct.get().getDescription()).isEqualTo("Test Description");
+    assertThat(updatedProduct.get().getPrice()).isEqualTo("100.0");
+    assertThat(updatedProduct.get().getQuantity()).isEqualTo(10);
+    assertThat(updatedProduct.get().getImageUrl()).isEqualTo("https://test.com");
+  }
+
 }

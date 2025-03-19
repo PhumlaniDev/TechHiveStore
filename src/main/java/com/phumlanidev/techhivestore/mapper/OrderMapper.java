@@ -5,7 +5,6 @@ import com.phumlanidev.techhivestore.dto.OrderDto;
 import com.phumlanidev.techhivestore.model.Address;
 import com.phumlanidev.techhivestore.model.Order;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -45,9 +44,6 @@ public class OrderMapper {
     dto.setTotalPrice(order.getTotalPrice());
     dto.setPaymentStatus(order.getPaymentStatus());
     dto.setAddress(addressMapper.toDto(order.getAddressId(), new AddressDto()));
-    dto.setItems(
-      order.getItems().stream().map(orderItemMapper::toDto).collect(Collectors.toList()));
-
     return dto;
   }
 }
