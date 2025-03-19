@@ -10,6 +10,10 @@ import com.phumlanidev.techhivestore.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -105,5 +109,25 @@ public class ProductService {
     productRepository.findById(productId)
         .orElseThrow(() -> new ProductNotFoundException(Constant.PRODUCT_NOT_FOUND));
     productRepository.deleteById(productId);
+  }
+
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
+  public Page<ProductDto> searchProducts(String productName, int page, int size, String sortField,
+                                         String sortDirection) {
+    Sort sort = sortDirection.equalsIgnoreCase("desc") ? Sort.by(sortField).descending() :
+        Sort.by(sortField).ascending();
+
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    Page<Product> productPage;
+    if (productName == null || productName.isBlank()) {
+      productPage = productRepository.findAll(pageable);
+    } else {
+      productPage = productRepository.findByNameContainingIgnoreCases(productName, pageable);
+    }
+
+    return productPage.map(product -> productMapper.toDto(product, new ProductDto()));
   }
 }
