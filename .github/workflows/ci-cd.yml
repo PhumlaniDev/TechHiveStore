@@ -174,7 +174,6 @@ jobs:
         Unit Tests: `${{ needs.unit-tests.result }}`
         SAST: `${{ needs.sast.result }}`
         SCA: `${{ needs.sca.result }}`
-        DAST: `${{ needs.dast.result }}`
         Commit: `${{ github.sha }}`
         [View Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
       color: >-
