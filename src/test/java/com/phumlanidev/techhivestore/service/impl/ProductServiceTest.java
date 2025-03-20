@@ -44,14 +44,14 @@ class ProductServiceTest {
     product.setProductId(1L);
     product.setName("Test Product");
     product.setDescription("Test Description");
-    product.setPrice("100.0");
+    product.setPrice(100);
     product.setQuantity(10);
     product.setImageUrl("https://test.com");
 
     productDto = new ProductDto();
     productDto.setName("Test Product");
     productDto.setDescription("Test Description");
-    productDto.setPrice("100.0");
+    productDto.setPrice(100);
     productDto.setQuantity(10);
     productDto.setImageUrl("https://test.com");
   }
@@ -178,7 +178,7 @@ class ProductServiceTest {
     assertThat(result).isNotNull();
     assertThat(result.getName()).isEqualTo("Test Product");
     assertThat(result.getDescription()).isEqualTo("Test Description");
-    assertThat(result.getPrice()).isEqualTo("100.0");
+    assertThat(result.getPrice()).isEqualTo(100);
     assertThat(result.getQuantity()).isEqualTo(10);
     assertThat(result.getImageUrl()).isEqualTo("https://test.com");
   }
@@ -203,7 +203,7 @@ class ProductServiceTest {
     assertThat(result).hasSize(1).isNotEmpty();
     assertThat(result.get(0).getName()).isEqualTo("Test Product");
     assertThat(result.get(0).getDescription()).isEqualTo("Test Description");
-    assertThat(result.get(0).getPrice()).isEqualTo("100.0");
+    assertThat(result.get(0).getPrice()).isEqualTo(100);
     assertThat(result.get(0).getQuantity()).isEqualTo(10);
     assertThat(result.get(0).getImageUrl()).isEqualTo("https://test.com");
   }
@@ -214,7 +214,7 @@ class ProductServiceTest {
     assertThat(result).isNotNull();
     assertThat(result.getName()).isEqualTo("Test Product");
     assertThat(result.getDescription()).isEqualTo("Test Description");
-    assertThat(result.getPrice()).isEqualTo("100.0");
+    assertThat(result.getPrice()).isEqualTo(100);
     assertThat(result.getQuantity()).isEqualTo(10);
     assertThat(result.getImageUrl()).isEqualTo("https://test.com");
 
@@ -222,7 +222,7 @@ class ProductServiceTest {
     assertThat(updatedProduct).isPresent();
     assertThat(updatedProduct.get().getName()).isEqualTo("Test Product");
     assertThat(updatedProduct.get().getDescription()).isEqualTo("Test Description");
-    assertThat(updatedProduct.get().getPrice()).isEqualTo("100.0");
+    assertThat(updatedProduct.get().getPrice()).isEqualTo(100);
     assertThat(updatedProduct.get().getQuantity()).isEqualTo(10);
     assertThat(updatedProduct.get().getImageUrl()).isEqualTo("https://test.com");
   }

@@ -30,7 +30,7 @@ public class Product extends BaseEntity {
   private Long productId;
   private String name;
   private String description;
-  private String price;
+  private Integer price;
   private Integer quantity;
   private String imageUrl;
 

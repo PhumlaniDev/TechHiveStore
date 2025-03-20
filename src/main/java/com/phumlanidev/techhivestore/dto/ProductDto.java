@@ -23,7 +23,7 @@ public class ProductDto {
   @NotEmpty(message = "Description must not be blank")
   private String description;
   @NotEmpty(message = "Price is required")
-  private String price;
+  private Integer price;
   @NotNull(message = "Quantity must not be null")
   private Integer quantity;
   private String imageUrl;
