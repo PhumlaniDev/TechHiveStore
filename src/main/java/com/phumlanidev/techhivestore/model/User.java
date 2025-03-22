@@ -1,6 +1,6 @@
 package com.phumlanidev.techhivestore.model;
 
-import com.phumlanidev.techhivestore.enums.Roles;
+import com.phumlanidev.techhivestore.enums.RoleMapping;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,7 +41,7 @@ public class User extends BaseEntity {
   private String lastName;
   private String phoneNumber;
   @Enumerated(EnumType.STRING)
-  private Roles role;
+  private RoleMapping role;
   @ManyToOne
   @JoinColumn(name = "address_id", referencedColumnName = "addressId")
   private Address address;

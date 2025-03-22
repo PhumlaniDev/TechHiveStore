@@ -1,6 +1,6 @@
 package com.phumlanidev.techhivestore.dto;
 
-import com.phumlanidev.techhivestore.enums.Roles;
+import com.phumlanidev.techhivestore.enums.RoleMapping;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +23,6 @@ public class UserDto {
   private String email;
   private String password;
   private String phoneNumber;
-  private Roles role;
+  private RoleMapping role;
   private AddressDto address;
 }

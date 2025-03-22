@@ -1,7 +1,8 @@
-package com.phumlanidev.techhivestore.auth;
+package com.phumlanidev.techhivestore.service.impl;
 
 import com.phumlanidev.techhivestore.dto.LoginDto;
 import com.phumlanidev.techhivestore.dto.UserDto;
+import com.phumlanidev.techhivestore.enums.RoleMapping;
 import com.phumlanidev.techhivestore.exception.auth.AuthenticationFailedException;
 import com.phumlanidev.techhivestore.exception.auth.KeycloakCommunicationException;
 import com.phumlanidev.techhivestore.mapper.AddressMapper;
@@ -10,6 +11,7 @@ import com.phumlanidev.techhivestore.model.Address;
 import com.phumlanidev.techhivestore.model.User;
 import com.phumlanidev.techhivestore.repository.AddressRepository;
 import com.phumlanidev.techhivestore.repository.UserRepository;
+import com.phumlanidev.techhivestore.service.IAuthService;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
@@ -36,7 +38,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements IAuthService {
 
   private static final String ENABLED_ATTRIBUTE = "enabled";
   private static final String TRUE_VALUE = "true";
@@ -46,6 +48,7 @@ public class AuthService {
   private final Keycloak keycloak;
   private final UserMapper userMapper;
   private final AddressMapper addressMapper;
+
   @Value("${keycloak.auth-server-url}")
   private String keycloakServerUrl;
   @Value("${keycloak.realm}")
@@ -59,8 +62,10 @@ public class AuthService {
   /**
    * Comment: this is the placeholder for documentation.
    */
+  @Override
   public void registerUser(UserDto userDto) {
-    userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+    String rawPassword = userDto.getPassword();
+    userDto.setPassword(passwordEncoder.encode(rawPassword));
 
     User user = userMapper.toEntity(userDto, new User());
     Address address = addressMapper.toEntity(userDto.getAddress(), new Address());
@@ -69,15 +74,15 @@ public class AuthService {
     user.setAddress(savedAddress);
     userRepository.save(user);
 
-    registerKeycloakUser(userDto);
+    registerKeycloakUser(userDto, rawPassword);
 
   }
 
-  private void registerKeycloakUser(UserDto userDto) {
+  private void registerKeycloakUser(UserDto userDto, String rawPassword) {
     try {
       RealmResource realmResource = keycloak.realm(keycloakRealm);
       UsersResource usersResource = realmResource.users();
-      UserRepresentation keycloakUser = createUserRepresentation(userDto);
+      UserRepresentation keycloakUser = createUserRepresentation(userDto, rawPassword);
 
       createAndAssignKeycloakUser(usersResource, realmResource, keycloakUser, userDto);
     } catch (Exception e) {
@@ -95,13 +100,11 @@ public class AuthService {
         String userId = getUserIdFromLocation(response.getLocation());
         UserResource userResource = usersResource.get(userId);
 
-        if ("ADMIN".equalsIgnoreCase(userDto.getRole().toString())) {
-          assignRealmRole(userResource, realmResource, "admin");
-          assignClientRole(userResource, realmResource, "client_admin");
-        } else if ("USER".equalsIgnoreCase(userDto.getRole().toString())) {
-          assignRealmRole(userResource, realmResource, "user");
-          assignClientRole(userResource, realmResource, "client_user");
-        }
+        RoleMapping roleMapping = RoleMapping.from(userDto.getRole().toString())
+            .orElseThrow(() -> new KeycloakCommunicationException("Invalid role"));
+
+        assignRealmRole(userResource, realmResource, roleMapping.getRealmRole());
+        assignClientRole(userResource, realmResource, roleMapping.getClientRole());
       } else {
         log.error("Failed to create Keycloak user: {}", response.getStatusInfo().toString());
         throw new KeycloakCommunicationException("Keycloak user creation failed");
@@ -116,7 +119,7 @@ public class AuthService {
     return path.substring(path.lastIndexOf('/') + 1);
   }
 
-  private UserRepresentation createUserRepresentation(UserDto userDto) {
+  private UserRepresentation createUserRepresentation(UserDto userDto, String rawPassword) {
     UserRepresentation userRepresentation = new UserRepresentation();
     userRepresentation.setUsername(userDto.getUsername());
     userRepresentation.setEmail(userDto.getEmail());
@@ -129,7 +132,7 @@ public class AuthService {
     CredentialRepresentation credential = new CredentialRepresentation();
     credential.setTemporary(false);
     credential.setType(CredentialRepresentation.PASSWORD);
-    credential.setValue(userDto.getPassword());
+    credential.setValue(rawPassword);
     userRepresentation.setCredentials(Collections.singletonList(credential));
     log.info("Password set for user ID {} in Keycloak", userDto.getUsername());
     return userRepresentation;
@@ -152,6 +155,7 @@ public class AuthService {
   /**
    * Comment: this is the placeholder for documentation.
    */
+  @Override
   public String login(LoginDto loginDto) {
     try (Keycloak keycloakClient = KeycloakBuilder.builder().serverUrl(keycloakServerUrl)
         .realm(keycloakRealm).clientId(keycloakClientId).clientSecret(keycloakClientSecret)
