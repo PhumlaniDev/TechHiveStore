@@ -21,9 +21,5 @@ public class Constant {
   public static final String PRODUCT_NOT_FOUND = "Product not found";
   public static final String ORDER_NOT_FOUND = "Order not found";
   public static final String CART_NOT_FOUND = "Cart not found";
-
-  /**
-   * Comment: this is the placeholder for documentation.
-   */
-
+  public static final String CART_ITEM_NOT_FOUND = "Cart not found";
 }

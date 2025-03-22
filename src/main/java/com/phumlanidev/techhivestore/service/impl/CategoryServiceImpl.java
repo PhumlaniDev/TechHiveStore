@@ -2,12 +2,13 @@ package com.phumlanidev.techhivestore.service.impl;
 
 
 import com.phumlanidev.techhivestore.dto.CategoryDto;
+import com.phumlanidev.techhivestore.exception.category.CategoryAlreadyExistsException;
+import com.phumlanidev.techhivestore.exception.category.CategoryNotFoundException;
 import com.phumlanidev.techhivestore.mapper.CategoryMapper;
 import com.phumlanidev.techhivestore.model.Category;
 import com.phumlanidev.techhivestore.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class CategoryService {
+public class CategoryServiceImpl {
 
   private final CategoryRepository categoryRepository;
   private final CategoryMapper categoryMapper;
@@ -32,7 +33,7 @@ public class CategoryService {
     }
 
     if (categoryRepository.findByCategoryName(categoryDto.getCategoryName()).isPresent()) {
-      throw new RuntimeException("Category already exist");
+      throw new CategoryAlreadyExistsException("Category already exist");
     }
 
     Category category = categoryMapper.toEntity(categoryDto, new Category());
@@ -53,7 +54,7 @@ public class CategoryService {
     }
 
     Category category = categoryRepository.findById(categoryId)
-        .orElseThrow(() -> new RuntimeException("category not found"));
+        .orElseThrow(() -> new CategoryNotFoundException("category not found"));
 
     categoryMapper.toEntity(categoryDto, category);
 
@@ -66,15 +67,14 @@ public class CategoryService {
    * Comment: this is the placeholder for documentation.
    */
   @Transactional
-  public List<CategoryDto> findAllcategories() {
+  public List<CategoryDto> findAllCategories() {
 
     List<Category> categories = categoryRepository.findAll();
 
     return categories.stream()
       .filter(category -> category.getCategoryName()
         != null && !category.getCategoryName().isEmpty())
-      .map(category -> categoryMapper.toDto(category, new CategoryDto()))
-      .collect(Collectors.toList());
+        .map(category -> categoryMapper.toDto(category, new CategoryDto())).toList();
   }
 
   /**

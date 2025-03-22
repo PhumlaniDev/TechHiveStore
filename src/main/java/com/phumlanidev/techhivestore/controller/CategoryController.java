@@ -4,10 +4,10 @@ package com.phumlanidev.techhivestore.controller;
 import com.phumlanidev.techhivestore.auth.ResponseDto;
 import com.phumlanidev.techhivestore.constant.Constant;
 import com.phumlanidev.techhivestore.dto.CategoryDto;
-import com.phumlanidev.techhivestore.service.impl.CategoryService;
+import com.phumlanidev.techhivestore.service.impl.CategoryServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(path = "/api/v1/category", produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Validated
 public class CategoryController {
 
-  private final CategoryService categoryService;
+  private final CategoryServiceImpl categoryServiceImpl;
 
   /**
    * Comment: this is the placeholder for documentation.
    */
   @PostMapping("/create")
   public ResponseEntity<ResponseDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
-    categoryService.createCategory(categoryDto);
+    categoryServiceImpl.createCategory(categoryDto);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new ResponseDto(Constant.STATUS_CODE_CREATED, "Category created successfully"));
   }
@@ -48,7 +48,7 @@ public class CategoryController {
   @PutMapping("/update/{categoryId}")
   public ResponseEntity<CategoryDto> updateCategory(@Valid @PathVariable Long categoryId,
                                                     @RequestBody CategoryDto categoryDto) {
-    CategoryDto updateCategory = categoryService.updateCategory(categoryId, categoryDto);
+    CategoryDto updateCategory = categoryServiceImpl.updateCategory(categoryId, categoryDto);
     return ResponseEntity.ok(updateCategory);
   }
 
@@ -57,7 +57,7 @@ public class CategoryController {
    */
   @GetMapping("/find/{categoryId}")
   public ResponseEntity<CategoryDto> findCategoryById(@Valid @PathVariable Long categoryId) {
-    CategoryDto category = categoryService.getCategoryById(categoryId);
+    CategoryDto category = categoryServiceImpl.getCategoryById(categoryId);
     return ResponseEntity.status(HttpStatus.OK).body(category);
   }
 
@@ -66,7 +66,7 @@ public class CategoryController {
    */
   @DeleteMapping("/delete/{categoryId}")
   public ResponseEntity<ResponseDto> deleteCategory(@PathVariable Long categoryId) {
-    categoryService.deleteCategoryById(categoryId);
+    categoryServiceImpl.deleteCategoryById(categoryId);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new ResponseDto(Constant.STATUS_CODE_OK, Constant.MESSAGE_200));
   }
@@ -76,7 +76,7 @@ public class CategoryController {
    */
   @GetMapping
   public ResponseEntity<List<CategoryDto>> getAllCategories() {
-    List<CategoryDto> categories = categoryService.findAllcategories();
+    List<CategoryDto> categories = categoryServiceImpl.findAllCategories();
     return ResponseEntity.status(HttpStatus.OK).body(categories);
   }
 

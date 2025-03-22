@@ -1,6 +1,8 @@
 package com.phumlanidev.techhivestore.service;
 
+import com.phumlanidev.techhivestore.dto.CartDto;
 import com.phumlanidev.techhivestore.model.Cart;
+import com.phumlanidev.techhivestore.model.User;
 
 /**
  * Comment: this is the placeholder for documentation.
@@ -10,20 +12,35 @@ public interface ICartService {
   /**
    * Comment: this is the placeholder for documentation.
    */
-  void addItemToCart(Long userId, Long productId, int quantity);
+  CartDto getCartByUser(User user);
 
   /**
    * Comment: this is the placeholder for documentation.
    */
-  void removeItemFromCart(Long userId, Long productId);
+  void addProductToCart(User user, Long productId, Integer quantity);
 
   /**
    * Comment: this is the placeholder for documentation.
    */
-  void clearCart(Long userId);
+  void removeCartItem(User user, Long cartItemId);
 
   /**
    * Comment: this is the placeholder for documentation.
    */
-  Cart getCartDetails(Long userId);
+  Cart getOrCreateCart(User user);
+
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
+  void clearCart(User user);
+
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
+  void updateCartItemQuantity(User user, Long cartItemId, Integer quantity);
+
+  /**
+   * Comment: this is the placeholder for documentation.
+   */
+  void recalculateCartTotal(Cart cart);
 }

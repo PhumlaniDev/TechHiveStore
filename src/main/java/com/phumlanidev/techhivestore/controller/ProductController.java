@@ -3,7 +3,7 @@ package com.phumlanidev.techhivestore.controller;
 import com.phumlanidev.techhivestore.auth.ResponseDto;
 import com.phumlanidev.techhivestore.constant.Constant;
 import com.phumlanidev.techhivestore.dto.ProductDto;
-import com.phumlanidev.techhivestore.service.impl.ProductService;
+import com.phumlanidev.techhivestore.service.impl.ProductServiceImpl;
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,14 +35,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class ProductController {
 
-  private final ProductService productService;
+  private final ProductServiceImpl productServiceImpl;
 
   /**
    * Comment: this is the placeholder for documentation.
    */
   @PostMapping("/create")
   public ResponseEntity<ResponseDto> createProduct(@Valid @RequestBody ProductDto productDto) {
-    productService.createProduct(productDto);
+    productServiceImpl.createProduct(productDto);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new ResponseDto(Constant.STATUS_CODE_CREATED, "Product created successfully"));
   }
@@ -53,7 +53,7 @@ public class ProductController {
   @PatchMapping("/update/{productId}")
   public ResponseEntity<ProductDto> updateProduct(@Valid @PathVariable Long productId,
                                                   @RequestBody ProductDto productDto) {
-    ProductDto updatedProduct = productService.updateProduct(productId, productDto);
+    ProductDto updatedProduct = productServiceImpl.updateProduct(productId, productDto);
     return ResponseEntity.ok(updatedProduct);
 
   }
@@ -63,7 +63,7 @@ public class ProductController {
    */
   @GetMapping("/find/{productId}")
   public ResponseEntity<ProductDto> findProductById(@Valid @PathVariable Long productId) {
-    ProductDto product = productService.findProductById(productId);
+    ProductDto product = productServiceImpl.findProductById(productId);
     return ResponseEntity.status(HttpStatus.OK).body(product);
   }
 
@@ -72,7 +72,7 @@ public class ProductController {
    */
   @DeleteMapping("/delete/{productId}")
   public ResponseEntity<ResponseDto> deleteProduct(@PathVariable Long productId) {
-    productService.deleteProductById(productId);
+    productServiceImpl.deleteProductById(productId);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new ResponseDto(Constant.STATUS_CODE_OK, Constant.MESSAGE_200));
   }
@@ -82,7 +82,7 @@ public class ProductController {
    */
   @GetMapping
   public ResponseEntity<List<ProductDto>> getAllProducts() {
-    List<ProductDto> products = productService.findAllProducts();
+    List<ProductDto> products = productServiceImpl.findAllProducts();
     return ResponseEntity.status(HttpStatus.OK).body(products);
   }
 
@@ -103,7 +103,7 @@ public class ProductController {
     Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortField).descending() :
         Sort.by(sortField).ascending();
     Pageable pageable = PageRequest.of(page, size, sort);
-    return productService.searchProducts(productName, category, minPrice, maxPrice, pageable);
+    return productServiceImpl.searchProducts(productName, category, minPrice, maxPrice, pageable);
   }
 
 }

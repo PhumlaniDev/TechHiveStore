@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductServiceImpl {
 
   private final ProductRepository productRepository;
   private final ProductMapper productMapper;
@@ -118,7 +118,9 @@ public class ProductService {
   /**
    * Comment: this is the placeholder for documentation.
    */
-  @Cacheable(value = "productSearchCache", key = "#name + '-' + #category + '-' + #minPrice + '-' + #maxPrice + '-' + #pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort")
+  @Cacheable(value = "productSearchCache", key = "#name + '-' + #category + '-' + #minPrice + " +
+      "'-' + #maxPrice + '-' + #pageable.pageNumber + '-' " +
+      "+ #pageable.pageSize + '-' + #pageable.sort")
   public Page<ProductDto> searchProducts(String productName, String category, BigDecimal minPrice,
                                          BigDecimal maxPrice, Pageable pageable) {
     Specification<Product> spec =
