@@ -1,6 +1,7 @@
 package com.phumlanidev.techhivestore.exception;
 
 import com.phumlanidev.techhivestore.dto.ErrorResponseDto;
+import com.phumlanidev.techhivestore.exception.category.CategoryAlreadyExistsException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -82,9 +83,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   /**
    * Comment: this is the placeholder for documentation.
    */
-  @ExceptionHandler(CategoryAlreadyExistException.class)
+  @ExceptionHandler(CategoryAlreadyExistsException.class)
   public ResponseEntity<ErrorResponseDto> handleCategoryAlreadyExistException(
-      CategoryAlreadyExistException ex, WebRequest request) {
+      CategoryAlreadyExistsException ex, WebRequest request) {
     ErrorResponseDto errorResponseDto =
         new ErrorResponseDto(request.getDescription(false), HttpStatus.BAD_REQUEST, ex.getMessage(),
             LocalDateTime.now());
