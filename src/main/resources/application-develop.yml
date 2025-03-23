@@ -54,14 +54,14 @@ keycloak:
   resource: tech-hive-store-api
   principle-attribute: preferred_username
   credentials:
-    secret: ENC(4Wb9DlLL3XGCO5Jvx03E4RN6jJryNjO1vlD+YP4y7oz5km3Wc3+6tDnjNL7HjS8kr3btqyc9JoggojdZwVvcawBp9rJo4DK3jFSHrh1Socg=)
+    secret: ENC(kcYV8v/y4d4F+R4ZI5H7Ak74BSfx1lRQ1JG5BpLhcdGLN/XP2EfdxebTVZ2mJD6Oh0LNCqVP87bwzOUmUNZpKdBUthYKMc0ZO3Zspv1OFMg=)
   admin:
-    username: aphumlanidev
-    password: apR,Pp,0Uc)?e!6u(*(dRA%|[
+    username: testuser
+    password: 12345
 
 jasypt:
   encryptor:
-    password: ilovecode
+    password: ENC(+VZeLPbvwBIQWGgJ3bG9qZUczyaYq4yA5t9gBr+ZbosuMH3FnEyxc7PUYH/3tqAb)
 
 logging:
   level:
